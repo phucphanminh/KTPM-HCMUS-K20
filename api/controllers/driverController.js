@@ -1,31 +1,48 @@
-exports.driverInfor = (req, res) => {
+const driverPromises = require('../promises/driverPromises.js');
+
+const driverInfor = (req, res) => {
   // Xử lý lấy thông tin tài xế
   // ...
 };
 
-exports.driverInforUpdate = (req, res) => {
+const driverInforUpdate = (req, res) => {
   // Xử lý cập nhật thông tin tài xế
   // ...
 };
 
-exports.driverRides = (req, res) => {
-  // Xử lý lịch sử di chuyển tài xế
+const driverRides = async (req, res) => {
+  const driverID  = req.params.driver_id;
+  // console.log(driverID);
+  try {
+    const rides = await driverPromises.callGetRidesByDriverID(driverID);
+    console.log(rides);
+    return res.json(rides);
+  } catch (error) {
+    console.error('Lỗi khi gọi stored procedure:', error);
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy lịch sử di chuyển tài xế.' });
+  }
+};
+
+const getNextBooking = (req, res) => {
+  // Xử lý lấy thông tin cuốc đặt tiếp theo cho tài xế
   // ...
 };
 
-exports.getNextBooking = (req, res) => {
-    // Xử lý lấy thông tin cuốc đặt tiếp theo cho tài xế
-    // ...
-  };
-  
-exports.confirmBooking = (req, res) => {
+const confirmBooking = (req, res) => {
   // Xử lý xác nhận cuốc đặt từ tài xế
   // ...
 };
 
-exports.cancelBooking = (req, res) => {
+const cancelBooking = (req, res) => {
   // Xử lý hủy cuốc đặt từ tài xế
   // ...
 };
-  
-  
+
+module.exports = {
+  driverInfor,
+  driverInforUpdate,
+  driverRides,
+  getNextBooking,
+  confirmBooking,
+  cancelBooking,
+};

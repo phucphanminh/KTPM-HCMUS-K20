@@ -1,7 +1,8 @@
 const express = require('express');
+const db = require ('./config.js');
 const bodyParser = require('body-parser');
 const callcenterRouter = require('./routes/callcenterRouter.js');
-const customerRouter = require('./routes/customerRouter');
+const userRouter = require('./routes/userRouter');
 const driverRouter = require('./routes/driverRouter');
 
 const app = express();
@@ -12,10 +13,14 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/api/callcenter', callcenterRouter);
-app.use('/api/customer', customerRouter);
+app.use('/api/customer', userRouter);
 app.use('/api/driver', driverRouter);
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+//connect to DB
+db.connect((error) => {
+  if (error) return console.log(error);
+  console.log("Connect to DB success");
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
 });

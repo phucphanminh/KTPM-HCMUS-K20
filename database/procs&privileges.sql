@@ -139,6 +139,8 @@ BEGIN
 END $$
 DELIMITER ;
 
+-- CALL GetRidesByDriverID ('D2');
+
 
 
 
