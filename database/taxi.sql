@@ -27,12 +27,13 @@ create table DRIVER
 (
    ID                   char(20) not null  comment '',
    TEL                  char(15) not null  comment '',
+   PASS                 char(30) not null  comment '',
    NAME                 nchar(30) not null  comment '',
    AVA                  char(30) not null  comment '',
    ACC                  char(30) not null  comment '',
    VEHICLEID            char(20) not null  comment '',
-   BRANDNAME            char(20) not null  comment '',
-   ATTRIBUTE_16         char(20) not null  comment '',
+   BRANDNAME            char(50) not null  comment '',
+   CMND         		char(20) not null  comment '',
    FREE                 bool not null  comment '',
    primary key (ID)
 );
@@ -51,7 +52,7 @@ create table RIDE
    STATUS               bool not null  comment '',
    BOOKTIME             datetime not null  comment '',
    PRICE                float not null  comment '',
-   RESERVEDTIME         datetime not null  comment '',
+   RESERVEDTIME         datetime  comment '',
    primary key (ID)
 );
 
