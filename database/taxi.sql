@@ -27,7 +27,7 @@ create table DRIVER
 (
    ID                   char(20) not null  comment '',
    TEL                  char(15) not null  comment '',
-   PASS                 char(30) not null  comment '',
+   PASS                 text(256) not null  comment '',
    NAME                 nchar(30) not null  comment '',
    AVA                  char(30) not null  comment '',
    ACC                  char(30) not null  comment '',
@@ -62,7 +62,7 @@ create table RIDE
 create table USER
 (
    TEL                  char(15) not null  comment '',
-   PASS                 char(30) not null  comment '',
+   PASS                 text(256) not null  comment '',
    NAME                 nchar(30) not null  comment '',
    AVA                  char(30) not null  comment '',
    VIP                  bool not null  comment '',

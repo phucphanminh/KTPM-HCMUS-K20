@@ -19,20 +19,22 @@ VALUES
 -- Insert data into DRIVER table
 INSERT INTO DRIVER (ID, TEL, PASS, NAME, AVA, ACC, VEHICLEID, BRANDNAME, CMND, FREE)
 VALUES
-   ('D1', '1111111111', 'Random_Password_1', 'Isabella Taylor', 'D1.png', '6589320147', '51C1-12345', 'Chevrolet Corvette', '089765432110', TRUE),
-   ('D2', '2222222222', 'Random_Password_2', 'William Martinez', 'D2.png', '3150782496', '36G8-67890', 'Mercedes-Benz E-Class', '034567890109', TRUE),
-   ('D3', '3333333333', 'Random_Password_3', 'Emily Williams', 'D3.png', '8912634075', '77A2-98765', 'Ford Mustang', '012345678908', TRUE),
-   ('D4', '4444444444', 'Random_Password_4', 'Ethan Patel', 'D4.png', '4062819357', '59B6-54321', 'Rolls-Royce Phantom', '065432109876', TRUE),
-   ('D5', '5555555555', 'Random_Password_5', 'James Chen', 'D5.png', '5291760348', '63D9-23456', 'Ferrari Portofino', '045678901232', TRUE);
+    ('D1', '1111111111', SHA2('Random_Password_1', 256), 'Isabella Taylor', 'D1.png', '6589320147', '51C1-12345', 'Chevrolet Corvette', '089765432110', TRUE),
+    ('D2', '2222222222', SHA2('Random_Password_2', 256), 'William Martinez', 'D2.png', '3150782496', '36G8-67890', 'Mercedes-Benz E-Class', '034567890109', TRUE),
+    ('D3', '3333333333', SHA2('Random_Password_3', 256), 'Emily Williams', 'D3.png', '8912634075', '77A2-98765', 'Ford Mustang', '012345678908', TRUE),
+    ('D4', '4444444444', SHA2('Random_Password_4', 256), 'Ethan Patel', 'D4.png', '4062819357', '59B6-54321', 'Rolls-Royce Phantom', '065432109876', TRUE),
+    ('D5', '5555555555', SHA2('Random_Password_5', 256), 'James Chen', 'D5.png', '5291760348', '63D9-23456', 'Ferrari Portofino', '045678901232', TRUE);
+
+
 
 -- Insert data into USER table
 INSERT INTO USER (TEL, PASS, NAME, AVA, VIP)
 VALUES
-   ('0123456789', 'Random_Password_1', 'Olivia Kim', 'U1.png', TRUE),
-   ('0234567890', 'Random_Password_2', 'Mia Garcia', 'U2.png', FALSE),
-   ('0345678901', 'Random_Password_3', 'Michael Wong', 'U3.png', FALSE),
-   ('0456789012', 'Random_Password_4', 'Christopher Anderson', 'U4.png', TRUE),
-   ('0567890123', 'Random_Password_5', 'Sophia Davis', 'U5.png', TRUE);
+    ('0123456789', SHA2('Random_Password_1', 256), 'Olivia Kim', 'U1.png', TRUE),
+    ('0234567890', SHA2('Random_Password_2', 256), 'Mia Garcia', 'U2.png', FALSE),
+    ('0345678901', SHA2('Random_Password_3', 256), 'Michael Wong', 'U3.png', FALSE),
+    ('0456789012', SHA2('Random_Password_4', 256), 'Christopher Anderson', 'U4.png', TRUE),
+    ('0567890123', SHA2('Random_Password_5', 256), 'Sophia Davis', 'U5.png', TRUE);
 
 -- Insert data into RIDE table
 INSERT INTO RIDE (ID, USE_ID, CUS_ID, DRI_ID, PICKUP, DROPOFF, STATUS, BOOKTIME, PRICE, RESERVEDTIME)

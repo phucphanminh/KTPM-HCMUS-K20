@@ -1,5 +1,23 @@
 const db = require('../config.js');
 
+const callAuthenticateDriver = (driverTel, driverPass) => {
+  return new Promise((resolve, reject) => {
+    db.query(
+      'CALL AuthenticateDriver(?, ?)',
+      [driverTel, driverPass],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          // Lấy dữ liệu từ kết quả của câu SELECT
+          console.log(results[0][0]);
+          resolve(results[0][0]);
+        }
+      }
+    );
+  });
+};
+
 const callGetDriver = (driverID) => {
   return new Promise((resolve, reject) => {
     db.query(
@@ -25,12 +43,11 @@ const callAddDriver = (
   driverAcc,
   driverVehicleID,
   driverBrandName,
-  driverCMND,
-  driverFree
+  driverCMND
 ) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL AddDriver(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'CALL AddDriver(?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         driverID,
         driverTel,
@@ -40,8 +57,7 @@ const callAddDriver = (
         driverAcc,
         driverVehicleID,
         driverBrandName,
-        driverCMND,
-        driverFree
+        driverCMND
       ],
       (error, results) => {
         if (error) {
@@ -64,7 +80,8 @@ const callUpdateDriver = (
   driverVehicleID, 
   driverBrandName, 
   driverCMND, 
-  driverFree) => {
+  driverFree
+  ) => {
   return new Promise((resolve, reject) => {
     db.query(
       'CALL UpdateDriver(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -78,7 +95,8 @@ const callUpdateDriver = (
         driverVehicleID, 
         driverBrandName, 
         driverCMND, 
-        driverFree],
+        driverFree
+      ],
       (error, results) => {
         if (error) {
           reject(error);
@@ -109,7 +127,7 @@ const callGetRidesByDriverID = (driverID) => {
 const callCompleteRide = (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL AddRide(?, ?, ?, ?, ?, ?, ?, ?, ?);',
+      'CALL CompleteRide(?, ?, ?, ?, ?, ?, ?, ?, ?);',
       [rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime],
       (error, results) => {
         if (error) {
@@ -124,6 +142,7 @@ const callCompleteRide = (rideID, userID, cusID, driverID, pickupLocation, dropO
 };
 
 module.exports = {
+  callAuthenticateDriver,
   callGetDriver,
   callAddDriver,
   callUpdateDriver,

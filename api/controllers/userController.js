@@ -1,10 +1,22 @@
 const userPromises = require('../promises/userPromises.js');
 
+const login = async (req, res) => {
+  const { userTel, userPass } = req.body;
+
+  try {
+    const result = await userPromises.callAuthenticateUser(userTel, userPass);
+    return res.status(200).json({ result: result.result });
+  } catch (error) {
+    console.error('Lỗi khi xác thực người dùng:', error);
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi xác thực người dùng.' });
+  }
+};
+
 const userInfor = async (req, res) => {
   const userTel = req.params.user_tel;
 
   try {
-    const user = await callGetUser(userTel);
+    const user = await userPromises.callGetUser(userTel);
     return res.json(user);
   } catch (error) {
     console.error('Lỗi khi gọi stored procedure:', error);
@@ -13,10 +25,10 @@ const userInfor = async (req, res) => {
 };
 
 const userAdd = async (req, res) => {
-  const { userTel, userPass, userName, userAva, userVIP } = req.body;
+  const { userTel, userPass, userName, userAva} = req.body;
 
   try {
-    const result = await callAddUser(userTel, userPass, userName, userAva, userVIP);
+    const result = await userPromises.callAddUser(userTel, userPass, userName, userAva);
     return res.status(200).json({ message: result.message });
   } catch (error) {
     console.error('Lỗi khi gọi stored procedure:', error);
@@ -28,7 +40,7 @@ const userInforUpdate = async (req, res) => {
   const { userTel, userPass, userName, userAva, userVIP } = req.body;
 
   try {
-    const result = await callUpdateUser(userTel, userPass, userName, userAva, userVIP);
+    const result = await userPromises.callUpdateUser(userTel, userPass, userName, userAva, userVIP);
     return res.status(200).json({ message: result.message });
   } catch (error) {
     console.error('Lỗi khi gọi stored procedure:', error);
@@ -40,7 +52,7 @@ const userRides = async (req, res) => {
   const userID = req.params.user_id;
 
   try {
-    const rides = await callGetRidesByUserID(userID);
+    const rides = await userPromises.callGetRidesByUserID(userID);
     return res.json(rides);
   } catch (error) {
     console.error('Lỗi khi gọi stored procedure:', error);
@@ -64,6 +76,7 @@ const cancelBooking = (req, res) => {
 };
 
 module.exports = {
+  login,
   userInfor,
   userAdd,
   userInforUpdate,

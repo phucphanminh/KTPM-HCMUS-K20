@@ -1,5 +1,17 @@
 const driverPromises = require('../promises/driverPromises.js');
 
+const login = async (req, res) => {
+  const { driverTel, driverPass } = req.body;
+
+  try {
+    const result = await driverPromises.callAuthenticateDriver(driverTel, driverPass);
+    return res.status(200).json({ result: result.result });
+  } catch (error) {
+    console.error('Lỗi khi xác thực tài xế:', error);
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi xác thực tài xế.' });
+  }
+};
+
 const driverInfor = async (req, res) => {
   const driverID = req.params.driver_id;
 
@@ -23,8 +35,7 @@ const driverAdd = async (req, res) => {
     driverAcc,
     driverVehicleID,
     driverBrandName,
-    driverCMND,
-    driverFree
+    driverCMND
   } = req.body;
 
   try {
@@ -37,8 +48,7 @@ const driverAdd = async (req, res) => {
       driverAcc,
       driverVehicleID,
       driverBrandName,
-      driverCMND,
-      driverFree
+      driverCMND
     );
 
     // Trả về thông báo thành công
@@ -115,7 +125,7 @@ const completeRide = async (req, res) => {
   const { rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime } = req.body;
 
   try {
-    const result = await callAddRide(rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime);
+    const result = await driverPromises.callCompleteRide(rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime);
     return res.json({ message: result.message });
   } catch (error) {
     console.error('Lỗi khi gọi stored procedure:', error);
@@ -124,6 +134,7 @@ const completeRide = async (req, res) => {
 };
 
 module.exports = {
+  login,
   driverInfor,
   driverAdd,
   driverInforUpdate,

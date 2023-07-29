@@ -7,6 +7,34 @@
 
 USE TAXI;
 
+/* Xác thực người dùng */
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `AuthenticateUser`$$
+CREATE PROCEDURE `AuthenticateUser`(
+      IN userTel CHAR(15),
+      IN userPass TEXT(256)
+)
+BEGIN
+      -- Mã hóa mật khẩu đầu vào bằng hàm SHA2() với độ dài hash là 256
+      SET userPass = SHA2(userPass, 256);
+  
+      -- Khai báo biến session matchUserId
+      SET @matchUserId = NULL;
+  
+      -- Gán giá trị cho biến session matchUserId
+      SELECT TEL INTO @matchUserId FROM USER WHERE TEL = userTel AND PASS = userPass;
+  
+      IF @matchUserId IS NOT NULL THEN
+          -- Xử lý khớp thành công và trả về số điện thoại của người dùng
+          SELECT @matchUserId AS result;
+      ELSE
+          SELECT 'Số điện thoại hoặc mật khẩu không đúng' AS result;
+      END IF;
+END $$
+DELIMITER ;
+
+-- CALL AuthenticateUser('0123456789', 'Random_Password_1');
+
 /* Lấy thông tin người dùng */
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `GetUser`$$
@@ -23,33 +51,34 @@ DELIMITER ;
 /* Tạo người dùng */
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `AddUser`$$
-CREATE PROCEDURE AddUser(
-    IN userTel char(15),
-    IN userPass char(30),
-    IN userName nchar(30),
-    IN userAva char(30),
-    IN userVIP bool
+CREATE PROCEDURE `AddUser`(
+     IN userTel CHAR(15),
+     IN userPass TEXT(256),
+     IN userName NCHAR(30),
+     IN userAva CHAR(30)
 )
 BEGIN
-    -- Kiểm tra số điện thoại đã tồn tại
-    IF EXISTS (SELECT 1 FROM USER WHERE TEL = userTel) THEN
-        SELECT 'Số điện thoại đã được sử dụng' AS message;
-    ELSE
-        -- Thêm thông tin user vào bảng USER
-        INSERT INTO USER (TEL, PASS, NAME, AVA, VIP)
-        VALUES (userTel, userPass, userName, userAva, userVIP);
-        SELECT 'Tạo tài khoản thành công' AS message;
-    END IF;
+     -- Kiểm tra xem userTel đã tồn tại trong bảng USER chưa
+     IF EXISTS (SELECT 1 FROM USER WHERE TEL = userTel) THEN
+         SELECT 'Số điện thoại đã được sử dụng' AS message;
+     ELSE
+         -- Mã hóa mật khẩu đầu vào bằng hàm SHA2() với độ dài hash là 30
+         SET userPass = SHA2(userPass, 256);
+
+         -- Thêm thông tin người dùng vào bảng USER
+         INSERT INTO USER (TEL, PASS, NAME, AVA, VIP)
+         VALUES (userTel, userPass, userName, userAva, FALSE);
+         SELECT 'Tạo tài khoản thành công' AS message;
+     END IF;
 END $$
 DELIMITER ;
-
 
 /* Cập nhật thông tin người dùng */
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `UpdateUser`$$
 CREATE PROCEDURE UpdateUser(
     IN userTel char(15),
-    IN userPass char(30),
+    IN userPass TEXT(256),
     IN userName nchar(30),
     IN userAva char(30),
     IN userVIP bool
@@ -65,6 +94,8 @@ BEGIN
     SELECT 'Cập nhật thông tin thành công' AS message;
 END $$
 DELIMITER ;
+
+
 
 /* Lấy lịch sử các cước xe của người dùng */
 DELIMITER $$
@@ -93,6 +124,36 @@ BEGIN
 END $$
 DELIMITER ;
 
+/* Xác thực tài xế */
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `AuthenticateDriver`$$
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `AuthenticateDriver`$$
+CREATE PROCEDURE `AuthenticateDriver`(
+     IN driverTel CHAR(15),
+     IN driverPass TEXT(256)
+)
+BEGIN
+     -- Mã hóa mật khẩu đầu vào bằng hàm SHA2() với độ dài hash là 256
+     SET driverPass = SHA2(driverPass, 256);
+ 
+     -- Khai báo biến session matchDriverId
+     SET @matchDriverId = NULL;
+ 
+     -- Gán giá trị cho biến session matchDriverId
+     SELECT ID INTO @matchDriverId FROM DRIVER WHERE TEL = driverTel AND PASS = driverPass;
+ 
+     IF @matchDriverId IS NOT NULL THEN
+         -- Xử lý khớp thành công và trả về ID của tài xế
+         SELECT @matchDriverId AS result;
+     ELSE
+         SELECT 'Số điện thoại hoặc mật khẩu không đúng' AS result;
+     END IF;
+END $$
+DELIMITER ;
+
+-- CALL AuthenticateDriver('2222222222', 'Random_Password_2');
+
 /* Lấy thông tin tài xế */
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `GetDriver`$$
@@ -112,25 +173,27 @@ DROP PROCEDURE IF EXISTS `AddDriver`$$
 CREATE PROCEDURE `AddDriver`(
     IN driverID char(20),
     IN driverTel char(15),
-    IN driverPass char(30),
+    IN driverPass TEXT(256),
     IN driverName nchar(30),
     IN driverAva char(30),
     IN driverAcc char(30),
     IN driverVehicleID char(20),
     IN driverBrandName char(50),
-    IN driverCMND char(20),
-    IN driverFree bool
+    IN driverCMND char(20)
 )
 BEGIN
     -- Kiểm tra số điện thoại đã tồn tại
     IF EXISTS (SELECT 1 FROM DRIVER WHERE TEL = driverTel) THEN
         SELECT 'Số điện thoại đã được sử dụng' AS message;
     ELSE
-        -- Thêm thông tin tài xế vào bảng DRIVER
-        INSERT INTO DRIVER (ID, TEL, PASS, NAME, AVA, ACC, VEHICLEID, BRANDNAME, CMND, FREE)
-        VALUES (driverID, driverTel, driverPass, driverName, driverAva, driverAcc, driverVehicleID, driverBrandName, driverCMND, driverFree);
-        SELECT 'Tạo tài khoản thành công' AS message;
-    END IF;
+        -- Mã hóa mật khẩu bằng hàm SHA2() với độ dài hash là 30
+		SET driverPass = SHA2(driverPass, 256);
+
+		-- Thêm thông tin tài xế vào bảng DRIVER
+		INSERT INTO DRIVER (ID, TEL, PASS, NAME, AVA, ACC, VEHICLEID, BRANDNAME, CMND, FREE)
+		VALUES (driverID, driverTel, driverPass, driverName, driverAva, driverAcc, driverVehicleID, driverBrandName, driverCMND, TRUE);
+		SELECT 'Tạo tài khoản thành công' AS message;
+		END IF;
 END $$
 DELIMITER ;
 
@@ -141,7 +204,7 @@ DROP PROCEDURE IF EXISTS `UpdateDriver`$$
 CREATE PROCEDURE UpdateDriver(
     IN driverID char(20),
     IN driverTel char(15),
-    IN driverPass char(30),
+    IN driverPass TEXT(256),
     IN driverName nchar(30),
     IN driverAva char(30),
     IN driverAcc char(30),
