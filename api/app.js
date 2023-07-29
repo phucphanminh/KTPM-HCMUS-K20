@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/api/callcenter', callcenterRouter);
-app.use('/api/customer', userRouter);
+app.use('/api/user', userRouter);
 app.use('/api/driver', driverRouter);
 
 //connect to DB

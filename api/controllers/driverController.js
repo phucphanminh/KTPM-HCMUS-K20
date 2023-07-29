@@ -1,13 +1,86 @@
 const driverPromises = require('../promises/driverPromises.js');
 
-const driverInfor = (req, res) => {
-  // Xử lý lấy thông tin tài xế
-  // ...
+const driverInfor = async (req, res) => {
+  const driverID = req.params.driver_id;
+
+  try {
+    const driver = await driverPromises.callGetDriver(driverID);
+    console.log(driver);
+    return res.json(driver);
+  } catch (error) {
+    console.error('Lỗi khi gọi stored procedure:', error);
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy thông tin tài xế.' });
+  }
 };
 
-const driverInforUpdate = (req, res) => {
-  // Xử lý cập nhật thông tin tài xế
-  // ...
+const driverAdd = async (req, res) => {
+  const {
+    driverID,
+    driverTel,
+    driverPass,
+    driverName,
+    driverAva,
+    driverAcc,
+    driverVehicleID,
+    driverBrandName,
+    driverCMND,
+    driverFree
+  } = req.body;
+
+  try {
+    const result = await driverPromises.callAddDriver(
+      driverID,
+      driverTel,
+      driverPass,
+      driverName,
+      driverAva,
+      driverAcc,
+      driverVehicleID,
+      driverBrandName,
+      driverCMND,
+      driverFree
+    );
+
+    // Trả về thông báo thành công
+    return res.status(200).json({ message: result.message });
+  } catch (error) {
+    console.error('Lỗi khi thêm tài xế:', error);
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm tài xế.' });
+  }
+};
+
+const driverInforUpdate = async (req, res) => {
+  const { 
+    driverID, 
+    driverTel, 
+    driverPass, 
+    driverName, 
+    driverAva, 
+    driverAcc, 
+    driverVehicleID, 
+    driverBrandName, 
+    driverCMND, 
+    driverFree 
+  } = req.body;
+
+  try {
+    const result = await driverPromises.callUpdateDriver(
+      driverID, 
+      driverTel, 
+      driverPass, 
+      driverName, 
+      driverAva, 
+      driverAcc, 
+      driverVehicleID, 
+      driverBrandName, 
+      driverCMND, 
+      driverFree
+      );
+    return res.json({ message: result.message });
+  } catch (error) {
+    console.error('Lỗi khi gọi stored procedure:', error);
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật thông tin tài xế.' });
+  }
 };
 
 const driverRides = async (req, res) => {
@@ -38,11 +111,25 @@ const cancelBooking = (req, res) => {
   // ...
 };
 
+const completeRide = async (req, res) => {
+  const { rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime } = req.body;
+
+  try {
+    const result = await callAddRide(rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime);
+    return res.json({ message: result.message });
+  } catch (error) {
+    console.error('Lỗi khi gọi stored procedure:', error);
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm cuốc xe.' });
+  }
+};
+
 module.exports = {
   driverInfor,
+  driverAdd,
   driverInforUpdate,
   driverRides,
   getNextBooking,
   confirmBooking,
   cancelBooking,
+  completeRide,
 };

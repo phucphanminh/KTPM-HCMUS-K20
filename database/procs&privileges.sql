@@ -20,6 +20,30 @@ BEGIN
 END $$
 DELIMITER ;
 
+/* Tạo người dùng */
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `AddUser`$$
+CREATE PROCEDURE AddUser(
+    IN userTel char(15),
+    IN userPass char(30),
+    IN userName nchar(30),
+    IN userAva char(30),
+    IN userVIP bool
+)
+BEGIN
+    -- Kiểm tra số điện thoại đã tồn tại
+    IF EXISTS (SELECT 1 FROM USER WHERE TEL = userTel) THEN
+        SELECT 'Số điện thoại đã được sử dụng' AS message;
+    ELSE
+        -- Thêm thông tin user vào bảng USER
+        INSERT INTO USER (TEL, PASS, NAME, AVA, VIP)
+        VALUES (userTel, userPass, userName, userAva, userVIP);
+        SELECT 'Tạo tài khoản thành công' AS message;
+    END IF;
+END $$
+DELIMITER ;
+
+
 /* Cập nhật thông tin người dùng */
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `UpdateUser`$$
@@ -38,6 +62,7 @@ BEGIN
         AVA = userAva,
         VIP = userVIP
     WHERE TEL = userTel;
+    SELECT 'Cập nhật thông tin thành công' AS message;
 END $$
 DELIMITER ;
 
@@ -81,6 +106,35 @@ BEGIN
 END $$
 DELIMITER ;
 
+/* Tạo tài xế */
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `AddDriver`$$
+CREATE PROCEDURE `AddDriver`(
+    IN driverID char(20),
+    IN driverTel char(15),
+    IN driverPass char(30),
+    IN driverName nchar(30),
+    IN driverAva char(30),
+    IN driverAcc char(30),
+    IN driverVehicleID char(20),
+    IN driverBrandName char(50),
+    IN driverCMND char(20),
+    IN driverFree bool
+)
+BEGIN
+    -- Kiểm tra số điện thoại đã tồn tại
+    IF EXISTS (SELECT 1 FROM DRIVER WHERE TEL = driverTel) THEN
+        SELECT 'Số điện thoại đã được sử dụng' AS message;
+    ELSE
+        -- Thêm thông tin tài xế vào bảng DRIVER
+        INSERT INTO DRIVER (ID, TEL, PASS, NAME, AVA, ACC, VEHICLEID, BRANDNAME, CMND, FREE)
+        VALUES (driverID, driverTel, driverPass, driverName, driverAva, driverAcc, driverVehicleID, driverBrandName, driverCMND, driverFree);
+        SELECT 'Tạo tài khoản thành công' AS message;
+    END IF;
+END $$
+DELIMITER ;
+
+
 /* Cập nhật thông tin tài xế */
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `UpdateDriver`$$
@@ -109,6 +163,7 @@ BEGIN
         CMND = driverCMND,
         FREE = driverFree
     WHERE ID = driverID;
+    SELECT 'Cập nhật thông tin thành công' AS message;
 END $$
 DELIMITER ;
 
@@ -116,13 +171,20 @@ DELIMITER ;
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `CompleteRide`$$
 CREATE PROCEDURE CompleteRide(
-    IN rideID char(20)
+    IN rideID char(20),
+    IN userID char(20),
+    IN cusID char(20),
+    IN driverID char(20),
+    IN pickupLocation char(50),
+    IN dropOffLocation char(50),
+    IN bookTime datetime,
+    IN price float,
+    IN reservedTime datetime
 )
 BEGIN
-    UPDATE RIDE
-    SET
-        STATUS = TRUE
-    WHERE ID = rideID;
+    INSERT INTO RIDE (ID, USE_ID, CUS_ID, DRI_ID, PICKUP, DROPOFF, STATUS, BOOKTIME, PRICE, RESERVEDTIME)
+    VALUES (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, TRUE, bookTime, price, reservedTime);
+    SELECT 'Thêm cuốc xe thành công' AS message;
 END $$
 DELIMITER ;
 

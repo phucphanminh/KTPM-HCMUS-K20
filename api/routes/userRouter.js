@@ -3,13 +3,16 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 
 // Route để lấy thông tin khách hàng
-router.get('/user-info', userController.userInfor);
+router.get('/user-info/:user_tel', userController.userInfor);       //
+
+// Route để thêm khách hàng
+router.post('/add-user', userController.userAdd);  
 
 // Route để cập nhật thông tin khách hàng
-router.put('/user-info/update', userController.userInforUpdate);
+router.put('/user-info/update', userController.userInforUpdate);    //
 
 // Route để lấy lịch sử di chuyển khách hàng
-router.get('/user-rides', userController.userRides);
+router.get('/user-rides/:user_id', userController.userRides);   //
 
 // Route để tạo cuốc xe từ App Khách Hàng
 router.post('/bookings', userController.createBooking);
