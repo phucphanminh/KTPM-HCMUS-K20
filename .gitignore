@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # React Native specific
 node_modules/
 android/build/
@@ -53,3 +54,6 @@ yarn-error.log*
 
 # CocoaPods dependencies
 /Pods
+=======
+node_modules/
+>>>>>>> 6c9b335941551400a6f125d6d41e6ed270810400
