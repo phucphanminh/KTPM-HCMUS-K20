@@ -1,28 +1,23 @@
 import React from 'react';
-import { Box, Image, Button, Text, VStack, Badge } from 'native-base';
+import { Box, Image, HStack, Spinner, Heading } from 'native-base';
 import Images from './../configs/images';
 import myStyles from './../configs/styles';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../routers/navigationParams';
 
-type LoadingScreenProps = NativeStackScreenProps<RootStackParamList, 'Loading'>;
+const textColor:string="secondary.600"
 
-const Loader: React.FC<LoadingScreenProps> = ({ navigation }) => {
+const Loader = () => {
+
+    
     return (
         <Box bg={'primary.600'}
             style={myStyles.flexCenter}>
             <Image source={Images.logo} alt='logo' />
-            <VStack>
-                <Badge bg={"red.600"} zIndex={1} rounded={"full"} alignSelf="flex-end" mb={-4} mr={-4} variant="solid">
-                    3
-                </Badge>
-                <Button colorScheme={"green"} _text={{
-                    fontSize: 14
-                }}>
-                    Notifications
-                </Button>
-            </VStack>
-
+            <HStack alignItems={"center"} space={2}>
+                <Spinner color={textColor} size={"sm"} accessibilityLabel="Loading ..." />
+                <Heading color={textColor} fontSize="2xl" fontWeight={600}>
+                    Loading...
+                </Heading>
+            </HStack>
         </Box>
     );
 };
