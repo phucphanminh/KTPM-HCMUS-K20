@@ -21,7 +21,7 @@ const Routes = () => {
     <>
       {appStatus.isLoading && <Loader />}
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Welcome"  screenOptions={{
+        <Stack.Navigator initialRouteName="SignIn"  screenOptions={{
             headerShown: false, 
           }}>
               <Stack.Screen name="Welcome" component={WelcomeScreen} />
