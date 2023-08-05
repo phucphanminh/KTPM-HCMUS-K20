@@ -8,7 +8,7 @@ import Loader from './../views/Loader';
 import { StoreType } from '../redux';
 import SignIn from '../views/SignIn';
 import SignUp from '../views/SignUp';
-import WelcomeScreen from './../views/WelcomScreen';
+import WelcomeScreen from '../views/WelcomeScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
