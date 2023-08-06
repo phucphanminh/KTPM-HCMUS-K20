@@ -31,7 +31,11 @@ const SignUp: React.FC<SignUpScreenProps>  = ({navigation}) => {
 	const [data, setData] = React.useState<FormFieldSignUp>(initialFormData);
 	const [errorFields,setErrorFields]=React.useState({userName:true,userTel:true,userPass:true})
 	const [showError,setShowError]=React.useState(false)
-	const [showSuccess,setShowSuccess]=React.useState(false)
+	const [showMessage,setShowMessage]=React.useState(false)
+
+	const [message,setMessage]=React.useState("")
+	const [isSuccess,setIsSuccess]=React.useState(true)
+
 	const dispatch=useDispatch()
 
 	const updateField = (fieldName: keyof FormFieldSignUp) => (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
@@ -48,19 +52,28 @@ const SignUp: React.FC<SignUpScreenProps>  = ({navigation}) => {
 		return userName && userTel && userPass;
 	}
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		const isValidated = validateForm();
 	  
 		if (isValidated) {
 		  dispatch(setLoading(true));
-		  // Call API or perform further actions
-		//   UserService.signUp(data)
-		//   dispatch(setLoading(false));
-		  setShowSuccess(true);
+		  try {
+			// Call API or perform further actions
+			const responseData = await UserService.signUp(data);
+			setIsSuccess(true);
+			setMessage(responseData);
+		  } catch (error) {
+			setIsSuccess(false);
+			setMessage(error as string);
+		  } finally {
+			dispatch(setLoading(false));
+			setShowMessage(true);
+		  }
 		} else {
 		  setShowError(true);
 		}
 	  };
+	  
 	  
 	
   	
@@ -74,15 +87,12 @@ const SignUp: React.FC<SignUpScreenProps>  = ({navigation}) => {
 			<VStack w={"90%"} space={4}>
 				<FormControl >
 					<Input  onChange={updateField('userName')} type='text' placeholder='Name' width={"100%"}/>	
-					<FormControl.ErrorMessage>corn acc</FormControl.ErrorMessage>	
 				</FormControl>
 				<FormControl >
 					<Input  onChange={updateField('userTel')}  type='text' placeholder='Phone Number' keyboardType='number-pad'width={"100%"}/>
-					<FormControl.ErrorMessage></FormControl.ErrorMessage>	
 				</FormControl>
 				<FormControl >
 					<Input   onChange={updateField('userPass')} type='password' placeholder='Password'width={"100%"}/>
-					<FormControl.ErrorMessage></FormControl.ErrorMessage>	
 				</FormControl>
 				<HStack alignItems={"center"} space={2} >
 					<CheckCircleIcon color="emerald.500"/>
@@ -146,18 +156,18 @@ const SignUp: React.FC<SignUpScreenProps>  = ({navigation}) => {
 							</Alert>
 					</Modal.Content>
 				</Modal>
-				<Modal isOpen={showSuccess} onClose={() => setShowSuccess(false)}>
+				<Modal isOpen={showMessage} onClose={() => setShowMessage(false)}>
 					<Modal.Content>
 						<Modal.CloseButton />
-							<Alert status={'success'}>
+							<Alert status={isSuccess?"success":"error"}>
 								<VStack alignItems={"center"} space={2}>
 										<Alert.Icon />
-										<Text textAlign={"center"}>
-											Register Success!
+										<Text color={isSuccess?"success.600":"error.600"} textAlign={"center"}>
+											{message}
 										</Text>
-										<Button colorScheme={"success"} variant={"solid"} onPress={()=>navigation.navigate("SignIn")} >
+										{isSuccess&&<Button colorScheme={isSuccess?"success":"error"} variant={"solid"} onPress={()=>navigation.navigate("SignIn")} >
 											Sign in
-										</Button>
+										</Button>}
 									</VStack>
 							</Alert>
 					</Modal.Content>

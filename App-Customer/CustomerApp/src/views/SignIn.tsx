@@ -1,4 +1,4 @@
-import { Flex, Text, Heading, VStack, Input, HStack,  Divider, Button, theme, FormControl, Image, Box, Modal, Alert, CloseIcon } from 'native-base';
+import { Flex, Text, Heading, VStack, Input, HStack, CheckCircleIcon, Divider, Button, theme, FormControl, Image, Box, Modal, Alert, CloseIcon } from 'native-base';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -12,15 +12,14 @@ import { FormFieldSignIn, UserService } from './../services/user/UserService';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
-
 const initialFormData: FormFieldSignIn = {
-	userTel: '',
-	userPass: '',
+	userTel:"",
+	userPass:"",
 };
 
 const ErrorMessage: FormFieldSignIn = {
-	userTel: 'PhoneNumber does not exist\n',
-	userPass: 'Password is wrong\n',
+	userTel: 'Phone number is required\n',
+	userPass: 'Password is required\n',
 };
 
 
@@ -30,7 +29,11 @@ const SignIn: React.FC<SignInScreenProps>  = ({navigation}) => {
 	const [data, setData] = React.useState<FormFieldSignIn>(initialFormData);
 	const [errorFields,setErrorFields]=React.useState({userTel:true,userPass:true})
 	const [showError,setShowError]=React.useState(false)
-	const [showSuccess,setShowSuccess]=React.useState(false)
+	const [showMessage,setShowMessage]=React.useState(false)
+
+	const [message,setMessage]=React.useState("")
+	const [isSuccess,setIsSuccess]=React.useState(true)
+
 	const dispatch=useDispatch()
 
 	const updateField = (fieldName: keyof FormFieldSignIn) => (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
@@ -39,30 +42,35 @@ const SignIn: React.FC<SignInScreenProps>  = ({navigation}) => {
 	  };
 
 	const validateForm=():boolean=>{
-		const userTel=validate.phone(data.userTel)
-		const userPass=validate.password(data.userPass)
+		const userTel=validate.notEmpty(data.userTel)
+		const userPass=validate.notEmpty(data.userPass)
 		setErrorFields({userTel,userPass})
 
-		return userTel && userPass;
+		return  userTel && userPass;
 	}
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		const isValidated = validateForm();
 	  
 		if (isValidated) {
-			dispatch(setLoading(true));
+		  dispatch(setLoading(true));
+		  try {
 			// Call API or perform further actions
-			// UserService.signIn(data)
-			
+			const responseData = await UserService.signIn(data);
+			setIsSuccess(true);
+			setMessage(responseData);
+		  } catch (error) {
+			setIsSuccess(false);
+			setMessage(error as string);
+		  } finally {
 			dispatch(setLoading(false));
-		  setShowSuccess(true);
+			setShowMessage(true);
+		  }
 		} else {
 		  setShowError(true);
 		}
 	  };
-	  
-	
-  	
+
     return (
 		<Flex  margin={"auto"} height={"90%"} >
 			<Heading marginBottom={4}>
@@ -71,35 +79,23 @@ const SignIn: React.FC<SignInScreenProps>  = ({navigation}) => {
 			<Divider  thickness="2" bg={"red.800"} />
 
 			<VStack w={"90%"} space={4}>
-			
+				
 				<FormControl >
-					<Input  onChange={updateField("userTel")}  type='text' placeholder='Phone Number' keyboardType='number-pad'width={"100%"}/>
-					<FormControl.ErrorMessage></FormControl.ErrorMessage>	
+					<Input  onChange={updateField('userTel')}  type='text' placeholder='Phone Number' keyboardType='number-pad'width={"100%"}/>
 				</FormControl>
 				<FormControl >
 					<Input   onChange={updateField('userPass')} type='password' placeholder='Password'width={"100%"}/>
-					<FormControl.ErrorMessage></FormControl.ErrorMessage>	
 				</FormControl>
-				<HStack justifyContent={"flex-end"} alignItems={"center"} space={1} >
-					<Text  color={"secondary.600"} textDecorationLine={'underline'}>
-						Forget password?
+				<HStack justifyContent={"flex-end"} alignItems={"center"}  >
+					<CloseIcon color="error.600"/>
+					<Text  color="error.600" textDecorationLine={'underline'}>
+						Forgot Password?
 					</Text>
-					<CloseIcon color="secondary.600"/>
 				</HStack>
-
-
+		
 				<Button onPress={handleSubmit} backgroundColor={"primary.700"}  rounded="md" >
 					<Text color="white" fontWeight={600}>Sign In</Text>
 				</Button>
-
-				<HStack mx={"auto"}>
-					<Text >
-							First time using app ?
-							<Text color="emerald.500" onPress={()=>navigation.navigate("SignUp")} textDecorationLine={'underline'}>
-							 Sign up
-							</Text>
-					</Text>
-				</HStack>
 
 				{/* Divider */}
 				<Box style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -121,7 +117,17 @@ const SignIn: React.FC<SignInScreenProps>  = ({navigation}) => {
 						<Image style={styles.icon} source={Icons.Apple} alt="icon" />
 					</Button>
 				</HStack>
+
 			
+
+				<HStack mx={"auto"}>
+					<Text >
+							First time? 
+							<Text color={"success.600"} onPress={()=>navigation.navigate("SignUp")} textDecorationLine={'underline'}>
+							 Sign Up
+							</Text>
+					</Text>
+				</HStack>
 
 				<Modal isOpen={showError} onClose={() => setShowError(false)}>
 					<Modal.Content>
@@ -137,13 +143,14 @@ const SignIn: React.FC<SignInScreenProps>  = ({navigation}) => {
 							</Alert>
 					</Modal.Content>
 				</Modal>
-				<Modal isOpen={showSuccess} onClose={() => setShowSuccess(false)}>
+				<Modal isOpen={showMessage} onClose={() => setShowMessage(false)}>
 					<Modal.Content>
-							<Alert status={'success'}>
+						<Modal.CloseButton />
+							<Alert status={isSuccess?"success":"error"}>
 								<VStack alignItems={"center"} space={2}>
 										<Alert.Icon />
-										<Text textAlign={"center"}>
-											Login Success!
+										<Text color={isSuccess?"success.600":"error.600"} textAlign={"center"}>
+											{message}
 										</Text>
 									</VStack>
 							</Alert>
