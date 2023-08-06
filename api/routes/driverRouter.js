@@ -13,11 +13,12 @@ router.get('/driver-info/:driver_id', driverController.driverInfor);        //
 // {
 //     "ID": "D2",
 //     "TEL": "2222222222",
-//     "PASS": "Random_Password_2",
+//     "PASS": "4420e33a9d750d6aa50e7fa57cb0037b68ab9970f78f2c177f3e34716e183ee8",
 //     "NAME": "William Martinez",
 //     "AVA": "D2.png",
 //     "ACC": "3150782496",
 //     "VEHICLEID": "36G8-67890",
+//     "VEHICLETYPE": "Car 7 seats",
 //     "BRANDNAME": "Mercedes-Benz E-Class",
 //     "CMND": "034567890109",
 //     "FREE": 1

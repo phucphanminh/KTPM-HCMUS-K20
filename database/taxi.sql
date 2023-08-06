@@ -32,6 +32,7 @@ create table DRIVER
    AVA                  char(30) not null  comment '',
    ACC                  char(30) not null  comment '',
    VEHICLEID            char(20) not null  comment '',
+   VEHICLETYPE          char(50) not null  comment '',
    BRANDNAME            char(50) not null  comment '',
    CMND         		char(20) not null  comment '',
    FREE                 bool not null  comment '',
