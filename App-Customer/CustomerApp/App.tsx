@@ -4,7 +4,7 @@ import { NativeBaseProvider } from 'native-base';
 import { SafeAreaView } from 'react-native';
 import Routes from './src/routers/Routes';
 import { Provider } from 'react-redux';
-import { StoreType, store } from './src/redux/index';
+import {  store } from './src/redux/index';
 
 
 
@@ -17,7 +17,7 @@ const App = () => {
     
       <NativeBaseProvider theme={myTheme}>
         <Provider store={store}>
-          <SafeAreaView style={{flex:1}}>
+          <SafeAreaView style={{flex:1}} >
             <Routes/>
           </SafeAreaView>
         </Provider>

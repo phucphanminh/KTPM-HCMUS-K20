@@ -1,12 +1,11 @@
 import React from 'react';
 import { Box, Image, HStack, Spinner, Heading } from 'native-base';
-import Images from './../configs/images';
+import {Images} from './../configs/images';
 import myStyles from './../configs/styles';
 
 const textColor:string="secondary.600"
 
 const Loader = () => {
-
     
     return (
         <Box bg={'primary.600'}

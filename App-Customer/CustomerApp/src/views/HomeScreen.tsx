@@ -1,9 +1,8 @@
 import React from 'react';
 import myStyles from '../configs/styles';
-import {  Text,Box } from 'native-base';
+import { Text, Box, Button } from 'native-base';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../routers/navigationParams';
-import Button from './../components/Button/Button';
 import { useDispatch } from 'react-redux';
 import { setLoading } from './../redux/reducers';
  
