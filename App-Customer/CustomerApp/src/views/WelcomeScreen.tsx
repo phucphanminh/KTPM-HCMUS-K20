@@ -19,50 +19,45 @@ import {StyleSheet} from 'react-native';
 
 type WelcomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
 
-const WelcomeScreen: React.FC<WelcomeScreenProps> = ({navigation}) => {
-  const dispatch = useDispatch();
+const WelcomeScreen: React.FC<WelcomeScreenProps>  = ({navigation}) => {
 
-  const navigateSignIn = () => {
-    navigation.navigate('SignIn');
-  };
-  const navigateSignUp = () => {
-    navigation.navigate('SignUp');
-  };
-  return (
-    <Flex style={myStyles.flexCenter} bgColor={'white'}>
-      <Flex
-        flexDirection={'column'}
-        justifyContent={'space-between'}
-        height={'90%'}>
-        <VStack justifyContent={'center'} alignItems={'center'} space={2}>
-          <Image source={Images.welcome} alt="bg" />
-          <Text style={styles.title}>Welcome</Text>
-          <Text style={styles.subTitle}>Have a better sharing experience</Text>
-        </VStack>
 
-        <VStack space={2} width="80" marginX="auto">
-          <Button
-            backgroundColor={'primary.700'}
-            onPress={navigateSignUp}
-            rounded="md">
-            <Text color="white" fontWeight={600}>
-              Create an account
-            </Text>
-          </Button>
-          <Button
-            onPress={navigateSignIn}
-            rounded="md"
-            variant={'outline'}
-            borderColor={'primary.600'}
-            borderWidth={1}>
-            <Text fontWeight={600} color={'primary.800'}>
-              Log In
-            </Text>
-          </Button>
-        </VStack>
-      </Flex>
-    </Flex>
-  );
+	const dispatch=useDispatch();
+
+	
+
+	const navigateSignIn=()=>{
+		navigation.navigate("SignIn")
+	}
+	const navigateSignUp=()=>{
+		navigation.navigate("SignUp")
+	}
+    return (
+      <Flex style={myStyles.flexCenter} bgColor={"white"}>
+		 <Flex flexDirection={"column"} justifyContent={"space-between"} height={"90%"}  >
+			 <VStack justifyContent={"center"} alignItems={"center"} space={2}>
+			 	<Image source={Images.welcome} alt='bg' />
+				<Text style={styles.title}>
+					Welcome
+				</Text>
+				<Text style={styles.subTitle}>
+					Have a better sharing experience
+				</Text>
+			 </VStack>
+
+
+			 <VStack space={2} width="80" marginX="auto" >
+				<Button onPress={navigateSignUp} rounded="md" >
+					<Text color="white" fontWeight={600}>Create an account</Text>
+				</Button>
+				<Button onPress={navigateSignIn} rounded="md" variant={"outline"} borderColor={"primary.600"} borderWidth={1}>
+					<Text fontWeight={600} color={"primary.800"}>Log In</Text>
+				</Button>
+			 </VStack>	
+		 </Flex>
+		
+	  </Flex>
+    );
 };
 
 const styles = StyleSheet.create({

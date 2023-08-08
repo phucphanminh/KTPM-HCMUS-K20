@@ -28,3 +28,4 @@ export const Icons = {
   Facebook,
   Gmail,
 };
+export default Images;
