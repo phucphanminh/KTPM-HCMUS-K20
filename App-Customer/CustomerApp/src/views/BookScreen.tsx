@@ -19,6 +19,7 @@ import {useDispatch} from 'react-redux';
 import {setStep} from '../redux/reducers';
 import {Button} from 'native-base';
 import {Divider} from 'native-base';
+import {Google_Map_Api_Key} from '@env';
 
 const DATA: ItemData[] = [
   {

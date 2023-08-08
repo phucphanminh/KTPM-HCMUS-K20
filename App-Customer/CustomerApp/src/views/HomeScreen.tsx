@@ -13,6 +13,7 @@ import {
   Platform,
 } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
+import {Google_Map_Api_Key} from '@env';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../routers/navigationParams';
@@ -190,7 +191,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
                 <Image source={Images.iconfind}></Image>
               </View>
             </View>
-            <Button className="my-2 rounded-[10px] px-5 h-[25%] w-[30%] ">
+            <Button
+              className="my-2 rounded-[10px] px-5 h-[25%] w-[30%] "
+              onPress={() => {
+                console.log(Google_Map_Api_Key);
+              }}>
               <Text className="text-white text-xs">Comfirm</Text>
             </Button>
           </View>

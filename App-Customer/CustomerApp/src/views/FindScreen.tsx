@@ -91,7 +91,7 @@ const FindScreen: React.FC<FindScreenProps> = ({navigation}) => {
             language: 'en',
           }}
           minLength={2}
-          debounce={400}
+          debounce={200}
           isRowScrollable={false}
           renderRow={rowData => {
             const title = rowData.structured_formatting.main_text;

@@ -6,7 +6,7 @@ type ItemProps = {title: string; address: string; time: string};
 const ItemCustom = ({title, address, time}: ItemProps) => {
   return (
     <View
-      className="w-full"
+      className="w-full h-[50%] overflow-auto"
       // onPress={() => {
       //   navigation.navigate('Book');
       // }}
