@@ -5,7 +5,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../routers/navigationParams';
 import { setLoading } from '../redux/reducers';
 import myStyles from '../configs/styles';
-import Images from '../configs/images';
+import {Images} from '../configs/images';
 import { StyleSheet } from 'react-native';
 
 type WelcomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
@@ -14,8 +14,6 @@ const WelcomeScreen: React.FC<WelcomeScreenProps>  = ({navigation}) => {
 
 
 	const dispatch=useDispatch();
-
-	
 
 	const navigateSignIn=()=>{
 		navigation.navigate("SignIn")
@@ -38,7 +36,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps>  = ({navigation}) => {
 
 
 			 <VStack space={2} width="80" marginX="auto" >
-				<Button onPress={navigateSignUp} rounded="md" >
+				<Button backgroundColor={"primary.700"} onPress={navigateSignUp} rounded="md" >
 					<Text color="white" fontWeight={600}>Create an account</Text>
 				</Button>
 				<Button onPress={navigateSignIn} rounded="md" variant={"outline"} borderColor={"primary.600"} borderWidth={1}>
