@@ -56,7 +56,7 @@ const DriverProfile: React.FC<DriverProps> = ({ tel }) => {
 				</HStack>
 
 				<VStack alignItems={"center"} space={2}>
-					<Image style={styles.image} source={Images.car} alt='car_type' />
+					<Image style={styles.image} source={Images.carType} alt='car_type' />
 					<Text fontSize={24} fontWeight={600} color={"secondary.600"}>Chevrolet Corvette - 4 Seats</Text>
 					<Divider width={"75%"} />
 					<Text fontSize={20} color={"gray.700"}>51C1-12345</Text>

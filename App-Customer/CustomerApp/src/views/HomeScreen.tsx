@@ -212,7 +212,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
               </View>
             </View>
             <Button
-              className="my-2 rounded-[10px] px-5 h-[25%] w-[30%] "
+              className="my-2 rounded-[10px] px-5 h-[40px] w-[30%] "
               onPress={() => {
                 console.log(Google_Map_Api_Key);
               }}>

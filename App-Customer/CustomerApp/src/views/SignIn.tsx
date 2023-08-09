@@ -113,35 +113,20 @@ const SignIn: React.FC<SignInScreenProps> = ({navigation}) => {
           </Text>
         </Button>
 
-        {/* Divider */}
-        <Box style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Box
-            style={{
-              flex: 1,
-              height: 1.5,
-              backgroundColor: theme.colors.gray[400],
-            }}
-          />
-          <Box>
-            <Text
-              style={{
-                width: 'auto',
-                paddingHorizontal: 10,
-                textAlign: 'center',
-              }}>
-              or
-            </Text>
-          </Box>
-          <Box
-            style={{
-              flex: 1,
-              height: 1.5,
-              backgroundColor: theme.colors.gray[400],
-            }}
-          />
-        </Box>
+        <HStack mx={"auto"}>
+					<Text >
+							First time?  
+							<Text color={"success.600"} onPress={()=>navigation.navigate("SignUp")} textDecorationLine={'underline'}>
+							 Sign Up
+							</Text>
+					</Text>
+				</HStack>
 
-				<Divider/>
+				<Divider>
+					<Text style={{width: "auto", paddingHorizontal:10, textAlign: 'center'}}>or</Text>
+				</Divider>
+
+
 					
 				<HStack space={2}  mx={"auto"} alignItems={"center"}>
 					<Button  style={styles.iconBtn} variant={'outline'}>

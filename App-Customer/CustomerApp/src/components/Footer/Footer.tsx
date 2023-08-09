@@ -14,7 +14,7 @@ const Footer: React.FC<FooterProps> = () => {
 	const [selected, setSelected] = React.useState(0);
 	const navigation =	useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   
-	const menu: (keyof RootStackParamList)[] = ["Welcome", "Ride", "SignIn", "SignUp"];
+	const menu: (keyof RootStackParamList)[] = ["Home", "Ride", "Welcome", "Find"];
   
 	const handlePress = (index: number, item: keyof RootStackParamList) => (event: GestureResponderEvent) => {
 	  setSelected(index);

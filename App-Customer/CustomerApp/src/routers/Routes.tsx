@@ -28,7 +28,7 @@ const Routes = () => {
       {appStatus.isLoading && <Loader />}
       <NavigationContainer>
         <SlideMessage placement='top' status={slideMessage.status} message={slideMessage.message} key={slideMessage.key}/>
-        <Stack.Navigator initialRouteName="Ride"  screenOptions={{
+        <Stack.Navigator initialRouteName="Home" screenOptions={{
             headerShown: false, 
           }}>
               <Stack.Screen name="Welcome" component={WelcomeScreen} />
