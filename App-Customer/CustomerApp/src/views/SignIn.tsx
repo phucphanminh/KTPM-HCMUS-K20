@@ -1,31 +1,15 @@
-import {
-  Flex,
-  Text,
-  Heading,
-  VStack,
-  Input,
-  HStack,
-  CheckCircleIcon,
-  Divider,
-  Button,
-  theme,
-  FormControl,
-  Image,
-  Box,
-  Modal,
-  Alert,
-  CloseIcon,
-} from 'native-base';
+import { Flex, Text, Heading, VStack, Input, HStack, CheckCircleIcon,  Button, theme, FormControl, Image, Box, Modal, Alert, CloseIcon } from 'native-base';
 import React from 'react';
-import {useDispatch} from 'react-redux';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../routers/navigationParams';
-import {setLoading} from './../redux/reducers';
-import {Icons} from '../configs/images';
-import {StyleSheet} from 'react-native';
-import {NativeSyntheticEvent, TextInputChangeEventData} from 'react-native';
-import {validate} from './../helpers/validate';
-import {FormFieldSignIn, UserService} from './../services/user/UserService';
+import { useDispatch } from 'react-redux';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../routers/navigationParams';
+import { setLoading } from './../redux/reducers';
+import { Icons } from '../configs/images';
+import { StyleSheet } from 'react-native';
+import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
+import { validate } from './../helpers/validate';
+import { FormFieldSignIn, UserService } from './../services/user/UserService';
+import Divider from './../components/Divider';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
@@ -93,7 +77,7 @@ const SignIn: React.FC<SignInScreenProps> = ({navigation}) => {
   return (
     <Flex margin={'auto'} height={'90%'}>
       <Heading marginBottom={4}>Sign in</Heading>
-      <Divider thickness="2" bg={'red.800'} />
+      <Divider backgroundColor={'red.800'} />
 
       <VStack w={'90%'} space={4}>
         <FormControl>
@@ -129,57 +113,32 @@ const SignIn: React.FC<SignInScreenProps> = ({navigation}) => {
           </Text>
         </Button>
 
-        {/* Divider */}
-        <Box style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Box
-            style={{
-              flex: 1,
-              height: 1.5,
-              backgroundColor: theme.colors.gray[400],
-            }}
-          />
-          <Box>
-            <Text
-              style={{
-                width: 'auto',
-                paddingHorizontal: 10,
-                textAlign: 'center',
-              }}>
-              or
-            </Text>
-          </Box>
-          <Box
-            style={{
-              flex: 1,
-              height: 1.5,
-              backgroundColor: theme.colors.gray[400],
-            }}
-          />
-        </Box>
+        <HStack mx={"auto"}>
+					<Text >
+							First time?  
+							<Text color={"success.600"} onPress={()=>navigation.navigate("SignUp")} textDecorationLine={'underline'}>
+							 Sign Up
+							</Text>
+					</Text>
+				</HStack>
 
-        <HStack space={2} mx={'auto'} alignItems={'center'}>
-          <Button style={styles.iconBtn} variant={'outline'}>
-            <Image style={styles.icon} source={Icons.Gmail} alt="icon" />
-          </Button>
-          <Button style={styles.iconBtn} variant={'outline'}>
-            <Image style={styles.icon} source={Icons.Facebook} alt="icon" />
-          </Button>
-          <Button style={styles.iconBtn} variant={'outline'}>
-            <Image style={styles.icon} source={Icons.Apple} alt="icon" />
-          </Button>
-        </HStack>
+				<Divider>
+					<Text style={{width: "auto", paddingHorizontal:10, textAlign: 'center'}}>or</Text>
+				</Divider>
 
-        <HStack mx={'auto'}>
-          <Text>
-            First time?
-            <Text
-              color={'success.600'}
-              onPress={() => navigation.navigate('SignUp')}
-              textDecorationLine={'underline'}>
-              Sign Up
-            </Text>
-          </Text>
-        </HStack>
+
+					
+				<HStack space={2}  mx={"auto"} alignItems={"center"}>
+					<Button  style={styles.iconBtn} variant={'outline'}>
+						<Image style={styles.icon} source={Icons.Gmail} alt="icon" />
+					</Button>
+					<Button style={styles.iconBtn} variant={'outline'}>
+						<Image style={styles.icon} source={Icons.Facebook} alt="icon" />
+					</Button>
+					<Button style={styles.iconBtn} variant={'outline'}>
+						<Image style={styles.icon} source={Icons.Apple} alt="icon" />
+					</Button>
+				</HStack>
 
         <Modal isOpen={showError} onClose={() => setShowError(false)}>
           <Modal.Content>

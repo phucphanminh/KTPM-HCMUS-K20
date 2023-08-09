@@ -8,4 +8,5 @@ export type RootStackParamList = {
   Welcome: undefined;
   Book: undefined;
   SelectWallet: undefined;
+  Ride: undefined;
 };
