@@ -42,6 +42,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
   useEffect(() => {
     const requestLocationPermission = async () => {
+      console.log("request Location");
       if (Platform.OS === 'ios') {
         getOneTimeLocation();
         subscribeLocationLocation();
@@ -81,12 +82,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
     Geolocation.getCurrentPosition(
       //Will give you the current location
       position => {
+        console.log("get position success");
         setLocationStatus('You are Here');
         const currentLongitude = position.coords.longitude;
         //getting the Longitude from the location json
         const currentLatitude = position.coords.latitude;
         //getting the Latitude from the location json
-
+        console.log(position);
         const currentDescription = JSON.stringify(
           position.coords.altitudeAccuracy,
         );
@@ -99,6 +101,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
       },
       error => {
         setLocationStatus(error.message);
+        console.log(error.message)
       },
       {enableHighAccuracy: false, timeout: 30000, maximumAge: 1000},
     );
@@ -145,7 +148,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         <MapView
           ref={mapRef}
           className=" absolute w-full h-full"
-          mapType="mutedStandard"
           initialRegion={{
             latitude: origin.location.lat,
             longitude: origin.location.lng,
@@ -163,8 +165,26 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
           />
         </MapView>
       )}
+            {/* <MapView
+             className=" absolute w-full h-full"
+        initialRegion={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+        <Marker 
+        coordinate={
+          {
+            latitude: 37.78825,
+            longitude: -122.4324,
+          }
+        }
+        />
+      </MapView> */}
 
-      <View className=" bottom-9  absolute h-[17%]  w-full">
+      <View className=" bottom-9  absolute h-[20%]  w-full">
         <View className="flex flex-col items-center justify-end h-full w-full ">
           <View className="flex flex-col items-center justify-start bg-[#FFFBE7] border-2 border-[#F3BD06] rounded-[15px] h-[95%] w-[90%] mb-7 ">
             {/* <View className="relative  h-[30%] w-[95%] mt-2">

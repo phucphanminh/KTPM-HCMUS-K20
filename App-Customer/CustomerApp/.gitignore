@@ -42,10 +42,8 @@ yarn-error.log
 # macos
 .DS_Store
 
-
-.env
-
-
+/ios
+/android
 
 # Ruby / CocoaPods
 /ios/Pods/

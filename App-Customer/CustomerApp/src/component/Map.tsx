@@ -13,6 +13,7 @@ import {useDispatch} from 'react-redux';
 import {setStep} from '../redux/reducers';
 
 import {Images} from '../configs/images';
+import myTheme from './../configs/Theme';
 
 const Map = () => {
   const origin = useSelector(selectorigin);
@@ -35,7 +36,6 @@ const Map = () => {
     <MapView
       ref={mapRef}
       className="flex w-full h-[50%]"
-      mapType="mutedStandard"
       initialRegion={{
         latitude: origin.location.lat,
         longitude: origin.location.lng,
@@ -73,11 +73,11 @@ const Map = () => {
           destination={destination.description}
           apikey={Google_Map_Api_Key}
           strokeWidth={3}
-          strokeColor="black"
+          strokeColor={myTheme.colors.secondary[500]}
         />
       )}
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           dispatch(
             setStep({
@@ -91,7 +91,7 @@ const Map = () => {
           <Image source={Images.angle}></Image>
           <Text className="text-bold">Back</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </MapView>
   );
 };
