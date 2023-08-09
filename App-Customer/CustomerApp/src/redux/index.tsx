@@ -1,9 +1,10 @@
 import { createStore, combineReducers} from 'redux';
-import { StatusReducer } from './reducers';
+import { MessageReducer, StatusReducer } from './reducers';
 
 
 const rootReducers=combineReducers({
-	status: StatusReducer
+	status: StatusReducer,
+	slideMessage:MessageReducer,
 })
 
 export const store=createStore(rootReducers)

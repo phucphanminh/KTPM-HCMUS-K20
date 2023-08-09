@@ -5,5 +5,6 @@ export type RootStackParamList = {
     SignIn: undefined;
     SignUp: undefined;
     Welcome: undefined;
+    Ride: undefined;
   };
   

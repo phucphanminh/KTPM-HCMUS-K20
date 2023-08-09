@@ -1,4 +1,4 @@
-import { Flex, Text, Heading, VStack, Input, HStack, CheckCircleIcon, Divider, Button, theme, FormControl, Image, Box, Modal, Alert, CloseIcon } from 'native-base';
+import { Flex, Text, Heading, VStack, Input, HStack, CheckCircleIcon,  Button, theme, FormControl, Image, Box, Modal, Alert, CloseIcon } from 'native-base';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -9,6 +9,7 @@ import { StyleSheet } from 'react-native';
 import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { validate } from './../helpers/validate';
 import { FormFieldSignIn, UserService } from './../services/user/UserService';
+import Divider from './../components/Divider';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
@@ -76,7 +77,7 @@ const SignIn: React.FC<SignInScreenProps>  = ({navigation}) => {
 			<Heading marginBottom={4}>
 				Sign in
 			</Heading>
-			<Divider  thickness="2" bg={"red.800"} />
+			
 
 			<VStack w={"90%"} space={4}>
 				
@@ -97,15 +98,8 @@ const SignIn: React.FC<SignInScreenProps>  = ({navigation}) => {
 					<Text color="white" fontWeight={600}>Sign In</Text>
 				</Button>
 
-				{/* Divider */}
-				<Box style={{flexDirection: 'row', alignItems: 'center'}}>
-					<Box style={{flex: 1, height: 1.5, backgroundColor: theme.colors.gray[400]}} />
-					<Box>
-						<Text style={{width: "auto", paddingHorizontal:10, textAlign: 'center'}}>or</Text>
-					</Box>
-					<Box style={{flex: 1, height: 1.5, backgroundColor: theme.colors.gray[400]}} />
-				</Box>
-
+				<Divider/>
+					
 				<HStack space={2}  mx={"auto"} alignItems={"center"}>
 					<Button  style={styles.iconBtn} variant={'outline'}>
 						<Image style={styles.icon} source={Icons.Gmail} alt="icon" />
