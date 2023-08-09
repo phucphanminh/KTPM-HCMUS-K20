@@ -63,7 +63,7 @@ const DriverProfile: React.FC<DriverProps> = ({ tel }) => {
 				</VStack>
 			</VStack>
 			
-			<Button onPress={()=>dispatch(showMessage(StatusColor.success,"The Driver is on the way!"))}>
+			<Button onPress={()=>dispatch(showMessage(StatusColor.info,"The Driver is not here!"))}>
 				Click	
 			</Button>
 		</>
