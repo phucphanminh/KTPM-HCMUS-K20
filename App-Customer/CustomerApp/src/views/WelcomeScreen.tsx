@@ -1,12 +1,21 @@
-import { Container, Text, Flex, VStack, Image, theme, useTheme, Button } from 'native-base';
+import {
+  Container,
+  Text,
+  Flex,
+  VStack,
+  Image,
+  theme,
+  useTheme,
+  Button,
+} from 'native-base';
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../routers/navigationParams';
-import { setLoading } from '../redux/reducers';
+import {useDispatch} from 'react-redux';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../routers/navigationParams';
+import {setLoading} from '../redux/reducers';
 import myStyles from '../configs/styles';
 import {Images} from '../configs/images';
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 type WelcomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
 
@@ -14,6 +23,8 @@ const WelcomeScreen: React.FC<WelcomeScreenProps>  = ({navigation}) => {
 
 
 	const dispatch=useDispatch();
+
+	
 
 	const navigateSignIn=()=>{
 		navigation.navigate("SignIn")
@@ -36,7 +47,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps>  = ({navigation}) => {
 
 
 			 <VStack space={2} width="80" marginX="auto" >
-				<Button backgroundColor={"primary.700"} onPress={navigateSignUp} rounded="md" >
+				<Button onPress={navigateSignUp} rounded="md" >
 					<Text color="white" fontWeight={600}>Create an account</Text>
 				</Button>
 				<Button onPress={navigateSignIn} rounded="md" variant={"outline"} borderColor={"primary.600"} borderWidth={1}>
@@ -49,22 +60,21 @@ const WelcomeScreen: React.FC<WelcomeScreenProps>  = ({navigation}) => {
     );
 };
 
-const styles=StyleSheet.create({
-	title:{
-		fontSize:24,
-		fontWeight:"500",
-		color:"black",
-		lineHeight:30,
-		textAlign:"center",
-	},
-	subTitle:{
-		fontSize:16,
-		fontWeight:"400",
-		color: theme.colors.gray[400],
-		lineHeight:24,
-		textAlign:"center",
-	}
-})
-
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 24,
+    fontWeight: '500',
+    color: 'black',
+    lineHeight: 30,
+    textAlign: 'center',
+  },
+  subTitle: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: theme.colors.gray[400],
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+});
 
 export default WelcomeScreen;
