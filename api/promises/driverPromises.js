@@ -10,7 +10,7 @@ const callAuthenticateDriver = (driverTel, driverPass) => {
           reject(error);
         } else {
           // Lấy dữ liệu từ kết quả của câu SELECT
-          console.log(results[0][0]);
+          // console.log(results[0][0]);
           resolve(results[0][0]);
         }
       }
@@ -42,12 +42,13 @@ const callAddDriver = (
   driverAva,
   driverAcc,
   driverVehicleID,
+  driverVehicleType,
   driverBrandName,
   driverCMND
 ) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL AddDriver(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'CALL AddDriver(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         driverID,
         driverTel,
@@ -56,6 +57,7 @@ const callAddDriver = (
         driverAva,
         driverAcc,
         driverVehicleID,
+        driverVehicleType,
         driverBrandName,
         driverCMND
       ],
@@ -78,13 +80,14 @@ const callUpdateDriver = (
   driverAva, 
   driverAcc, 
   driverVehicleID, 
+  driverVehicleType,
   driverBrandName, 
   driverCMND, 
   driverFree
   ) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL UpdateDriver(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'CALL UpdateDriver(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         driverID, 
         driverTel, 
@@ -93,6 +96,7 @@ const callUpdateDriver = (
         driverAva, 
         driverAcc, 
         driverVehicleID, 
+        driverVehicleType,
         driverBrandName, 
         driverCMND, 
         driverFree

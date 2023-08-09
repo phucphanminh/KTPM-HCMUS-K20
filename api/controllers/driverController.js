@@ -34,6 +34,7 @@ const driverAdd = async (req, res) => {
     driverAva,
     driverAcc,
     driverVehicleID,
+    driverVehicleType,
     driverBrandName,
     driverCMND
   } = req.body;
@@ -47,6 +48,7 @@ const driverAdd = async (req, res) => {
       driverAva,
       driverAcc,
       driverVehicleID,
+      driverVehicleType,
       driverBrandName,
       driverCMND
     );
@@ -67,7 +69,8 @@ const driverInforUpdate = async (req, res) => {
     driverName, 
     driverAva, 
     driverAcc, 
-    driverVehicleID, 
+    driverVehicleID,
+    driverVehicleType,
     driverBrandName, 
     driverCMND, 
     driverFree 
@@ -81,7 +84,8 @@ const driverInforUpdate = async (req, res) => {
       driverName, 
       driverAva, 
       driverAcc, 
-      driverVehicleID, 
+      driverVehicleID,
+      driverVehicleType,
       driverBrandName, 
       driverCMND, 
       driverFree

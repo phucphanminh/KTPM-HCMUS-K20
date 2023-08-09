@@ -178,6 +178,7 @@ CREATE PROCEDURE `AddDriver`(
     IN driverAva char(30),
     IN driverAcc char(30),
     IN driverVehicleID char(20),
+    IN driverVehicleType char(50),
     IN driverBrandName char(50),
     IN driverCMND char(20)
 )
@@ -190,8 +191,8 @@ BEGIN
 		SET driverPass = SHA2(driverPass, 256);
 
 		-- Thêm thông tin tài xế vào bảng DRIVER
-		INSERT INTO DRIVER (ID, TEL, PASS, NAME, AVA, ACC, VEHICLEID, BRANDNAME, CMND, FREE)
-		VALUES (driverID, driverTel, driverPass, driverName, driverAva, driverAcc, driverVehicleID, driverBrandName, driverCMND, TRUE);
+		INSERT INTO DRIVER (ID, TEL, PASS, NAME, AVA, ACC, VEHICLEID, VEHICLETYPE, BRANDNAME, CMND, FREE)
+		VALUES (driverID, driverTel, driverPass, driverName, driverAva, driverAcc, driverVehicleID, driverVehicleType, driverBrandName, driverCMND, TRUE);
 		SELECT 'Tạo tài khoản thành công' AS message;
 		END IF;
 END $$
@@ -209,6 +210,7 @@ CREATE PROCEDURE UpdateDriver(
     IN driverAva char(30),
     IN driverAcc char(30),
     IN driverVehicleID char(20),
+    IN driverVehicleType char(50),
     IN driverBrandName char(50),
     IN driverCMND char(20),
     IN driverFree bool
@@ -222,6 +224,7 @@ BEGIN
         AVA = driverAva,
         ACC = driverAcc,
         VEHICLEID = driverVehicleID,
+        VEHICLETYPE = driverVehicleType,
         BRANDNAME = driverBrandName,
         CMND = driverCMND,
         FREE = driverFree
