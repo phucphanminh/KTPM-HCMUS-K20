@@ -86,7 +86,7 @@ CREATE PROCEDURE UpdateUser(
 BEGIN
     UPDATE USER
     SET
-        PASS = userPass,
+        PASS = SHA2(userPass, 256),
         NAME = userName,
         AVA = userAva,
         VIP = userVIP
@@ -219,7 +219,7 @@ BEGIN
     UPDATE DRIVER
     SET
         TEL = driverTel,
-        PASS = driverPass,
+        PASS = SHA2(driverPass, 256),
         NAME = driverName,
         AVA = driverAva,
         ACC = driverAcc,
