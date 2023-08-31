@@ -1,16 +1,15 @@
-const db = require('../config.js');
+const createTcpPool = require('../config.js'); 
 
-const callAuthenticateDriver = (driverTel, driverPass) => {
+const callAuthenticateDriver = async (driverTel, driverPass) => {
+  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    db.query(
+    pool.query(
       'CALL AuthenticateDriver(?, ?)',
       [driverTel, driverPass],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          // Lấy dữ liệu từ kết quả của câu SELECT
-          // console.log(results[0][0]);
           resolve(results[0][0]);
         }
       }
@@ -18,9 +17,10 @@ const callAuthenticateDriver = (driverTel, driverPass) => {
   });
 };
 
-const callGetDriver = (driverID) => {
+const callGetDriver = async (driverID) => {
+  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    db.query(
+    pool.query(
       'CALL GetDriver(?)',
       [driverID],
       (error, results) => {
@@ -34,7 +34,7 @@ const callGetDriver = (driverID) => {
   });
 };
 
-const callAddDriver = (
+const callAddDriver = async (
   driverID,
   driverTel,
   driverPass,
@@ -46,8 +46,9 @@ const callAddDriver = (
   driverBrandName,
   driverCMND
 ) => {
+  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    db.query(
+    pool.query(
       'CALL AddDriver(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         driverID,
@@ -72,7 +73,7 @@ const callAddDriver = (
   });
 };
 
-const callUpdateDriver = (
+const callUpdateDriver = async (
   driverID, 
   driverTel, 
   driverPass, 
@@ -84,9 +85,10 @@ const callUpdateDriver = (
   driverBrandName, 
   driverCMND, 
   driverFree
-  ) => {
+) => {
+  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    db.query(
+    pool.query(
       'CALL UpdateDriver(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         driverID, 
@@ -112,9 +114,10 @@ const callUpdateDriver = (
   });
 };
 
-const callGetRidesByDriverID = (driverID) => {
+const callGetRidesByDriverID = async (driverID) => {
+  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    db.query(
+    pool.query(
       'CALL GetRidesByDriverID(?)',
       [driverID],
       (error, results) => {
@@ -128,16 +131,16 @@ const callGetRidesByDriverID = (driverID) => {
   });
 };
 
-const callCompleteRide = (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime) => {
+const callCompleteRide = async (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime) => {
+  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    db.query(
+    pool.query(
       'CALL CompleteRide(?, ?, ?, ?, ?, ?, ?, ?, ?);',
       [rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          // Lấy dữ liệu từ kết quả của câu SELECT
           resolve(results[0][0]);
         }
       }
