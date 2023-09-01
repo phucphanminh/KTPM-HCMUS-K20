@@ -1,9 +1,8 @@
-const createTcpPool = require('../config.js'); 
+const db = require('../config.js'); 
 
 const callAuthenticateDriver = async (driverTel, driverPass) => {
-  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    pool.query(
+    db.query(
       'CALL AuthenticateDriver(?, ?)',
       [driverTel, driverPass],
       (error, results) => {
@@ -18,9 +17,8 @@ const callAuthenticateDriver = async (driverTel, driverPass) => {
 };
 
 const callGetDriver = async (driverID) => {
-  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    pool.query(
+    db.query(
       'CALL GetDriver(?)',
       [driverID],
       (error, results) => {
@@ -46,9 +44,8 @@ const callAddDriver = async (
   driverBrandName,
   driverCMND
 ) => {
-  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    pool.query(
+    db.query(
       'CALL AddDriver(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         driverID,
@@ -86,9 +83,8 @@ const callUpdateDriver = async (
   driverCMND, 
   driverFree
 ) => {
-  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    pool.query(
+    db.query(
       'CALL UpdateDriver(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         driverID, 
@@ -115,9 +111,8 @@ const callUpdateDriver = async (
 };
 
 const callGetRidesByDriverID = async (driverID) => {
-  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    pool.query(
+    db.query(
       'CALL GetRidesByDriverID(?)',
       [driverID],
       (error, results) => {
@@ -132,9 +127,8 @@ const callGetRidesByDriverID = async (driverID) => {
 };
 
 const callCompleteRide = async (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime) => {
-  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    pool.query(
+    db.query(
       'CALL CompleteRide(?, ?, ?, ?, ?, ?, ?, ?, ?);',
       [rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime],
       (error, results) => {
