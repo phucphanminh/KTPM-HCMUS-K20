@@ -21,40 +21,19 @@ import ItemWallet from '../component/ItemWallet';
 const DATA: ItemData[] = [
   {
     id: '1',
-    title: 'AndreCar',
-    detail: 'Muximum 4 passengers',
-    price: '120.000',
+    title: 'Momo',
+    image: Images.Momo,
   },
   {
     id: '2',
-    title: 'AndreCar',
-    detail: 'Muximum 4 passengers',
-    price: '120.000',
-  },
-  {
-    id: '3',
-    title: 'AndreCar',
-    detail: 'Muximum 4 passengers',
-    price: '120.000',
-  },
-  {
-    id: '4',
-    title: 'AndreCar',
-    detail: 'Muximum 4 passengers',
-    price: '120.000',
-  },
-  {
-    id: '5',
-    title: 'AndreCar',
-    detail: 'Muximum 4 passengers',
-    price: '120.000',
+    title: 'Cash',
+    image: Images.Cash,
   },
 ];
 type ItemData = {
   id: string;
   title: string;
-  detail: string;
-  price: string;
+  image: string;
 };
 
 type SelectWalletScreenProps = NativeStackScreenProps<
@@ -98,8 +77,7 @@ const SelectWalletScreen: React.FC<SelectWalletScreenProps> = ({
               onPress={() => setSelectedId(item.id)}>
               <ItemWallet
                 title={item.title}
-                detail={item.detail}
-                price={item.price}
+                image={item.image}
                 classname={`${item.id === selectedId ? '' : 'opacity-40 '}`}
               />
             </TouchableOpacity>
