@@ -1,16 +1,15 @@
-const db = require('../config.js');
+const createTcpPool = require('../config.js'); 
 
-const callAuthenticateUser = (userTel, userPass) => {
+const callAuthenticateUser = async (userTel, userPass) => {
+  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    db.query(
+    pool.query(
       'CALL AuthenticateUser(?, ?)',
       [userTel, userPass],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          // Lấy dữ liệu từ kết quả của câu SELECT
-          // console.log(results[0][0]);
           resolve(results[0][0]);
         }
       }
@@ -18,9 +17,10 @@ const callAuthenticateUser = (userTel, userPass) => {
   });
 };
 
-const callGetUser = (userTel) => {
+const callGetUser = async (userTel) => {
+  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    db.query(
+    pool.query(
       'CALL GetUser(?)',
       [userTel],
       (error, results) => {
@@ -34,9 +34,10 @@ const callGetUser = (userTel) => {
   });
 };
 
-const callAddUser = (userTel, userPass, userName, userAva) => {
+const callAddUser = async (userTel, userPass, userName, userAva) => {
+  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    db.query(
+    pool.query(
       'CALL AddUser(?, ?, ?, ?)',
       [userTel, userPass, userName, userAva],
       (error, results) => {
@@ -50,16 +51,16 @@ const callAddUser = (userTel, userPass, userName, userAva) => {
   });
 };
 
-const callUpdateUser = (userTel, userPass, userName, userAva, userVIP) => {
+const callUpdateUser = async (userTel, userPass, userName, userAva, userVIP) => {
+  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    db.query(
+    pool.query(
       'CALL UpdateUser(?, ?, ?, ?, ?)',
       [userTel, userPass, userName, userAva, userVIP],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          // Trả về kết quả từ stored procedure
           resolve(results[0][0]);
         }
       }
@@ -67,9 +68,10 @@ const callUpdateUser = (userTel, userPass, userName, userAva, userVIP) => {
   });
 };
 
-const callGetRidesByUserID = (userID) => {
+const callGetRidesByUserID = async (userID) => {
+  const pool = await createTcpPool();
   return new Promise((resolve, reject) => {
-    db.query(
+    pool.query(
       'CALL GetRidesByUserID(?)',
       [userID],
       (error, results) => {
