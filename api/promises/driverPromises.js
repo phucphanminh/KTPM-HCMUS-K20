@@ -1,15 +1,15 @@
-const db = require('../config.js'); 
+const db = require('../config.js');
 
 const callAuthenticateDriver = async (driverTel, driverPass) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL AuthenticateDriver(?, ?)',
+      'SELECT * FROM TAXI.AuthenticateDriver($1, $2)',
       [driverTel, driverPass],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results[0][0]);
+          resolve(results.rows[0]);
         }
       }
     );
@@ -19,13 +19,13 @@ const callAuthenticateDriver = async (driverTel, driverPass) => {
 const callGetDriver = async (driverID) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL GetDriver(?)',
+      'SELECT * FROM TAXI.GetDriver($1)',
       [driverID],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results[0]);
+          resolve(results.rows);
         }
       }
     );
@@ -46,7 +46,7 @@ const callAddDriver = async (
 ) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL AddDriver(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'SELECT * FROM TAXI.AddDriver($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
       [
         driverID,
         driverTel,
@@ -63,7 +63,7 @@ const callAddDriver = async (
         if (error) {
           reject(error);
         } else {
-          resolve(results[0][0]);
+          resolve(results.rows[0]);
         }
       }
     );
@@ -85,7 +85,7 @@ const callUpdateDriver = async (
 ) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL UpdateDriver(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'SELECT * FROM TAXI.UpdateDriver($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
       [
         driverID, 
         driverTel, 
@@ -103,7 +103,7 @@ const callUpdateDriver = async (
         if (error) {
           reject(error);
         } else {
-          resolve(results[0][0]);
+          resolve(results.rows[0]);
         }
       }
     );
@@ -113,13 +113,13 @@ const callUpdateDriver = async (
 const callGetRidesByDriverID = async (driverID) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL GetRidesByDriverID(?)',
+      'SELECT * FROM TAXI.GetRidesByDriverID($1)',
       [driverID],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results[0]);
+          resolve(results.rows);
         }
       }
     );
@@ -129,13 +129,13 @@ const callGetRidesByDriverID = async (driverID) => {
 const callCompleteRide = async (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL CompleteRide(?, ?, ?, ?, ?, ?, ?, ?, ?);',
+      'SELECT * FROM TAXI.CompleteRide($1, $2, $3, $4, $5, $6, $7, $8, $9);',
       [rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results[0][0]);
+          resolve(results.rows[0]);
         }
       }
     );

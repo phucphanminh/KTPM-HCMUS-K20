@@ -5,221 +5,248 @@
 /* 20127507	BÙI TRẦN HUÂN                                       */
 /*==============================================================*/
 
-USE TAXI;
-
-/* Xác thực người dùng */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `AuthenticateUser`$$
-CREATE PROCEDURE `AuthenticateUser`(
-      IN userTel CHAR(15),
-      IN userPass TEXT(256)
+-- Authenticate User
+CREATE OR REPLACE FUNCTION TAXI.AuthenticateUser(
+      userTel CHAR(15),
+      userPass TEXT
 )
+RETURNS TABLE (result TEXT) 
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    matchUserId CHAR(20);
 BEGIN
-      -- Mã hóa mật khẩu đầu vào bằng hàm SHA2() với độ dài hash là 256
-      SET userPass = SHA2(userPass, 256);
+      -- Hash the input password using SHA256
+      userPass = digest(userPass, 'sha256');
   
-      -- Khai báo biến session matchUserId
-      SET @matchUserId = NULL;
+      -- Assign the value to the matchUserId variable
+      SELECT TEL INTO matchUserId FROM TAXI.APPUSER WHERE TEL = userTel AND PASS = userPass;
   
-      -- Gán giá trị cho biến session matchUserId
-      SELECT TEL INTO @matchUserId FROM USER WHERE TEL = userTel AND PASS = userPass;
-  
-      IF @matchUserId IS NOT NULL THEN
-          -- Xử lý khớp thành công và trả về số điện thoại của người dùng
-          SELECT @matchUserId AS result;
+      IF matchUserId IS NOT NULL THEN
+          -- Successful match, return the user's telephone number
+          RETURN QUERY SELECT userTel::TEXT;
       ELSE
-          SELECT 'Số điện thoại hoặc mật khẩu không đúng' AS result;
+          RETURN QUERY SELECT 'Số điện thoại hoặc mật khẩu không đúng';
       END IF;
-END $$
-DELIMITER ;
+END;
+$$;
 
--- CALL AuthenticateUser('0123456789', 'Random_Password_1');
+--SELECT TAXI.AuthenticateUser('0123456789', 'Random_Password_1');
 
-/* Lấy thông tin người dùng */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `GetUser`$$
-CREATE PROCEDURE GetUser(
-	UTEL varchar(15)
-)
+-- Get User Information
+CREATE OR REPLACE FUNCTION TAXI.GetUser(
+	UTEL varchar(15))
+RETURNS TABLE (
+    TEL CHAR(15),
+    PASS TEXT,
+    NAME NCHAR(30),
+    AVA CHAR(30),
+    VIP BOOLEAN
+) 
+LANGUAGE plpgsql
+AS $$
 BEGIN
-	SELECT * 
-	FROM USER
-	WHERE TEL = UTEL;
-END $$
-DELIMITER ;
+	RETURN QUERY SELECT * FROM TAXI.APPUSER WHERE APPUSER.TEL = UTEL;
+END;
+$$;
 
-/* Tạo người dùng */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `AddUser`$$
-CREATE PROCEDURE `AddUser`(
-     IN userTel CHAR(15),
-     IN userPass TEXT(256),
-     IN userName NCHAR(30),
-     IN userAva CHAR(30)
+--SELECT TAXI.GetUser('0234567890');
+
+-- Add User
+CREATE OR REPLACE FUNCTION TAXI.AddUser(
+     userTel CHAR(15),
+     userPass TEXT,
+     userName NCHAR(30),
+     userAva CHAR(30)
 )
+RETURNS TABLE (message TEXT) 
+LANGUAGE plpgsql
+AS $$
 BEGIN
-     -- Kiểm tra xem userTel đã tồn tại trong bảng USER chưa
-     IF EXISTS (SELECT 1 FROM USER WHERE TEL = userTel) THEN
-         SELECT 'Số điện thoại đã được sử dụng' AS message;
+     -- Check if userTel already exists in the USER table
+     IF EXISTS (SELECT 1 FROM TAXI.APPUSER WHERE TEL = userTel) THEN
+         RETURN QUERY SELECT 'Số điện thoại đã được sử dụng';
      ELSE
-         -- Mã hóa mật khẩu đầu vào bằng hàm SHA2() với độ dài hash là 30
-         SET userPass = SHA2(userPass, 256);
+         -- Hash the input password using SHA256
+         userPass = digest(userPass, 'sha256');
 
-         -- Thêm thông tin người dùng vào bảng USER
-         INSERT INTO USER (TEL, PASS, NAME, AVA, VIP)
+         -- Insert user information into the USER table
+         INSERT INTO TAXI.APPUSER (TEL, PASS, NAME, AVA, VIP)
          VALUES (userTel, userPass, userName, userAva, FALSE);
-         SELECT 'Tạo tài khoản thành công' AS message;
+         RETURN QUERY SELECT 'Tạo tài khoản thành công';
      END IF;
-END $$
-DELIMITER ;
+END;
+$$;
 
-/* Cập nhật thông tin người dùng */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `UpdateUser`$$
-CREATE PROCEDURE UpdateUser(
-    IN userTel char(15),
-    IN userPass TEXT(256),
-    IN userName nchar(30),
-    IN userAva char(30),
-    IN userVIP bool
+-- Update User Information
+CREATE OR REPLACE FUNCTION TAXI.UpdateUser(
+    userTel char(15),
+    userPass TEXT,
+    userName nchar(30),
+    userAva char(30),
+    userVIP BOOLEAN
 )
+RETURNS TABLE (message TEXT) 
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    UPDATE USER
+    UPDATE TAXI.APPUSER
     SET
-        PASS = SHA2(userPass, 256),
+        PASS = digest(userPass, 'sha256'),
         NAME = userName,
         AVA = userAva,
         VIP = userVIP
     WHERE TEL = userTel;
-    SELECT 'Cập nhật thông tin thành công' AS message;
-END $$
-DELIMITER ;
+    RETURN QUERY SELECT 'Cập nhật thông tin thành công';
+END;
+$$;
 
-
-
-/* Lấy lịch sử các cước xe của người dùng */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `GetRidesByUserID`$$
-CREATE PROCEDURE GetRidesByUserID(
-    IN userID char(20)
+-- Get User's Ride History
+CREATE OR REPLACE FUNCTION TAXI.GetRidesByUserID(
+    userID char(20)
 )
+RETURNS TABLE (
+    ID CHAR(20),
+    USE_ID CHAR(20),
+    CUS_ID CHAR(20),
+    DRI_ID CHAR(20),
+    PICKUP CHAR(50),
+    DROPOFF CHAR(50),
+    STATUS BOOLEAN,
+    BOOKTIME TIMESTAMP,
+    PRICE FLOAT,
+    RESERVEDTIME TIMESTAMP
+) 
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    SELECT *
-    FROM RIDE
-    WHERE USE_ID = userID;
-END $$
-DELIMITER ;
+    RETURN QUERY SELECT * FROM TAXI.RIDE WHERE RIDE.USE_ID = userID;
+END;
+$$;
 
-/* Hủy đặt xe */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `CancelRide`$$
-CREATE PROCEDURE CancelRide(
-    IN rideID char(20)
+-- Cancel Ride
+CREATE OR REPLACE FUNCTION TAXI.CancelRide(
+    rideID char(20)
 )
+RETURNS VOID 
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    UPDATE RIDE
+    UPDATE TAXI.RIDE
     SET
         STATUS = FALSE
     WHERE ID = rideID;
-END $$
-DELIMITER ;
+END;
+$$;
 
-/* Xác thực tài xế */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `AuthenticateDriver`$$
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `AuthenticateDriver`$$
-CREATE PROCEDURE `AuthenticateDriver`(
-     IN driverTel CHAR(15),
-     IN driverPass TEXT(256)
+-- Authenticate Driver
+CREATE OR REPLACE FUNCTION TAXI.AuthenticateDriver(
+     driverTel CHAR(15),
+     driverPass TEXT
 )
+RETURNS TABLE (result TEXT) 
+LANGUAGE plpgsql
+AS $$
+DECLARE
+     matchDriverId CHAR(20);
 BEGIN
-     -- Mã hóa mật khẩu đầu vào bằng hàm SHA2() với độ dài hash là 256
-     SET driverPass = SHA2(driverPass, 256);
+     -- Hash the input password using SHA256
+     driverPass = digest(driverPass, 'sha256');
  
-     -- Khai báo biến session matchDriverId
-     SET @matchDriverId = NULL;
+     -- Assign the value to the matchDriverId variable
+     SELECT ID INTO matchDriverId FROM TAXI.DRIVER WHERE TEL = driverTel AND PASS = driverPass;
  
-     -- Gán giá trị cho biến session matchDriverId
-     SELECT ID INTO @matchDriverId FROM DRIVER WHERE TEL = driverTel AND PASS = driverPass;
- 
-     IF @matchDriverId IS NOT NULL THEN
-         -- Xử lý khớp thành công và trả về ID của tài xế
-         SELECT @matchDriverId AS result;
+     IF matchDriverId IS NOT NULL THEN
+         -- Successful match, return the driver's ID
+         RETURN QUERY SELECT matchDriverId::TEXT;
      ELSE
-         SELECT 'Số điện thoại hoặc mật khẩu không đúng' AS result;
+         RETURN QUERY SELECT 'Số điện thoại hoặc mật khẩu không đúng';
      END IF;
-END $$
-DELIMITER ;
+END;
+$$;
 
--- CALL AuthenticateDriver('2222222222', 'Random_Password_2');
+--SELECT TAXI.AuthenticateDriver('2222222222', 'Random_Password_2');
 
-/* Lấy thông tin tài xế */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `GetDriver`$$
-CREATE PROCEDURE GetDriver(
-	UID varchar(20)
+-- Get Driver Information
+CREATE OR REPLACE FUNCTION TAXI.GetDriver(
+    UID varchar(20)
 )
+RETURNS TABLE (
+    ID CHAR(20),
+    TEL CHAR(15),
+    PASS TEXT,
+    NAME NCHAR(30),
+    AVA CHAR(30),
+    ACC CHAR(30),
+    VEHICLEID CHAR(20),
+    VEHICLETYPE CHAR(50),
+    BRANDNAME CHAR(50),
+    CMND CHAR(20),
+    FREE BOOLEAN
+) 
+LANGUAGE plpgsql
+AS $$
 BEGIN
-	SELECT * 
-	FROM DRIVER
-	WHERE ID = UID;
-END $$
-DELIMITER ;
+    RETURN QUERY SELECT * FROM TAXI.DRIVER WHERE DRIVER.ID = UID;
+END;
+$$;
 
-/* Tạo tài xế */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `AddDriver`$$
-CREATE PROCEDURE `AddDriver`(
-    IN driverID char(20),
-    IN driverTel char(15),
-    IN driverPass TEXT(256),
-    IN driverName nchar(30),
-    IN driverAva char(30),
-    IN driverAcc char(30),
-    IN driverVehicleID char(20),
-    IN driverVehicleType char(50),
-    IN driverBrandName char(50),
-    IN driverCMND char(20)
+--SELECT TAXI.GetDriver('D2');
+
+-- Add Driver
+CREATE OR REPLACE FUNCTION TAXI.AddDriver(
+    driverID char(20),
+    driverTel char(15),
+    driverPass TEXT,
+    driverName nchar(30),
+    driverAva char(30),
+    driverAcc char(30),
+    driverVehicleID char(20),
+    driverVehicleType char(50),
+    driverBrandName char(50),
+    driverCMND char(20)
 )
+RETURNS TABLE (message TEXT) 
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    -- Kiểm tra số điện thoại đã tồn tại
-    IF EXISTS (SELECT 1 FROM DRIVER WHERE TEL = driverTel) THEN
-        SELECT 'Số điện thoại đã được sử dụng' AS message;
+    -- Check if the phone number already exists
+    IF EXISTS (SELECT 1 FROM TAXI.DRIVER WHERE TEL = driverTel) THEN
+        RETURN QUERY SELECT 'Số điện thoại đã được sử dụng';
     ELSE
-        -- Mã hóa mật khẩu bằng hàm SHA2() với độ dài hash là 30
-		SET driverPass = SHA2(driverPass, 256);
+        -- Hash the password using SHA256
+        driverPass = digest(driverPass, 'sha256');
 
-		-- Thêm thông tin tài xế vào bảng DRIVER
-		INSERT INTO DRIVER (ID, TEL, PASS, NAME, AVA, ACC, VEHICLEID, VEHICLETYPE, BRANDNAME, CMND, FREE)
-		VALUES (driverID, driverTel, driverPass, driverName, driverAva, driverAcc, driverVehicleID, driverVehicleType, driverBrandName, driverCMND, TRUE);
-		SELECT 'Tạo tài khoản thành công' AS message;
-		END IF;
-END $$
-DELIMITER ;
+        -- Insert driver information into the DRIVER table
+        INSERT INTO TAXI.DRIVER (ID, TEL, PASS, NAME, AVA, ACC, VEHICLEID, VEHICLETYPE, BRANDNAME, CMND, FREE)
+        VALUES (driverID, driverTel, driverPass, driverName, driverAva, driverAcc, driverVehicleID, driverVehicleType, driverBrandName, driverCMND, TRUE);
+        RETURN QUERY SELECT 'Tạo tài khoản thành công';
+    END IF;
+END;
+$$;
 
-
-/* Cập nhật thông tin tài xế */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `UpdateDriver`$$
-CREATE PROCEDURE UpdateDriver(
-    IN driverID char(20),
-    IN driverTel char(15),
-    IN driverPass TEXT(256),
-    IN driverName nchar(30),
-    IN driverAva char(30),
-    IN driverAcc char(30),
-    IN driverVehicleID char(20),
-    IN driverVehicleType char(50),
-    IN driverBrandName char(50),
-    IN driverCMND char(20),
-    IN driverFree bool
+-- Update Driver Information
+CREATE OR REPLACE FUNCTION TAXI.UpdateDriver(
+    driverID char(20),
+    driverTel char(15),
+    driverPass TEXT,
+    driverName nchar(30),
+    driverAva char(30),
+    driverAcc char(30),
+    driverVehicleID char(20),
+    driverVehicleType char(50),
+    driverBrandName char(50),
+    driverCMND char(20),
+    driverFree BOOLEAN
 )
+RETURNS TABLE (message TEXT) 
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    UPDATE DRIVER
+    UPDATE TAXI.DRIVER
     SET
         TEL = driverTel,
-        PASS = SHA2(driverPass, 256),
+        PASS = digest(driverPass, 'sha256'),
         NAME = driverName,
         AVA = driverAva,
         ACC = driverAcc,
@@ -229,45 +256,55 @@ BEGIN
         CMND = driverCMND,
         FREE = driverFree
     WHERE ID = driverID;
-    SELECT 'Cập nhật thông tin thành công' AS message;
-END $$
-DELIMITER ;
+    RETURN QUERY SELECT 'Cập nhật thông tin thành công';
+END;
+$$;
 
-/* Tới điểm trả khách */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `CompleteRide`$$
-CREATE PROCEDURE CompleteRide(
-    IN rideID char(20),
-    IN userID char(20),
-    IN cusID char(20),
-    IN driverID char(20),
-    IN pickupLocation char(50),
-    IN dropOffLocation char(50),
-    IN bookTime datetime,
-    IN price float,
-    IN reservedTime datetime
+-- Complete Ride
+CREATE OR REPLACE FUNCTION TAXI.CompleteRide(
+    rideID char(20),
+    userID char(20),
+    cusID char(20),
+    driverID char(20),
+    pickupLocation char(50),
+    dropOffLocation char(50),
+    bookTime TIMESTAMP,
+    price FLOAT,
+    reservedTime TIMESTAMP
 )
+RETURNS TABLE (message TEXT) 
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    INSERT INTO RIDE (ID, USE_ID, CUS_ID, DRI_ID, PICKUP, DROPOFF, STATUS, BOOKTIME, PRICE, RESERVEDTIME)
+    INSERT INTO TAXI.RIDE (ID, USE_ID, CUS_ID, DRI_ID, PICKUP, DROPOFF, STATUS, BOOKTIME, PRICE, RESERVEDTIME)
     VALUES (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, TRUE, bookTime, price, reservedTime);
-    SELECT 'Thêm cuốc xe thành công' AS message;
-END $$
-DELIMITER ;
+    RETURN QUERY SELECT 'Thêm cuốc xe thành công';
+END;
+$$;
 
-/* Lấy lịch sử các cước xe của tài xế */
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `GetRidesByDriverID`$$
-CREATE PROCEDURE GetRidesByDriverID(
-    IN driverID char(20)
+-- Get Driver's Ride History
+CREATE OR REPLACE FUNCTION TAXI.GetRidesByDriverID(
+    driverID char(20)
 )
+RETURNS TABLE (
+    ID CHAR(20),
+    USE_ID CHAR(20),
+    CUS_ID CHAR(20),
+    DRI_ID CHAR(20),
+    PICKUP CHAR(50),
+    DROPOFF CHAR(50),
+    STATUS BOOLEAN,
+    BOOKTIME TIMESTAMP,
+    PRICE FLOAT,
+    RESERVEDTIME TIMESTAMP
+) 
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    SELECT *
-    FROM RIDE
-    WHERE DRI_ID = driverID;
-END $$
-DELIMITER ;
+    RETURN QUERY SELECT * FROM TAXI.RIDE WHERE RIDE.DRI_ID = driverID;
+END;
+$$;
 
--- CALL GetRidesByDriverID ('D2');
 
 
 

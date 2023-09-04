@@ -20,7 +20,7 @@ const login = async(req, res) => {
 
 const userInfor = async(req, res) => {
     const userTel = req.params.user_tel;
-
+    // console.log(userTel);
     try {
       const user = await userPromises.callGetUser(userTel);
       if (user.length === 0) {
@@ -28,6 +28,7 @@ const userInfor = async(req, res) => {
       }
       return res.json(user);
     } catch (error) {
+        // console.error(error);
         return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy thông tin người dùng.' });
     }
 };

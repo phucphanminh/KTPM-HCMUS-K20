@@ -27,6 +27,7 @@ const driverInfor = async (req, res) => {
     }
     return res.json(driver);
   } catch (error) {
+    // console.error(error);
     return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy thông tin tài xế.' });
   }
 };
@@ -61,6 +62,7 @@ const driverAdd = async (req, res) => {
 
     return res.status(200).json({ message: result.message });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm tài xế.' });
   }
 };
