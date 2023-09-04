@@ -13,13 +13,20 @@ import Map from '../component/Map';
 import ChoiceOrign from '../component/ChoiceOrign';
 import FlatListCar from '../component/FlatListCar';
 import {useSelector} from 'react-redux';
-import {selectStep} from '../redux/reducers';
+import {
+  selectStep,
+  selectLocationDriver,
+  selectorigin,
+} from '../redux/reducers';
 import {Images} from '../configs/images';
 import {useDispatch} from 'react-redux';
-import {setStep} from '../redux/reducers';
+import {setStep, setLocationDriver} from '../redux/reducers';
 import {Button} from 'native-base';
 import {Divider} from 'native-base';
 import {Google_Map_Api_Key} from '@env';
+import * as io from 'socket.io-client';
+
+const socket = io.connect('http://localhost:3001');
 
 const DATA: ItemData[] = [
   {
@@ -63,10 +70,22 @@ type ItemData = {
 type BookScreenProps = NativeStackScreenProps<RootStackParamList, 'Book'>;
 const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   const [selectedId, setSelectedId] = useState<string>();
-  const Step = useSelector(selectStep);
-
-  React.useEffect(() => {}, [Step]);
   const dispatch = useDispatch();
+  const Step = useSelector(selectStep);
+  const origin = useSelector(selectorigin);
+
+  const Booking = () => {
+    socket.emit('Booking Verhical', origin);
+    navigation.navigate('MapBook');
+  };
+
+  React.useEffect(() => {
+    socket.on('send_location_driver_sround', data => {
+      dispatch(setLocationDriver(data));
+      console.log(data);
+    });
+  }, [Step, socket]);
+
   return (
     <View className="h-full w-full">
       <Map></Map>
@@ -126,7 +145,9 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
                 orientation="vertical"
               />
             </View>
-            <Button className=" mb-2 h-[50%] w-[60%] rounded-[20px]">
+            <Button
+              className=" mb-2 h-[50%] w-[60%] rounded-[20px]"
+              onPress={Booking}>
               <Text className="text-xl font-semibold text-white">
                 Book Ride now
               </Text>

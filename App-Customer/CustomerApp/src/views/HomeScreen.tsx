@@ -42,7 +42,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
   useEffect(() => {
     const requestLocationPermission = async () => {
-      console.log("request Location");
+      console.log('request Location');
       if (Platform.OS === 'ios') {
         getOneTimeLocation();
         subscribeLocationLocation();
@@ -82,7 +82,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
     Geolocation.getCurrentPosition(
       //Will give you the current location
       position => {
-        console.log("get position success");
+        console.log('get position success');
         setLocationStatus('You are Here');
         const currentLongitude = position.coords.longitude;
         //getting the Longitude from the location json
@@ -101,7 +101,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
       },
       error => {
         setLocationStatus(error.message);
-        console.log(error.message)
+        console.log(error.message);
       },
       {enableHighAccuracy: false, timeout: 30000, maximumAge: 1000},
     );
@@ -165,7 +165,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
           />
         </MapView>
       )}
-            {/* <MapView
+      {/* <MapView
              className=" absolute w-full h-full"
         initialRegion={{
           latitude: 37.78825,
