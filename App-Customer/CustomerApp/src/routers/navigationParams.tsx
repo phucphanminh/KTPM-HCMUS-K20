@@ -7,6 +7,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   Welcome: undefined;
   Book: undefined;
+  MapBook: undefined;
   SelectWallet: undefined;
   Ride: undefined;
 };

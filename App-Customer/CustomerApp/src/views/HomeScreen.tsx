@@ -44,6 +44,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   useEffect(() => {
     const requestLocationPermission = async () => {
+      console.log('request Location');
       if (Platform.OS === 'ios') {
         try {
           dispatch(setLoading(true))
@@ -104,6 +105,58 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   }, [dispatch]);
 
 
+  const getOneTimeLocation = () => {
+    setLocationStatus('Getting Location ...');
+    Geolocation.getCurrentPosition(
+      //Will give you the current location
+      position => {
+        console.log('get position success');
+        setLocationStatus('You are Here');
+        const currentLongitude = position.coords.longitude;
+        //getting the Longitude from the location json
+        const currentLatitude = position.coords.latitude;
+        //getting the Latitude from the location json
+        console.log(position);
+        const currentDescription = JSON.stringify(
+          position.coords.altitudeAccuracy,
+        );
+
+        dispatch(
+          setOrigin({
+            location: {lat: currentLatitude, lng: currentLongitude},
+          }),
+        );
+      },
+      error => {
+        setLocationStatus(error.message);
+        console.log(error.message);
+      },
+      {enableHighAccuracy: false, timeout: 30000, maximumAge: 1000},
+    );
+  };
+
+  const subscribeLocationLocation = () => {
+    const watchID = Geolocation.watchPosition(
+      position => {
+        setLocationStatus('You are Here');
+        //Will give you the location on location change
+        console.log(position);
+        const currentLongitude = position.coords.longitude;
+
+        const currentLatitude = position.coords.latitude;
+
+        dispatch(
+          setOrigin({
+            location: {lat: currentLatitude, lng: currentLongitude},
+          }),
+        );
+      },
+      error => {
+        setLocationStatus(error.message);
+      },
+      {enableHighAccuracy: false, maximumAge: 1000},
+    );
+  };
   const mapRef = useRef(null);
   const origin = useSelector(selectorigin);
 

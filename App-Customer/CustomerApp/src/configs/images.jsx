@@ -15,9 +15,25 @@ import Facebook from '../../assets/icons/Facebook.png';
 import Gmail from '../../assets/icons/Gmail.png';
 import CallIcon from '../../assets/icons/Call.png';
 import HomeIcon from '../../assets/icons/homeIcon.png';
+import Momo from '../../assets/images/Momo.png';
+import Cash from '../../assets/images/cash.png';
+import CarMarker from '../../assets/images/carMarker.png';
 
 export const Images = {
-  logo,welcome,profile,car,wallet,iconfind,map,clock,notfound,angle,carType
+  logo,
+  welcome,
+  profile,
+  car,
+  wallet,
+  iconfind,
+  map,
+  clock,
+  notfound,
+  angle,
+  carType,
+  CarMarker,
+  Momo,
+  Cash,
 };
 export const Icons = {
   Apple,Facebook,Gmail,CallIcon,HomeIcon

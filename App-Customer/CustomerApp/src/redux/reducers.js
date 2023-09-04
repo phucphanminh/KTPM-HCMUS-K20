@@ -1,4 +1,4 @@
-import { StatusColor } from "../component/Overlay/SlideMessage"
+import {StatusColor} from '../components/Overlay/SlideMessage';
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialStatusState = {
@@ -10,38 +10,39 @@ export const setLoading = bool => {
 };
 
 export const StatusReducer = (state = initialStatusState, action) => {
-    switch (action.type) {
-        case "setLoading":
-            return { isLoading: action.payload }
-        default:
-            return state
-    }
-}
+  switch (action.type) {
+    case 'setLoading':
+      return {isLoading: action.payload};
+    default:
+      return state;
+  }
+};
 
 const initialMessageState = {
-    status:StatusColor.error,
-    message:"",
-    key:"",
-}
+  status: StatusColor.error,
+  message: '',
+  key: '',
+};
 
-export const showMessage = (status,message) => {
-    const id=new Date().toString()
-   
-    return { type: "showMessage", status,message,key:id}
-}
+export const showMessage = (status, message) => {
+  const id = new Date().toString();
+
+  return {type: 'showMessage', status, message, key: id};
+};
 
 export const MessageReducer = (state = initialMessageState, action) => {
-    switch (action.type) {
-        case "showMessage":
-            return { status: action.status,message:action.message, key:action.key }
-        default:
-            return state
-    }
+  switch (action.type) {
+    case 'showMessage':
+      return {status: action.status, message: action.message, key: action.key};
+    default:
+      return state;
+  }
 };
 
 const initialState = {
   origin: null,
-  destination:  null,
+  destination: null,
+  LocationDriver: null,
   step: {name: 'init'},
   travelTimeinformations: null,
 };
@@ -62,16 +63,25 @@ export const navSlices = createSlice({
     setTravelTime: (state, action) => {
       state.travelTimeinformations = action.payload;
     },
+    setLocationDriver: (state, action) => {
+      state.LocationDriver = action.payload;
+    },
   },
 });
 
-export const {setOrigin, setDestination, setTravelTime, setStep} =
-  navSlices.actions;
+export const {
+  setOrigin,
+  setDestination,
+  setTravelTime,
+  setStep,
+  setLocationDriver,
+} = navSlices.actions;
 
 // selector
 export const selectorigin = state => state.nav.origin;
 export const selectdestination = state => state.nav.destination;
 export const selecttravelTime = state => state.nav.travelTimeinformations;
 export const selectStep = state => state.nav.step;
+export const selectLocationDriver = state => state.nav.LocationDriver;
 
 export default navSlices.reducer;
