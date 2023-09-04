@@ -1,15 +1,15 @@
-const db = require('../config.js'); 
+const db = require('../config.js');
 
 const callAuthenticateUser = async (userTel, userPass) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL AuthenticateUser(?, ?)',
+      'SELECT * FROM TAXI.AuthenticateUser($1, $2)',
       [userTel, userPass],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results[0][0]);
+          resolve(results.rows[0]);
         }
       }
     );
@@ -19,13 +19,13 @@ const callAuthenticateUser = async (userTel, userPass) => {
 const callGetUser = async (userTel) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL GetUser(?)',
+      'SELECT * FROM TAXI.GetUser($1)',
       [userTel],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results[0]);
+          resolve(results.rows);
         }
       }
     );
@@ -35,13 +35,13 @@ const callGetUser = async (userTel) => {
 const callAddUser = async (userTel, userPass, userName, userAva) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL AddUser(?, ?, ?, ?)',
+      'SELECT * FROM TAXI.AddUser($1, $2, $3, $4)',
       [userTel, userPass, userName, userAva],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results[0][0]);
+          resolve(results.rows[0]);
         }
       }
     );
@@ -51,13 +51,13 @@ const callAddUser = async (userTel, userPass, userName, userAva) => {
 const callUpdateUser = async (userTel, userPass, userName, userAva, userVIP) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL UpdateUser(?, ?, ?, ?, ?)',
+      'SELECT * FROM TAXI.UpdateUser($1, $2, $3, $4, $5)',
       [userTel, userPass, userName, userAva, userVIP],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results[0][0]);
+          resolve(results.rows[0]);
         }
       }
     );
@@ -67,13 +67,13 @@ const callUpdateUser = async (userTel, userPass, userName, userAva, userVIP) => 
 const callGetRidesByUserID = async (userID) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'CALL GetRidesByUserID(?)',
+      'SELECT * FROM TAXI.GetRidesByUserID($1)',
       [userID],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results[0]);
+          resolve(results.rows);
         }
       }
     );
