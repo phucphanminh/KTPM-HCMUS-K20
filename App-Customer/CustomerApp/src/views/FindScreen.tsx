@@ -69,12 +69,6 @@ const FindScreen: React.FC<FindScreenProps> = ({navigation}) => {
             console.log(details?.geometry.location);
             console.log(data.description);
 
-            // dispatch(
-            //   setOrigin({
-            //     location: details?.geometry.location,
-            //     description: data.description,
-            //   }),
-            // );
             dispatch(
               setDestination({
                 location: details?.geometry.location,
@@ -114,5 +108,6 @@ const FindScreen: React.FC<FindScreenProps> = ({navigation}) => {
     </KeyboardAvoidingView>
   );
 };
+
 
 export default FindScreen;

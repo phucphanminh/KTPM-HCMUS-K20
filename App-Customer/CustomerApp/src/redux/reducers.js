@@ -1,4 +1,4 @@
-import { StatusColor } from "../components/Overlay/SlideMessage"
+import { StatusColor } from "../component/Overlay/SlideMessage"
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialStatusState = {
@@ -41,7 +41,7 @@ export const MessageReducer = (state = initialMessageState, action) => {
 
 const initialState = {
   origin: null,
-  destination: null,
+  destination:  null,
   step: {name: 'init'},
   travelTimeinformations: null,
 };

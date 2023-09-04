@@ -6,6 +6,10 @@ const myStyles = StyleSheet.create({
         alignItems: "center",
         height: "100%",
         width:"100%",
+    },
+    icon:{
+        flex:1,
+        objectFit:"contain"
     }
 }) 
 

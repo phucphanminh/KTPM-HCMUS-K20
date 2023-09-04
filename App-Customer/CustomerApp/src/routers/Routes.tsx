@@ -11,8 +11,8 @@ import SignUp from '../views/SignUp';
 import FindScreen from '../views/FindScreen';
 import WelcomeScreen from '../views/WelcomeScreen';
 import RideScreen from './../views/RideScreen';
-import SlideMessage from '../components/Overlay/SlideMessage';
-import Footer from '../components/Footer/Footer';
+import SlideMessage from '../component/Overlay/SlideMessage';
+import Footer from '../component/Footer/Footer';
 import BookScreen from '../views/BookScreen';
 import SelectWalletScreen from '../views/SelecteWallet';
 
