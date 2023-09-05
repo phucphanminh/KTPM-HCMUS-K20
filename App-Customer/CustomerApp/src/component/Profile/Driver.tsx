@@ -6,8 +6,8 @@ import myTheme from './../../configs/Theme';
 import Divider from '../Divider';
 import { useDispatch } from 'react-redux';
 import { showMessage } from './../../redux/reducers';
-import { StatusColor } from '../Overlay/SlideMessage';
 import { DriverModels } from './../../models/Driver/index';
+import { StatusColor } from '../Overlay/SlideMessage';
 
 interface DriverProps {
 	data: DriverModels

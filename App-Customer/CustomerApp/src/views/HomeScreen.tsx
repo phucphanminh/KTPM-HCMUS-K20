@@ -1,15 +1,11 @@
 import React, { useRef } from 'react';
 import myStyles from '../configs/styles';
 import {
-  Keyboard,
   Text,
   View,
   Image,
   TextInput,
-  StyleSheet,
-  KeyboardAvoidingView,
   PermissionsAndroid,
-  TouchableWithoutFeedback,
   Platform,
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
@@ -17,17 +13,12 @@ import { Google_Map_Api_Key } from '@env';
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../routers/navigationParams';
-import { StatusBar } from 'expo-status-bar';
 import { Images } from '../configs/images';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { selectdestination, setLoading, showMessage } from './../redux/reducers';
+import {  setLoading, showMessage } from './../redux/reducers';
 import { Button } from 'native-base';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Geolocation from '@react-native-community/geolocation';
 import { setOrigin } from './../redux/reducers';
-import Map from '../component/Map';
 import { useSelector } from 'react-redux';
 import { selectorigin } from './../redux/reducers';
 import { LocationService } from '../services/location/LocationService';
@@ -36,32 +27,11 @@ type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [currentLongitude, setCurrentLongitude] = useState();
-  const [currentLatitude, setCurrentLatitude] = useState();
-  const [Description, setDescription] = useState();
-  const [locationStatus, setLocationStatus] = useState('');
-
 
   useEffect(() => {
     const requestLocationPermission = async () => {
-      console.log('request Location');
       if (Platform.OS === 'ios') {
-        try {
-          dispatch(setLoading(true))
-          const position = await LocationService.getMyLocation();
-          const currentLongitude = position.coords.longitude;
-          const currentLatitude = position.coords.latitude;
-
-          dispatch(
-            setOrigin({
-              location: { lat: currentLatitude, lng: currentLongitude },
-            })
-          );
-          dispatch(setLoading(false))
-
-        } catch (err) {
-          dispatch(showMessage(StatusColor.error, err));
-        }
+        getLocation()
       } else {
         // For Android
         // Request location permission using PermissionsAndroid API
@@ -75,23 +45,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             }
           );
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            try {
-              dispatch(setLoading(true))
-
-              const position = await LocationService.getMyLocation();
-              const currentLongitude = position.coords.longitude;
-              const currentLatitude = position.coords.latitude;
-
-              dispatch(
-                setOrigin({
-                  location: { lat: currentLatitude, lng: currentLongitude },
-                })
-              );
-              dispatch(setLoading(false))
-
-            } catch (err) {
-              dispatch(showMessage(StatusColor.error, err));
-            }
+            getLocation()
           } else {
             dispatch(showMessage(StatusColor.error, 'Permission Denied'));
           }
@@ -101,65 +55,33 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       }
     };
 
+    const getLocation = async () => {
+      try {
+        dispatch(setLoading(true))
+        const position = await LocationService.getMyLocation();
+        const currentLongitude = position.coords.longitude;
+        const currentLatitude = position.coords.latitude;
+
+        dispatch(
+          setOrigin({
+            location: { lat: currentLatitude, lng: currentLongitude },
+          })
+        );
+        dispatch(setLoading(false))
+
+      } catch (err) {
+        dispatch(showMessage(StatusColor.error, err));
+      }
+      finally {
+        dispatch(setLoading(false))
+      }
+    }
+
     requestLocationPermission();
   }, [dispatch]);
 
-
-  const getOneTimeLocation = () => {
-    setLocationStatus('Getting Location ...');
-    Geolocation.getCurrentPosition(
-      //Will give you the current location
-      position => {
-        console.log('get position success');
-        setLocationStatus('You are Here');
-        const currentLongitude = position.coords.longitude;
-        //getting the Longitude from the location json
-        const currentLatitude = position.coords.latitude;
-        //getting the Latitude from the location json
-        console.log(position);
-        const currentDescription = JSON.stringify(
-          position.coords.altitudeAccuracy,
-        );
-
-        dispatch(
-          setOrigin({
-            location: {lat: currentLatitude, lng: currentLongitude},
-          }),
-        );
-      },
-      error => {
-        setLocationStatus(error.message);
-        console.log(error.message);
-      },
-      {enableHighAccuracy: false, timeout: 30000, maximumAge: 1000},
-    );
-  };
-
-  const subscribeLocationLocation = () => {
-    const watchID = Geolocation.watchPosition(
-      position => {
-        setLocationStatus('You are Here');
-        //Will give you the location on location change
-        console.log(position);
-        const currentLongitude = position.coords.longitude;
-
-        const currentLatitude = position.coords.latitude;
-
-        dispatch(
-          setOrigin({
-            location: {lat: currentLatitude, lng: currentLongitude},
-          }),
-        );
-      },
-      error => {
-        setLocationStatus(error.message);
-      },
-      {enableHighAccuracy: false, maximumAge: 1000},
-    );
-  };
   const mapRef = useRef(null);
   const origin = useSelector(selectorigin);
-
 
   return (
     <View className="relative h-full w-full">

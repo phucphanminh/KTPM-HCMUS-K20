@@ -1,5 +1,5 @@
-import {StatusColor} from '../components/Overlay/SlideMessage';
 import {createSlice} from '@reduxjs/toolkit';
+import { StatusColor } from '../component/Overlay/SlideMessage';
 
 const initialStatusState = {
   isLoading: false,
@@ -21,7 +21,7 @@ export const StatusReducer = (state = initialStatusState, action) => {
 const initialMessageState = {
   status: StatusColor.error,
   message: '',
-  key: '',
+  id: '',
 };
 
 export const showMessage = (status, message) => {
@@ -33,7 +33,7 @@ export const showMessage = (status, message) => {
 export const MessageReducer = (state = initialMessageState, action) => {
   switch (action.type) {
     case 'showMessage':
-      return {status: action.status, message: action.message, key: action.key};
+      return {status: action.status, message: action.message, id: action.id};
     default:
       return state;
   }

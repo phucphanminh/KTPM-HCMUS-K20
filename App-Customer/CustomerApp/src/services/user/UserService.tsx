@@ -20,7 +20,7 @@ export class UserService{
 		  const responseData = response?.data;
 	  
 		  // Check if the response data exists and has the message field
-		  if (responseData && responseData.message && responseData.message === "Tạo tài khoản thành công") {
+		  if (responseData?.message === "Tạo tài khoản thành công") {
 			return Promise.resolve(responseData.message);
 		  } else {
 			// If the response does not have the expected data, reject the Promise with a custom error message
