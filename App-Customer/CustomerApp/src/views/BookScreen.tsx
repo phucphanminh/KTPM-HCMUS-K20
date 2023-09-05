@@ -25,6 +25,8 @@ import {Button} from 'native-base';
 import {Divider} from 'native-base';
 import {Google_Map_Api_Key} from '@env';
 import * as io from 'socket.io-client';
+import { SOCKET } from './../socket/constants';
+
 
 const socket = io.connect('http://localhost:3001');
 
@@ -75,12 +77,12 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   const origin = useSelector(selectorigin);
 
   const Booking = () => {
-    socket.emit('Booking Verhical', origin);
+    socket.emit(SOCKET.BOOKING, origin);
     navigation.navigate('MapBook');
   };
 
   React.useEffect(() => {
-    socket.on('send_location_driver_sround', data => {
+    socket.on(SOCKET.SEND_DRIVERS_LOCATION, data => {
       dispatch(setLocationDriver(data));
       console.log(data);
     });

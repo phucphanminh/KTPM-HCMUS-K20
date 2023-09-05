@@ -9,7 +9,7 @@ import { StyleSheet } from 'react-native';
 import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { validate } from './../helpers/validate';
 import { FormFieldSignUp, UserService } from './../services/user/UserService';
-import Divider from './../components/Divider';
+import Divider from './../component/Divider';
 
 type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 
