@@ -7,7 +7,7 @@ const gpsHistory = async (req, res) => {
   // console.log(req.body);
   try {
     const result = await callCenterPromises.gpsHistory(phoneNumber, pickupAddress);
-    if (result && result.length > 0) {
+    // if (result && result.length > 0) {
         // result không trống, và có ít nhất một phần tử trong mảng (hoặc có giá trị)
         return res.json(result);
       // } else {
@@ -21,7 +21,7 @@ const gpsHistory = async (req, res) => {
         
       //   // return res.json(coordinate);
       //   // return res.status(404).json({ error: 'Không tìm thấy dữ liệu GPS.' });
-      }
+      // }
     } catch (error) {
     // console.error(error);
     return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy lịch sử GPS.' });
