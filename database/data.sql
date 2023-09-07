@@ -46,3 +46,8 @@ VALUES
    ('R9', '0234567890', NULL, 'D1', 'Galaxy Cinema Nguyễn Du', 'Đại học Y Dược', TRUE, '2023-07-27 12:00:00', 295000, '2023-07-27 10:15:00'),
    ('R10', '0345678901', NULL, 'D2', 'BHD Star Cineplex Vincom Quang Trung', 'Đại học Sư phạm', FALSE, '2023-07-27 13:15:00', 230000, '2023-07-27 11:30:00');
 
+-- Insert data into GPS_HISTORY table
+INSERT INTO TAXI.GPS_HISTORY (ID, PHONE_NUMBER, ADDRESS, LATITUDE, LONGITUDE)
+VALUES 
+('001', '0123456789', '2 Nguyễn Văn Cừ, Quận 5, TP.Hồ Chí Minh', 22.06, 23.02),
+('002', '0123456789', '2 Nguyễn Văn Cừ, Quận 5, TP.Hồ Chí Minh', 20.03, 20.02);
