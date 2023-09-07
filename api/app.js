@@ -4,7 +4,7 @@ const db = require('./config.js');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/userRouter');
 const driverRouter = require('./routes/driverRouter');
-const callCenterRouter = require('./routes/callCenterRouter');
+const callcenterRouter = require('./routes/callcenterRouter.js');
 const { Kafka } = require('kafkajs'); 
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Routes
-app.use('/api/callcenter', callCenterRouter);
+app.use('/api/callcenter', callcenterRouter);
 app.use('/api/user', userRouter);
 app.use('/api/driver', driverRouter);
 
