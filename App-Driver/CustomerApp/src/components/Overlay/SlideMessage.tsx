@@ -12,10 +12,10 @@ type SlideMessageProps = {
   status: keyof typeof StatusColor;
   placement?: "top" | "right" | "bottom" | "left" | undefined;
   message: string;
-  key?: string; 
+  id?: string; 
 };
 
-const SlideMessage: React.FC<SlideMessageProps> = ({ status, placement = "top", message,key }) => {
+const SlideMessage: React.FC<SlideMessageProps> = ({ status, placement = "top", message,id }) => {
   const colorStatus = {
     [StatusColor.error]: "error.600",
     [StatusColor.success]: "success.600",
@@ -35,7 +35,7 @@ const SlideMessage: React.FC<SlideMessageProps> = ({ status, placement = "top", 
 
       return () => clearTimeout(timeoutId);
     }
-  }, [status,message,key]);
+  }, [status,message,id]);
 
   return (
     <Center position={"absolute"} h={32}>

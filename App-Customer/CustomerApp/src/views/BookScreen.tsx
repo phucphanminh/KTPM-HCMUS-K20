@@ -28,7 +28,7 @@ import * as io from 'socket.io-client';
 import { SOCKET } from './../socket/constants';
 
 
-const socket = io.connect('http://localhost:3001');
+const socket = io.connect('http://192.168.2.29:3001');
 
 const DATA: ItemData[] = [
   {
@@ -90,7 +90,7 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
 
   return (
     <View className="h-full w-full">
-      <Map></Map>
+      <Map/>
 
       {Step.name === 'Success location' ? (
         <View className="relative h-[50%]">

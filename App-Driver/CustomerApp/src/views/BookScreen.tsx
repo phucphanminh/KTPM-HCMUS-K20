@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../routers/navigationParams';
 import Map from '../component/Map';
@@ -16,17 +16,15 @@ import {useSelector} from 'react-redux';
 import {
   selectStep,
   selectorigin,
-  selectLocationCustomer,
 } from '../redux/reducers';
 import {Images} from '../configs/images';
 import {useDispatch} from 'react-redux';
-import {setStep, setLocationCustomer} from '../redux/reducers';
+import {setStep} from '../redux/reducers';
 import {Button} from 'native-base';
 import {Divider} from 'native-base';
 import {Google_Map_Api_Key} from '@env';
-import * as io from 'socket.io-client';
+import { SocketIOClient } from '../socket';
 
-const socket = io.connect('http://localhost:3001');
 
 const DATA: ItemData[] = [
   {
@@ -57,17 +55,19 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   const [selectedId, setSelectedId] = useState<string>();
   const Step = useSelector(selectStep);
   const origin = useSelector(selectorigin);
-  socket.emit('join_room', 'driver1');
-
+  const socket=SocketIOClient.getInstance()
+  
+  // socket.emit('join_room', 'driver1');
+  socket.emitJoinRoom("driver1")
   const AcceptBooking = () => {
-    socket.emit('send_location_to_customer', origin);
+    // socket.emit('send_location_to_customer', origin);
   };
 
-  React.useEffect(() => {
-    socket.on('send_location_to_driver', data => {
-      console.log(data);
-    });
-  }, [socket]);
+  // React.useEffect(() => {
+  //   // socket.on('send_location_to_driver', data => {
+  //   //   console.log(data);
+  //   // });
+  // }, [socket]);
   const dispatch = useDispatch();
   return (
     <View className="h-full w-full">

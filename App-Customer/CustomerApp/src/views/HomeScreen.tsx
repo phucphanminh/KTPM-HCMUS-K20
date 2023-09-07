@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import myStyles from '../configs/styles';
 import {
   Text,
   View,
@@ -16,17 +15,25 @@ import { RootStackParamList } from '../routers/navigationParams';
 import { Images } from '../configs/images';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import {  setLoading, showMessage } from './../redux/reducers';
+import { setLoading, showMessage } from './../redux/reducers';
 import { Button } from 'native-base';
 import { setOrigin } from './../redux/reducers';
 import { useSelector } from 'react-redux';
 import { selectorigin } from './../redux/reducers';
 import { LocationService } from '../services/location/LocationService';
 import { StatusColor } from '../component/Overlay/SlideMessage';
+import { SocketIOClient } from '../socket';
+
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
+
+  const socket=SocketIOClient.getInstance()
+
+  useEffect(() => {
+    socket.connect()
+  })
 
   useEffect(() => {
     const requestLocationPermission = async () => {
