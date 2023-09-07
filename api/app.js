@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config.js');
 const bodyParser = require('body-parser');
-const callcenterRouter = require('./routes/callCenterRouter');
+const callCenterRouter = require('./routes/callCenterRouter');
 const userRouter = require('./routes/userRouter');
 const driverRouter = require('./routes/driverRouter');
 const { Kafka } = require('kafkajs'); // Thêm import cho kafkajs
@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Routes
-app.use('/api/callcenter', callcenterRouter);
+app.use('/api/callcenter', callCenterRouter);
 app.use('/api/user', userRouter);
 app.use('/api/driver', driverRouter);
 
