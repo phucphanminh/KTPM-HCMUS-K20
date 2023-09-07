@@ -2,11 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config.js');
 const bodyParser = require('body-parser');
-const callCenterRouter = require('./routes/callCenterRouter');
 const userRouter = require('./routes/userRouter');
 const driverRouter = require('./routes/driverRouter');
-const { Kafka } = require('kafkajs'); // Thêm import cho kafkajs
-// const handleRequest = require('../Web-CallCenter/handleRequest.js');
+const callCenterRouter = require('./routes/callCenterRouter');
+const { Kafka } = require('kafkajs'); 
 
 const app = express();
 const port = 3000 || process.env.PORT;
