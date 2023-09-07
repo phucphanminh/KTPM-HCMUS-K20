@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const callCenterController = require('../controllers/callCenterController');
+const callcenterController = require('../controllers/callcenterController');
 
 // Route để lấy lịch sử GPS từ CallCenter
-router.post('/customer', callCenterController.gpsHistory);
+router.post('/customer', callcenterController.gpsHistory);
 
 // Route để lưu lịch sử GPS từ CallCenter
-router.post('/save', callCenterController.saveGPS);
+router.post('/save', callcenterController.saveGPS);
 
 // Route để tạo cuốc xe từ CallCenter
-router.post('/bookings', callCenterController.createBooking);
+router.post('/bookings', callcenterController.createBooking);
 
 // Route để hủy cuốc xe từ CallCenter
-router.post('/bookings/:booking_id/cancel', callCenterController.cancelBooking);
+router.post('/bookings/:booking_id/cancel', callcenterController.cancelBooking);
 
 module.exports = router;

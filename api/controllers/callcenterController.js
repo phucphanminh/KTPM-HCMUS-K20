@@ -1,12 +1,12 @@
 const CoordinateProviderFactory = require('../CoordinateProviderFactory');
-const callCenterPromises = require('../promises/callCenterPromises');
+const callcenterPromises = require('../promises/callcenterPromises');
 const { Kafka } = require('kafkajs');
 
 const gpsHistory = async (req, res) => {
   const { phoneNumber, pickupAddress } = req.body;
   // console.log(req.body);
   try {
-    const result = await callCenterPromises.gpsHistory(phoneNumber, pickupAddress);
+    const result = await callcenterPromises.gpsHistory(phoneNumber, pickupAddress);
     // if (result && result.length > 0) {
         // result không trống, và có ít nhất một phần tử trong mảng (hoặc có giá trị)
         return res.json(result);
@@ -32,7 +32,7 @@ const saveGPS = async (req, res) => {
   const { ID,  phoneNumber, pickupAddress, latitude, longitude } = req.body;
 
   try {
-    const result = await callCenterPromises.saveGPS(ID,  phoneNumber, pickupAddress, latitude, longitude);
+    const result = await callcenterPromises.saveGPS(ID,  phoneNumber, pickupAddress, latitude, longitude);
     return res.json(result);
   } catch (error) {
     console.error(error);
