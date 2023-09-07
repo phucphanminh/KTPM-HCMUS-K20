@@ -27,7 +27,7 @@ const Routes = () => {
     <>
       {appStatus.isLoading && <Loader />}
       <NavigationContainer>
-        <SlideMessage placement='top' status={slideMessage.status} message={slideMessage.message} key={slideMessage.key}/>
+        <SlideMessage placement='top' status={slideMessage.status} message={slideMessage.message} id={slideMessage.id}/>
         <Stack.Navigator initialRouteName="Home" screenOptions={{
             headerShown: false, 
           }}>
