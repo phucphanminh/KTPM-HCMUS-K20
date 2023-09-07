@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config.js');
 const bodyParser = require('body-parser');
-const callcenterRouter = require('./routes/callCenterRouter.js');
+const callcenterRouter = require('./routes/callCenterRouter');
 const userRouter = require('./routes/userRouter');
 const driverRouter = require('./routes/driverRouter');
 const { Kafka } = require('kafkajs'); // Thêm import cho kafkajs
@@ -72,7 +72,7 @@ db.connect((error) => {
   if (error) return console.log(error);
   console.log("Connected to the database successfully");
 
-//   createTopics(); // Call the createTopics function here
+  // createTopics(); // Call the createTopics function here
 
   app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
