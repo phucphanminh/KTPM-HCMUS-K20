@@ -10,17 +10,17 @@ const gpsHistory = async (req, res) => {
     if (result && result.length > 0) {
         // result không trống, và có ít nhất một phần tử trong mảng (hoặc có giá trị)
         return res.json(result);
-      } else {
-        // result trống
-        const providerType = req.body.coordinateProviderType;
-        const factory = new CoordinateProviderFactory();
-        const provider = factory.createProvider(providerType);
-        const coordinate = provider.getCoordinateResponse(pickupAddress);
-        console.log(coordinate);
-        return res.json(coordinate);
+      // } else {
+      //   // result trống
+      //   const providerType = req.body.coordinateProviderType;
+      //   const factory = new CoordinateProviderFactory();
+      //   const provider = factory.createProvider(providerType);
+      //   const coordinate = provider.getCoordinateResponse(pickupAddress);
+      //   console.log(coordinate);
+      //   return res.json(coordinate);
         
-        // return res.json(coordinate);
-        // return res.status(404).json({ error: 'Không tìm thấy dữ liệu GPS.' });
+      //   // return res.json(coordinate);
+      //   // return res.status(404).json({ error: 'Không tìm thấy dữ liệu GPS.' });
       }
     } catch (error) {
     // console.error(error);
