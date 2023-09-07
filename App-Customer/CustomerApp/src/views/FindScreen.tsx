@@ -81,7 +81,7 @@ const FindScreen: React.FC<FindScreenProps> = ({navigation}) => {
           enablePoweredByContainer={false}
           fetchDetails={true}
           query={{
-            key: Google_Map_Api_Key,
+            key: 'AIzaSyA3I9U2vrkhKwLoziKmNEXbzUcXdXOw630',
             language: 'en',
           }}
           minLength={2}
@@ -108,6 +108,5 @@ const FindScreen: React.FC<FindScreenProps> = ({navigation}) => {
     </KeyboardAvoidingView>
   );
 };
-
 
 export default FindScreen;
