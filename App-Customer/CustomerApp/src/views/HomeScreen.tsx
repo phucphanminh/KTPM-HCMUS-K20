@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, {useRef} from 'react';
 import {
   Text,
   View,
@@ -7,44 +7,43 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../routers/navigationParams';
-import { Images } from '../configs/images';
-import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { setLoading, showMessage } from './../redux/reducers';
-import { Button } from 'native-base';
-import { setOrigin } from './../redux/reducers';
-import { useSelector } from 'react-redux';
-import { selectorigin } from './../redux/reducers';
-import { LocationService } from '../services/location/LocationService';
-import { StatusColor } from '../component/Overlay/SlideMessage';
-import { SocketIOClient } from '../socket';
-import { User } from '../appData/user/User';
-import { LoginHandler } from '../designPattern/chain';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../routers/navigationParams';
+import {Images} from '../configs/images';
+import {useState, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import {setLoading, showMessage} from './../redux/reducers';
+import {Button} from 'native-base';
+import {setOrigin} from './../redux/reducers';
+import {useSelector} from 'react-redux';
+import {selectorigin} from './../redux/reducers';
+import {LocationService} from '../services/location/LocationService';
+import {StatusColor} from '../component/Overlay/SlideMessage';
+import {SocketIOClient} from '../socket';
+import {User} from '../appData/user/User';
+import {LoginHandler} from '../designPattern/chain';
 import useCustomNavigation from '../hooks/useCustomNavigation';
 
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const dispatch = useDispatch();
 
-  const socket = SocketIOClient.getInstance()
+  const socket = SocketIOClient.getInstance();
   const navigate = useCustomNavigation();
   const loginHandler = new LoginHandler();
 
   useEffect(() => {
     // Check if the user is logged in using the LoginHandler
-    !loginHandler.handle() ? navigate.replace("Welcome") :socket.connect();
-    
-  });
+    !loginHandler.handle() && navigate.replace('Welcome');
+  }, []);
 
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'ios') {
-        getLocation()
+        getLocation();
       } else {
         // For Android
         // Request location permission using PermissionsAndroid API
@@ -55,10 +54,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               title: 'Location Access Required',
               message: 'This App needs to Access your location',
               buttonPositive: 'OK',
-            }
+            },
           );
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            getLocation()
+            getLocation();
           } else {
             dispatch(showMessage(StatusColor.error, 'Permission Denied'));
           }
@@ -70,25 +69,23 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
     const getLocation = async () => {
       try {
-        dispatch(setLoading(true))
+        dispatch(setLoading(true));
         const position = await LocationService.getMyLocation();
         const currentLongitude = position.coords.longitude;
         const currentLatitude = position.coords.latitude;
 
         dispatch(
           setOrigin({
-            location: { lat: currentLatitude, lng: currentLongitude },
-          })
+            location: {lat: currentLatitude, lng: currentLongitude},
+          }),
         );
-        dispatch(setLoading(false))
-
+        dispatch(setLoading(false));
       } catch (err) {
         dispatch(showMessage(StatusColor.error, err));
+      } finally {
+        dispatch(setLoading(false));
       }
-      finally {
-        dispatch(setLoading(false))
-      }
-    }
+    };
 
     requestLocationPermission();
   }, [dispatch]);
@@ -120,11 +117,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </MapView>
       )}
 
-
       <View className=" bottom-0  absolute h-[20%]  w-full">
         <View className="flex flex-col items-center justify-end h-full w-full ">
           <View className="flex flex-col items-center justify-start bg-[#FFFBE7] border-2 border-[#F3BD06] rounded-[15px] h-[95%] w-[90%] mb-7 ">
-
             <View className="relative  h-[30%] w-[95%] mt-2">
               <TextInput
                 className="absolute pl-[15%]  bg-[#FFFBE7] border-2 border-[#F3BD06] rounded-[10px] h-full w-full "

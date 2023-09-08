@@ -16,6 +16,7 @@ import {useSelector} from 'react-redux';
 import {
   selectStep,
   selectLocationDriver,
+  selectdestination,
   selectorigin,
 } from '../redux/reducers';
 import {Images} from '../configs/images';
@@ -24,11 +25,13 @@ import {setStep, setLocationDriver} from '../redux/reducers';
 import {Button} from 'native-base';
 import {Divider} from 'native-base';
 import {Google_Map_Api_Key} from '@env';
-import * as io from 'socket.io-client';
-import { SOCKET } from './../socket/constants';
+import {SocketIOClient} from '../socket';
+import {User} from '../appData/user/User';
 
+// import * as io from 'socket.io-client';
+// import {SOCKET} from './../socket/constants';
 
-const socket = io.connect('http://192.168.2.29:3001');
+// const socket = io.connect('http://192.168.2.29:3001');
 
 const DATA: ItemData[] = [
   {
@@ -75,22 +78,40 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   const dispatch = useDispatch();
   const Step = useSelector(selectStep);
   const origin = useSelector(selectorigin);
+  const destination = useSelector(selectdestination);
+
+  const socket = SocketIOClient.getInstance();
+  const customerinfo = User.getInstance().information;
 
   const Booking = () => {
-    socket.emit(SOCKET.BOOKING, origin);
+    const data = {
+      Customer: {id: customerinfo.tel, name: customerinfo.name},
+      origin,
+      destination,
+      cardetails: {
+        price: '120.000',
+        genre: '4 seat',
+      },
+    };
+    socket.emitSendBooking(data);
     navigation.navigate('MapBook');
   };
 
-  React.useEffect(() => {
-    socket.on(SOCKET.SEND_DRIVERS_LOCATION, data => {
-      dispatch(setLocationDriver(data));
-      console.log(data);
-    });
-  }, [Step, socket]);
+  // React.useEffect(() => {
+  //   socket.on(SOCKET.SEND_DRIVERS_LOCATION, data => {
+  //     dispatch(setLocationDriver(data));
+  //     console.log(data);
+  //   });
+  // }, [Step, socket]);
+  const getItemLayout = (_: any, index: number) => ({
+    length: 3, // Replace with the estimated height of your list items
+    offset: 3 * index,
+    index,
+  });
 
   return (
     <View className="h-full w-full">
-      <Map/>
+      <Map />
 
       {Step.name === 'Success location' ? (
         <View className="relative h-[50%]">
@@ -112,6 +133,7 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
             data={DATA}
             keyExtractor={item => item.id}
             extraData={selectedId}
+            getItemLayout={getItemLayout}
             renderItem={({item}) => (
               <TouchableOpacity
                 className={`${item.id === selectedId ? 'bg-[#cea0a0]' : ''}`}

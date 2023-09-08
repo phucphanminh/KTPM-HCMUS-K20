@@ -1,7 +1,6 @@
 // NavigationParams.ts
 export type RootStackParamList = {
   Home: undefined;
-  Find: undefined;
   Loading: undefined;
   SignIn: undefined;
   SignUp: undefined;
@@ -9,4 +8,5 @@ export type RootStackParamList = {
   Book: undefined;
   SelectWallet: undefined;
   Ride: undefined;
+  MapBook: undefined;
 };

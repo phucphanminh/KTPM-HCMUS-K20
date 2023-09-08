@@ -83,36 +83,53 @@ const MapBook = () => {
         />
       )} */}
         {locationDriver &&
-          Object.values(locationDriver).map((value: any, index: number) => (
+          (locationDriver?.name ? (
             <Marker
-              key={`driver-${index}`}
               coordinate={{
-                latitude: value.lat,
-                longitude: value.lng,
-              }}
+                latitude: locationDriver.location.lat,
+                longitude: locationDriver.location.lng,
+              }} // Set default latitude and longitude
               title="location driver"
               identifier="locationDriver"
               image={Images.CarMarker}
             />
+          ) : (
+            Object.values(locationDriver).map((value: any, index: number) => (
+              <Marker
+                key={`driver-${index}`}
+                coordinate={{
+                  latitude: value.lat,
+                  longitude: value.lng,
+                }}
+                title="location driver"
+                identifier="locationDriver"
+                image={Images.CarMarker}
+              />
+            ))
           ))}
 
-        {/* {origin && destination && (
-        <MapViewDirections
-          origin={{
-            latitude: origin.location.lat,
-            longitude: origin.location.lng,
-          }}
-          destination={destination.description}
-          apikey={Google_Map_Api_Key}
-          strokeWidth={3}
-          strokeColor={myTheme.colors.blue[500]}
-        />
-      )} */}
+        {origin && locationDriver?.name && (
+          <MapViewDirections
+            destination={{
+              latitude: origin.location.lat,
+              longitude: origin.location.lng,
+            }}
+            origin={{
+              latitude: locationDriver.location.lat,
+              longitude: locationDriver.location.lng,
+            }}
+            apikey="AIzaSyA3I9U2vrkhKwLoziKmNEXbzUcXdXOw630"
+            strokeWidth={3}
+            strokeColor={myTheme.colors.blue[500]}
+          />
+        )}
       </MapView>
-      <View className=" absolute top-[50%] h-[20%] w-full flex flex-col items-center ">
-        <ActivityIndicator size="large" color="#007aff" />
-        <Text>Finding Driver...</Text>
-      </View>
+      {!locationDriver?.name && (
+        <View className=" absolute top-[50%] h-[20%] w-full flex flex-col items-center ">
+          <ActivityIndicator size="large" color="#007aff" />
+          <Text>Finding Driver...</Text>
+        </View>
+      )}
     </View>
   );
 };

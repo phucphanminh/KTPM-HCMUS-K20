@@ -28,7 +28,7 @@ type FindScreenProps = NativeStackScreenProps<RootStackParamList, 'Find'>;
 const FindScreen: React.FC<FindScreenProps> = ({navigation}) => {
   const dispatch = useDispatch();
   const [textvalue, changetext] = useState('');
-  
+
   return (
     <KeyboardAvoidingView
       className="h-screen w-full"
@@ -81,7 +81,7 @@ const FindScreen: React.FC<FindScreenProps> = ({navigation}) => {
           enablePoweredByContainer={false}
           fetchDetails={true}
           query={{
-            key: "AIzaSyAUHF9a6W4nq7bittrtrgC6SE-51lS4e44",
+            key: 'AIzaSyA3I9U2vrkhKwLoziKmNEXbzUcXdXOw630',
             language: 'en',
           }}
           minLength={2}
@@ -108,6 +108,5 @@ const FindScreen: React.FC<FindScreenProps> = ({navigation}) => {
     </KeyboardAvoidingView>
   );
 };
-
 
 export default FindScreen;

@@ -15,7 +15,7 @@ import {
   selectdestination,
   selectorigin,
   selectStep,
-  selectLocationDriver,
+  selectLocationCustomer,
 } from '../redux/reducers';
 import MapViewDirections from 'react-native-maps-directions';
 import {Google_Map_Api_Key} from '@env';
@@ -30,7 +30,7 @@ import myTheme from './../configs/Theme';
 const MapBook = () => {
   const origin = useSelector(selectorigin);
   const destination = useSelector(selectdestination);
-  const locationDriver = useSelector(selectLocationDriver);
+  const locationCustomer = useSelector(selectLocationCustomer);
   const mapRef = useRef(null);
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -42,13 +42,14 @@ const MapBook = () => {
     }
     if (mapRef.current) {
       (mapRef.current as any).fitToSuppliedMarkers(
-        ['origin', 'destination', 'locationDriver'],
+        ['origin', 'destination', 'locationCustomer'],
         {
           edgePadding: {top: 50, right: 50, bottom: 50, left: 50},
         },
       );
     }
-  }, [origin, destination, locationDriver]);
+  }, [origin, destination, locationCustomer]);
+  console.log(locationCustomer);
   return (
     <View className="relative">
       <MapView
@@ -69,6 +70,7 @@ const MapBook = () => {
             title="your location"
             description={origin.description}
             identifier="origin"
+            image={Images.CarMarker}
           />
         )}
         {/* {destination?.location && (
@@ -82,37 +84,32 @@ const MapBook = () => {
           identifier="destination"
         />
       )} */}
-        {locationDriver &&
-          Object.values(locationDriver).map((value: any, index: number) => (
-            <Marker
-              key={`driver-${index}`}
-              coordinate={{
-                latitude: value.lat,
-                longitude: value.lng,
-              }}
-              title="location driver"
-              identifier="locationDriver"
-              image={Images.CarMarker}
-            />
-          ))}
-
-        {/* {origin && destination && (
-        <MapViewDirections
-          origin={{
-            latitude: origin.location.lat,
-            longitude: origin.location.lng,
-          }}
-          destination={destination.description}
-          apikey={Google_Map_Api_Key}
-          strokeWidth={3}
-          strokeColor={myTheme.colors.blue[500]}
-        />
-      )} */}
+        {locationCustomer && (
+          <Marker
+            coordinate={{
+              latitude: locationCustomer.origin.location.lat,
+              longitude: locationCustomer.origin.location.lng,
+            }} // Set default latitude and longitude
+            title="location customer"
+            identifier="locationCustomer"
+          />
+        )}
+        {origin && locationCustomer && (
+          <MapViewDirections
+            origin={{
+              latitude: origin.location.lat,
+              longitude: origin.location.lng,
+            }}
+            destination={{
+              latitude: locationCustomer.origin.location.lat,
+              longitude: locationCustomer.origin.location.lng,
+            }}
+            apikey="AIzaSyA3I9U2vrkhKwLoziKmNEXbzUcXdXOw630"
+            strokeWidth={3}
+            strokeColor={myTheme.colors.blue[500]}
+          />
+        )}
       </MapView>
-      <View className=" absolute top-[50%] h-[20%] w-full flex flex-col items-center ">
-        <ActivityIndicator size="large" color="#007aff" />
-        <Text>Finding Driver...</Text>
-      </View>
     </View>
   );
 };

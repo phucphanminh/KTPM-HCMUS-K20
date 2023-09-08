@@ -71,7 +71,7 @@ const Map = () => {
             longitude: origin.location.lng,
           }}
           destination={destination.description}
-          apikey={Google_Map_Api_Key}
+          apikey="AIzaSyA3I9U2vrkhKwLoziKmNEXbzUcXdXOw630"
           strokeWidth={3}
           strokeColor={myTheme.colors.secondary[500]}
         />

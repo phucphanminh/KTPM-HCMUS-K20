@@ -14,58 +14,39 @@ import MapBook from '../component/MapBook';
 import ChoiceOrign from '../component/ChoiceOrign';
 import FlatListCar from '../component/FlatListCar';
 import {useSelector} from 'react-redux';
-import {
-  selectStep,
-  selectLocationDriver,
-  selectorigin,
-} from '../redux/reducers';
+import {selectStep, selectorigin} from '../redux/reducers';
 import {Images} from '../configs/images';
 import {useDispatch} from 'react-redux';
-import {setLocationDriver} from '../redux/reducers';
+import {selectLocationCustomer} from '../redux/reducers';
 import {setStep} from '../redux/reducers';
 import {Button} from 'native-base';
 import {Divider} from 'native-base';
 import {Google_Map_Api_Key} from '@env';
 import {SocketIOClient} from '../socket';
-import NotifyInformationDriver from '../component/NotifyInformationDriver';
-import {User} from '../appData/user/User';
+import NotifyInformationCustomer from '../component/NotifyInformationCustomer';
+
 type MapBookScreenProps = NativeStackScreenProps<RootStackParamList, 'MapBook'>;
 const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
   const [selectedId, setSelectedId] = useState<string>();
   const Step = useSelector(selectStep);
   const origin = useSelector(selectorigin);
   const socket = SocketIOClient.getInstance();
-  const locationDriver = useSelector(selectLocationDriver);
+  const locationCustomer = useSelector(selectLocationCustomer);
   const [Notify, SetNotify] = useState({
     notify: false,
     name: '',
-    vehicleInfo: '',
+    telephonenumber: '',
   });
 
   React.useEffect(() => {
-    socket.emitJoinRoom(User.getInstance().information.tel);
-    socket.onListenDriversLocation(data => {
-      console.log(data);
-      dispatch(setLocationDriver(data));
-    });
-    socket.onListenUpdateLocationDriver(data => {
-      console.log(data);
-      dispatch(setLocationDriver(data));
-    });
-    socket.onListenAcceptBookingSuccess(data => {
-      console.log(data);
-      dispatch(setLocationDriver(data));
-    });
-  }, []);
-  React.useEffect(() => {
-    if (locationDriver?.name) {
+    if (locationCustomer.Customer?.name) {
       SetNotify(() => ({
         notify: true,
-        name: locationDriver.name,
-        vehicleInfo: `${locationDriver.identify}-${locationDriver.brandName}`,
+        name: locationCustomer.Customer.name,
+        telephonenumber: locationCustomer.Customer.id,
       }));
     }
-  }, [locationDriver]);
+  }, [locationCustomer]);
 
   const dispatch = useDispatch();
   return (
@@ -86,13 +67,12 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
           <Text className="text-bold">Back</Text>
         </View>
       </TouchableOpacity>
-      {Notify.notify && (
-        <View className="absolute bottom-3 w-full h-[10%] items-center">
-          <NotifyInformationDriver
-            driverName={Notify.name}
-            vehicleInfo={Notify.vehicleInfo}></NotifyInformationDriver>
-        </View>
-      )}
+      <View className="absolute bottom-3 w-full h-[20%] items-center">
+        <NotifyInformationCustomer
+          customerName={Notify.name}
+          telephonenumber={Notify.telephonenumber}
+        />
+      </View>
     </View>
   );
 };

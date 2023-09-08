@@ -1,17 +1,34 @@
-import { Flex, Text, Heading, VStack, Input, HStack, CheckCircleIcon, Button, theme, FormControl, Image, Box, Modal, Alert, CloseIcon } from 'native-base';
+import {
+  Flex,
+  Text,
+  Heading,
+  VStack,
+  Input,
+  HStack,
+  CheckCircleIcon,
+  Button,
+  theme,
+  FormControl,
+  Image,
+  Box,
+  Modal,
+  Alert,
+  CloseIcon,
+} from 'native-base';
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../routers/navigationParams';
-import { setLoading, setLogin } from './../redux/reducers';
-import { Icons } from '../configs/images';
-import { StyleSheet } from 'react-native';
-import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
-import { validate } from './../helpers/validate';
-import { FormFieldSignIn, UserService } from './../services/user/UserService';
-import { User } from '../appData/user/User';
+import {useDispatch} from 'react-redux';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../routers/navigationParams';
+import {setLoading, setLogin} from './../redux/reducers';
+import {Icons} from '../configs/images';
+import {StyleSheet} from 'react-native';
+import {NativeSyntheticEvent, TextInputChangeEventData} from 'react-native';
+import {validate} from './../helpers/validate';
+import {FormFieldSignIn, UserService} from './../services/user/UserService';
+import {User} from '../appData/user/User';
 import useCustomNavigation from '../hooks/useCustomNavigation';
 import Divider from '../component/Divider';
+import {SocketIOClient} from '../socket';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
@@ -25,7 +42,7 @@ const ErrorMessage: FormFieldSignIn = {
   driverPass: 'Password is required\n',
 };
 
-const SignIn: React.FC<SignInScreenProps> = ({ navigation }) => {
+const SignIn: React.FC<SignInScreenProps> = ({navigation}) => {
   const [data, setData] = React.useState<FormFieldSignIn>(initialFormData);
   const [errorFields, setErrorFields] = React.useState({
     driverTel: true,
@@ -38,19 +55,19 @@ const SignIn: React.FC<SignInScreenProps> = ({ navigation }) => {
   const [isSuccess, setIsSuccess] = React.useState(true);
 
   const dispatch = useDispatch();
-  const navigate = useCustomNavigation()
+  const navigate = useCustomNavigation();
 
   const updateField =
     (fieldName: keyof FormFieldSignIn) =>
-      (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
-        const value = event.nativeEvent.text;
-        setData(prevData => ({ ...prevData, [fieldName]: value }));
-      };
+    (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
+      const value = event.nativeEvent.text;
+      setData(prevData => ({...prevData, [fieldName]: value}));
+    };
 
   const validateForm = (): boolean => {
     const driverTel = validate.notEmpty(data.driverTel);
     const driverPass = validate.notEmpty(data.driverPass);
-    setErrorFields({ driverTel, driverPass });
+    setErrorFields({driverTel, driverPass});
 
     return driverTel && driverPass;
   };
@@ -62,15 +79,15 @@ const SignIn: React.FC<SignInScreenProps> = ({ navigation }) => {
       dispatch(setLoading(true));
       try {
         // Call API or perform further actions
-        const { result } = await UserService.signIn(data);
+        const {result} = await UserService.signIn(data);
         setIsSuccess(true);
-        setMessage("Login Success");
+        setMessage('Login Success');
 
-        const user = User.getInstance()
-        const info = await user.getInformation(result)
-        dispatch(setLogin(User.isUserLogin()))
-        navigate.navigate("Home")
+        const user = User.getInstance();
+        const info = await user.getInformation(result);
+        dispatch(setLogin(User.isUserLogin()));
 
+        navigate.navigate('Home');
       } catch (error) {
         setIsSuccess(false);
         setMessage(error as string);
@@ -122,22 +139,26 @@ const SignIn: React.FC<SignInScreenProps> = ({ navigation }) => {
           </Text>
         </Button>
 
-        <HStack mx={"auto"}>
-          <Text >
+        <HStack mx={'auto'}>
+          <Text>
             First time?
-            <Text color={"success.600"} onPress={() => navigation.navigate("SignUp")} textDecorationLine={'underline'}>
+            <Text
+              color={'success.600'}
+              onPress={() => navigation.navigate('SignUp')}
+              textDecorationLine={'underline'}>
               Sign Up
             </Text>
           </Text>
         </HStack>
 
         <Divider>
-          <Text style={{ width: "auto", paddingHorizontal: 10, textAlign: 'center' }}>or</Text>
+          <Text
+            style={{width: 'auto', paddingHorizontal: 10, textAlign: 'center'}}>
+            or
+          </Text>
         </Divider>
 
-
-
-        <HStack space={2} mx={"auto"} alignItems={"center"}>
+        <HStack space={2} mx={'auto'} alignItems={'center'}>
           <Button style={styles.iconBtn} variant={'outline'}>
             <Image style={styles.icon} source={Icons.Gmail} alt="icon" />
           </Button>

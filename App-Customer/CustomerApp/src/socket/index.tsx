@@ -1,8 +1,9 @@
 import {Socket} from 'socket.io-client';
 import io from 'socket.io-client';
-import { SOCKET } from './constants';
+import {SOCKET} from './constants';
 
-const server='http://192.168.2.29:3001'
+// const server = 'http://192.168.2.29:3001';
+const server = 'http://localhost:3001';
 
 export class SocketIOClient {
   private static instance: SocketIOClient;
@@ -30,9 +31,9 @@ export class SocketIOClient {
       console.log(`Disconnect to ${server}`);
     });
 
-    this.socket.on('create_user', (data) => {
+    this.socket.on('create_user', data => {
       // Handle user creation here
-      console.log("create_user");
+      console.log('create_user');
     });
   }
 
@@ -44,7 +45,29 @@ export class SocketIOClient {
     this.socket.disconnect();
   }
 
-  emitJoinRoom() {
-    this.socket.emit(SOCKET.JOIN_ROOM, "joinRoom data");
+  emitJoinRoom(data: string) {
+    this.socket.emit(SOCKET.JOIN_ROOM, data);
+  }
+  emitSendBooking(data: any) {
+    this.socket.emit(SOCKET.BOOKING, data);
+  }
+
+  emitSendCustomerLocation(data: any) {
+    this.socket.emit(SOCKET.SEND_CUSTOMER_LOCATION, data);
+  }
+  onListenDriversLocation(callback: (data: any) => void) {
+    this.socket.on(SOCKET.SEND_DRIVERS_LOCATION, data => {
+      callback(data);
+    });
+  }
+  onListenAcceptBookingSuccess(callback: (data: any) => void) {
+    this.socket.on(SOCKET.LISTEN_ACCEPT_BOOKING_SUCCESS, data => {
+      callback(data);
+    });
+  }
+  onListenUpdateLocationDriver(callback: (data: any) => void) {
+    this.socket.on(SOCKET.UPDATE_LOCATION_DRIVER_TO_CUSTOMER, data => {
+      callback(data);
+    });
   }
 }
