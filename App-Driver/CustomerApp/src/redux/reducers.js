@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { StatusColor } from '../components/Overlay/SlideMessage';
+import { StatusColor } from '../component/Overlay/SlideMessage';
 
 const initialStatusState = {
   isLoading: false,
@@ -18,6 +18,23 @@ export const StatusReducer = (state = initialStatusState, action) => {
   }
 };
 
+const initialAuthState = {
+  isLogin: false,
+};
+
+export const setLogin = bool => {
+  return {type: 'setLogin', payload: bool};
+};
+
+export const AuthReducer = (state = initialAuthState, action) => {
+  switch (action.type) {
+    case 'setLogin':
+      return {isLogin: action.payload};
+    default:
+      return state;
+  }
+};
+
 const initialMessageState = {
   status: StatusColor.error,
   message: '',
@@ -27,7 +44,7 @@ const initialMessageState = {
 export const showMessage = (status, message) => {
   const id = new Date().toString();
 
-  return {type: 'showMessage', status, message, key: id};
+  return {type: 'showMessage', status, message, id: id};
 };
 
 export const MessageReducer = (state = initialMessageState, action) => {

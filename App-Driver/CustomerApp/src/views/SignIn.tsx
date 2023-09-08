@@ -3,33 +3,33 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../routers/navigationParams';
-import { setLoading } from './../redux/reducers';
+import { setLoading, setLogin } from './../redux/reducers';
 import { Icons } from '../configs/images';
 import { StyleSheet } from 'react-native';
 import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { validate } from './../helpers/validate';
 import { FormFieldSignIn, UserService } from './../services/user/UserService';
-import Divider from './../components/Divider';
 import { User } from '../appData/user/User';
 import useCustomNavigation from '../hooks/useCustomNavigation';
+import Divider from '../component/Divider';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
 const initialFormData: FormFieldSignIn = {
-  userTel: '',
-  userPass: '',
+  driverTel: '',
+  driverPass: '',
 };
 
 const ErrorMessage: FormFieldSignIn = {
-  userTel: 'Phone number is required\n',
-  userPass: 'Password is required\n',
+  driverTel: 'Phone number is required\n',
+  driverPass: 'Password is required\n',
 };
 
 const SignIn: React.FC<SignInScreenProps> = ({ navigation }) => {
   const [data, setData] = React.useState<FormFieldSignIn>(initialFormData);
   const [errorFields, setErrorFields] = React.useState({
-    userTel: true,
-    userPass: true,
+    driverTel: true,
+    driverPass: true,
   });
   const [showError, setShowError] = React.useState(false);
   const [showMessage, setShowMessage] = React.useState(false);
@@ -48,11 +48,11 @@ const SignIn: React.FC<SignInScreenProps> = ({ navigation }) => {
       };
 
   const validateForm = (): boolean => {
-    const userTel = validate.notEmpty(data.userTel);
-    const userPass = validate.notEmpty(data.userPass);
-    setErrorFields({ userTel, userPass });
+    const driverTel = validate.notEmpty(data.driverTel);
+    const driverPass = validate.notEmpty(data.driverPass);
+    setErrorFields({ driverTel, driverPass });
 
-    return userTel && userPass;
+    return driverTel && driverPass;
   };
 
   const handleSubmit = async () => {
@@ -68,6 +68,7 @@ const SignIn: React.FC<SignInScreenProps> = ({ navigation }) => {
 
         const user = User.getInstance()
         const info = await user.getInformation(result)
+        dispatch(setLogin(User.isUserLogin()))
         navigate.navigate("Home")
 
       } catch (error) {
@@ -90,7 +91,7 @@ const SignIn: React.FC<SignInScreenProps> = ({ navigation }) => {
       <VStack w={'90%'} space={4}>
         <FormControl>
           <Input
-            onChange={updateField('userTel')}
+            onChange={updateField('driverTel')}
             type="text"
             placeholder="Phone Number"
             keyboardType="number-pad"
@@ -99,7 +100,7 @@ const SignIn: React.FC<SignInScreenProps> = ({ navigation }) => {
         </FormControl>
         <FormControl>
           <Input
-            onChange={updateField('userPass')}
+            onChange={updateField('driverPass')}
             type="password"
             placeholder="Password"
             width={'100%'}
@@ -155,8 +156,8 @@ const SignIn: React.FC<SignInScreenProps> = ({ navigation }) => {
               <VStack alignItems={'center'} space={2}>
                 <Alert.Icon />
                 <Text style={styles.errorMsg} textAlign={'center'}>
-                  {!errorFields.userTel && ErrorMessage.userTel}
-                  {!errorFields.userPass && ErrorMessage.userPass}
+                  {!errorFields.driverTel && ErrorMessage.driverTel}
+                  {!errorFields.driverPass && ErrorMessage.driverPass}
                 </Text>
               </VStack>
             </Alert>
