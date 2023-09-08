@@ -1,4 +1,4 @@
-import { Flex, Text, Heading, VStack, Input, HStack, CheckCircleIcon,  Button, theme, FormControl, Image, Box, Modal, Alert, CloseIcon } from 'native-base';
+import { Flex, Text, Heading, VStack, Input, HStack, CheckCircleIcon, Button, theme, FormControl, Image, Box, Modal, Alert, CloseIcon } from 'native-base';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -10,6 +10,8 @@ import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { validate } from './../helpers/validate';
 import { FormFieldSignIn, UserService } from './../services/user/UserService';
 import Divider from './../components/Divider';
+import { User } from '../appData/user/User';
+import useCustomNavigation from '../hooks/useCustomNavigation';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
@@ -23,7 +25,7 @@ const ErrorMessage: FormFieldSignIn = {
   userPass: 'Password is required\n',
 };
 
-const SignIn: React.FC<SignInScreenProps> = ({navigation}) => {
+const SignIn: React.FC<SignInScreenProps> = ({ navigation }) => {
   const [data, setData] = React.useState<FormFieldSignIn>(initialFormData);
   const [errorFields, setErrorFields] = React.useState({
     userTel: true,
@@ -36,18 +38,19 @@ const SignIn: React.FC<SignInScreenProps> = ({navigation}) => {
   const [isSuccess, setIsSuccess] = React.useState(true);
 
   const dispatch = useDispatch();
+  const navigate = useCustomNavigation()
 
   const updateField =
     (fieldName: keyof FormFieldSignIn) =>
-    (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
-      const value = event.nativeEvent.text;
-      setData(prevData => ({...prevData, [fieldName]: value}));
-    };
+      (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
+        const value = event.nativeEvent.text;
+        setData(prevData => ({ ...prevData, [fieldName]: value }));
+      };
 
   const validateForm = (): boolean => {
     const userTel = validate.notEmpty(data.userTel);
     const userPass = validate.notEmpty(data.userPass);
-    setErrorFields({userTel, userPass});
+    setErrorFields({ userTel, userPass });
 
     return userTel && userPass;
   };
@@ -59,9 +62,14 @@ const SignIn: React.FC<SignInScreenProps> = ({navigation}) => {
       dispatch(setLoading(true));
       try {
         // Call API or perform further actions
-        const responseData = await UserService.signIn(data);
+        const { result } = await UserService.signIn(data);
         setIsSuccess(true);
-        setMessage(responseData);
+        setMessage("Login Success");
+
+        const user = User.getInstance()
+        const info = await user.getInformation(result)
+        navigate.navigate("Home")
+
       } catch (error) {
         setIsSuccess(false);
         setMessage(error as string);
@@ -114,31 +122,31 @@ const SignIn: React.FC<SignInScreenProps> = ({navigation}) => {
         </Button>
 
         <HStack mx={"auto"}>
-					<Text >
-							First time?  
-							<Text color={"success.600"} onPress={()=>navigation.navigate("SignUp")} textDecorationLine={'underline'}>
-							 Sign Up
-							</Text>
-					</Text>
-				</HStack>
+          <Text >
+            First time?
+            <Text color={"success.600"} onPress={() => navigation.navigate("SignUp")} textDecorationLine={'underline'}>
+              Sign Up
+            </Text>
+          </Text>
+        </HStack>
 
-				<Divider>
-					<Text style={{width: "auto", paddingHorizontal:10, textAlign: 'center'}}>or</Text>
-				</Divider>
+        <Divider>
+          <Text style={{ width: "auto", paddingHorizontal: 10, textAlign: 'center' }}>or</Text>
+        </Divider>
 
 
-					
-				<HStack space={2}  mx={"auto"} alignItems={"center"}>
-					<Button  style={styles.iconBtn} variant={'outline'}>
-						<Image style={styles.icon} source={Icons.Gmail} alt="icon" />
-					</Button>
-					<Button style={styles.iconBtn} variant={'outline'}>
-						<Image style={styles.icon} source={Icons.Facebook} alt="icon" />
-					</Button>
-					<Button style={styles.iconBtn} variant={'outline'}>
-						<Image style={styles.icon} source={Icons.Apple} alt="icon" />
-					</Button>
-				</HStack>
+
+        <HStack space={2} mx={"auto"} alignItems={"center"}>
+          <Button style={styles.iconBtn} variant={'outline'}>
+            <Image style={styles.icon} source={Icons.Gmail} alt="icon" />
+          </Button>
+          <Button style={styles.iconBtn} variant={'outline'}>
+            <Image style={styles.icon} source={Icons.Facebook} alt="icon" />
+          </Button>
+          <Button style={styles.iconBtn} variant={'outline'}>
+            <Image style={styles.icon} source={Icons.Apple} alt="icon" />
+          </Button>
+        </HStack>
 
         <Modal isOpen={showError} onClose={() => setShowError(false)}>
           <Modal.Content>
