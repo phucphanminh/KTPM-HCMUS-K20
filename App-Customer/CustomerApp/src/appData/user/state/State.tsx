@@ -1,0 +1,6 @@
+interface UserState {
+	handleRequest(): void;
+}
+
+
+

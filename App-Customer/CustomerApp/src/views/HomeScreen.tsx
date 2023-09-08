@@ -8,7 +8,6 @@ import {
   Platform,
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { Google_Map_Api_Key } from '@env';
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../routers/navigationParams';
@@ -23,17 +22,24 @@ import { selectorigin } from './../redux/reducers';
 import { LocationService } from '../services/location/LocationService';
 import { StatusColor } from '../component/Overlay/SlideMessage';
 import { SocketIOClient } from '../socket';
+import { User } from '../appData/user/User';
+import { LoginHandler } from '../designPattern/chain';
+import useCustomNavigation from '../hooks/useCustomNavigation';
 
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const socket=SocketIOClient.getInstance()
+  const socket = SocketIOClient.getInstance()
+  const navigate = useCustomNavigation();
+  const loginHandler = new LoginHandler();
 
   useEffect(() => {
-    socket.connect()
-  })
+    // Check if the user is logged in using the LoginHandler
+    !loginHandler.handle() ? navigate.replace("Welcome") :socket.connect();
+    
+  });
 
   useEffect(() => {
     const requestLocationPermission = async () => {
@@ -135,7 +141,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <Button
               className="my-2 rounded-[10px] px-5 h-[40px] w-[30%] "
               onPress={() => {
-                console.log(Google_Map_Api_Key);
+                console.log(User.getInstance().information);
               }}>
               <Text className="text-white text-xs">Comfirm</Text>
             </Button>
