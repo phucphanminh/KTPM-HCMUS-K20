@@ -5,20 +5,18 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../routers/navigationParams';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../redux/reducers';
-import DriverProfile from './../components/Profile/Driver';
- 
+
 type RideScreenProps = NativeStackScreenProps<RootStackParamList, 'Ride'>;
 
-const RideScreen: React.FC<RideScreenProps> = ({navigation}) => {
+const RideScreen: React.FC<RideScreenProps> = ({ navigation }) => {
 
- 
-  
+
+
   return (
-   <Flex margin={"auto"} height={"90%"}>
+    <Flex margin={"auto"} height={"90%"}>
       <VStack space={4}>
-        <DriverProfile tel={"0913447801"}/>
       </VStack>
-   </Flex>
+    </Flex>
   );
 };
 

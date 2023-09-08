@@ -20,8 +20,9 @@ import {setOrigin} from './../redux/reducers';
 import {useSelector} from 'react-redux';
 import {selectorigin} from './../redux/reducers';
 import {LocationService} from '../services/location/LocationService';
-import {StatusColor} from '../components/Overlay/SlideMessage';
 import {SocketIOClient} from '../socket';
+import {StatusColor} from '../component/Overlay/SlideMessage';
+import {LoginHandler} from '../designPattern/chain';
 import useCustomNavigation from '../hooks/useCustomNavigation';
 
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
@@ -32,12 +33,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
   const socket = SocketIOClient.getInstance();
 
+  const loginHandler = new LoginHandler();
   const [stateTurnOff, setStateTurnOff] = React.useState(false);
 
   useEffect(() => {
-    socket.connect();
-  }, []);
-
+    // Check if the user is logged in using the LoginHandler
+    !loginHandler.handle() ? navigate.replace('Welcome') : socket.connect();
+  });
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'ios') {

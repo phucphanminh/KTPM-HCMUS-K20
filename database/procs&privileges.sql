@@ -305,7 +305,45 @@ BEGIN
 END;
 $$;
 
+-- Get GPS History
+CREATE OR REPLACE FUNCTION TAXI.Find_GPS_History(
+   phoneNumber VARCHAR, 
+   pickupAddress text
+)
+RETURNS TABLE (
+   id CHAR(15),
+   phone_number VARCHAR(255),
+   address TEXT,
+   latitude DOUBLE PRECISION,
+   longitude DOUBLE PRECISION
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+   RETURN QUERY
+   SELECT * FROM TAXI.GPS_HISTORY
+    WHERE
+        GPS_HISTORY.PHONE_NUMBER = phoneNumber
+        AND GPS_HISTORY.ADDRESS = pickupAddress;
+END;
+$$;
 
+-- Save GPS History
+CREATE OR REPLACE FUNCTION TAXI.Save_GPS_History(
+   ID CHAR(15), 
+   phoneNumber VARCHAR(255), 
+   pickupAddress TEXT, 
+   latitude DOUBLE PRECISION, 
+   longitude DOUBLE PRECISION)
+RETURNS TABLE (message TEXT) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO TAXI.GPS_HISTORY(ID, PHONE_NUMBER, ADDRESS, LATITUDE, LONGITUDE)
+    VALUES (ID, phoneNumber, pickupAddress, latitude, longitude);
+    RETURN QUERY SELECT 'Thêm tọa độ GPS thành công';
+END;
+$$;
 
 
 

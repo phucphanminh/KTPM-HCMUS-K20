@@ -33,7 +33,7 @@ const Routes = () => {
           id={slideMessage.id}
         />
         <Stack.Navigator
-          initialRouteName="Home"
+          initialRouteName="Welcome"
           screenOptions={{
             headerShown: false,
           }}>
