@@ -14,25 +14,32 @@ import { RootStackParamList } from '../routers/navigationParams';
 import { Images } from '../configs/images';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import {  setLoading, showMessage } from './../redux/reducers';
+import { setLoading, showMessage } from './../redux/reducers';
 import { Button } from 'native-base';
 import { setOrigin } from './../redux/reducers';
 import { useSelector } from 'react-redux';
 import { selectorigin } from './../redux/reducers';
 import { LocationService } from '../services/location/LocationService';
-import { StatusColor } from '../components/Overlay/SlideMessage';
 import { SocketIOClient } from '../socket';
+import { StatusColor } from '../component/Overlay/SlideMessage';
+import { LoginHandler } from '../designPattern/chain';
+import useCustomNavigation from '../hooks/useCustomNavigation';
+
+
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const socket=SocketIOClient.getInstance()
+  const socket = SocketIOClient.getInstance()
+  const navigate = useCustomNavigation();
+  const loginHandler = new LoginHandler();
 
   useEffect(() => {
-    socket.connect()
-  },[])
+    // Check if the user is logged in using the LoginHandler
+    !loginHandler.handle() ? navigate.replace("Welcome") : socket.connect();
 
+  });
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'ios') {
@@ -66,8 +73,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         const position = await LocationService.getMyLocation();
         const currentLongitude = position.coords.longitude;
         const currentLatitude = position.coords.latitude;
-        console.log(currentLongitude,currentLatitude);
-        
+        console.log(currentLongitude, currentLatitude);
+
 
         dispatch(
           setOrigin({
@@ -135,7 +142,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <Button
               className="my-2 rounded-[10px] px-5 h-[40px] w-[30%] "
               onPress={() => {
-                console.log(Google_Map_Api_Key);
+                console.log(loginHandler.handle());
               }}>
               <Text className="text-white text-xs">Comfirm</Text>
             </Button>

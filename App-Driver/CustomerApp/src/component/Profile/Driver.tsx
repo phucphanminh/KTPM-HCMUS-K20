@@ -5,22 +5,16 @@ import { Icons, Images } from './../../configs/images';
 import myTheme from './../../configs/Theme';
 import Divider from '../Divider';
 import { useDispatch } from 'react-redux';
-import { showMessage } from './../../redux/reducers';
-import { StatusColor } from '../Overlay/SlideMessage';
+import { UserInformation } from '../../appData/user/User';
 
 interface DriverProps {
-	tel: string
+	data: UserInformation
 }
 
-const DriverProfile: React.FC<DriverProps> = ({ tel }) => {
-
-	const [isFree, setIsFree] = useState(true)
-	const [phone, setPhone] = useState("")
-	const dispatch=useDispatch()
-
-	useEffect(() =>
-		setPhone(tel)
-	)
+const DriverProfile: React.FC<DriverProps> = ({ data }) => {
+	
+	const [isFree, setIsFree] = useState(data.free)
+	const dispatch = useDispatch()
 
 	return (
 		<>
@@ -29,7 +23,7 @@ const DriverProfile: React.FC<DriverProps> = ({ tel }) => {
 					<Image style={styles.imgProfile} source={Images.profile} alt='avt' />
 					<Badge backgroundColor={isFree ? "teal.500" : "gray.400"} rounded="full" width={6} height={6} mt={-6} mr={1} zIndex={1} variant="solid" alignSelf="flex-end" />
 				</VStack>
-				<Heading style={styles.name}> Harry Bui</Heading>
+				<Heading style={styles.name}> {data.name}</Heading>
 
 				<HStack style={styles.border} alignItems={"center"}>
 					<HStack space={2}>
@@ -37,7 +31,7 @@ const DriverProfile: React.FC<DriverProps> = ({ tel }) => {
 							Phone:
 						</Text>
 						<Text fontSize={20}>
-							{phone}
+							{data.tel}
 						</Text>
 					</HStack>
 					<Button colorScheme={"success"} style={styles.button}>
@@ -47,25 +41,21 @@ const DriverProfile: React.FC<DriverProps> = ({ tel }) => {
 				<HStack style={styles.border} alignItems={"center"}>
 					<HStack space={2}>
 						<Text fontWeight={600} fontSize={20}>
-							CCCD:
+							CMND:
 						</Text>
 						<Text fontSize={20}>
-							05220002468
+							{data.cmnd}
 						</Text>
 					</HStack>
 				</HStack>
 
 				<VStack alignItems={"center"} space={2}>
 					<Image style={styles.image} source={Images.carType} alt='car_type' />
-					<Text fontSize={24} fontWeight={600} color={"secondary.600"}>Chevrolet Corvette - 4 Seats</Text>
+					<Text fontSize={24} fontWeight={600} color={"secondary.600"}>{data.brandname} - {data.vehicletype}</Text>
 					<Divider width={"75%"} />
-					<Text fontSize={20} color={"gray.700"}>51C1-12345</Text>
+					<Text fontSize={20} color={"gray.700"}>{data.vehicleid}</Text>
 				</VStack>
 			</VStack>
-			
-			<Button onPress={()=>dispatch(showMessage(StatusColor.info,"The Driver is not here!"))}>
-				Click	
-			</Button>
 		</>
 
 	);

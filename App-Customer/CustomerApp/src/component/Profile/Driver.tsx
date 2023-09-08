@@ -21,8 +21,6 @@ const DriverProfile: React.FC<DriverProps> = ({ data }) => {
 	const [isFree, setIsFree] = useState(true)
 	const dispatch = useDispatch()
 
-
-
 	return (
 		<>
 			<VStack width={"100%"} alignItems={"center"} space={3}>
@@ -63,10 +61,6 @@ const DriverProfile: React.FC<DriverProps> = ({ data }) => {
 					<Text fontSize={20} color={"gray.700"}>{vehicleNumber}</Text>
 				</VStack>
 			</VStack>
-
-			<Button onPress={() => dispatch(showMessage(StatusColor.info, "The Driver is not here!"))}>
-				Click
-			</Button>
 		</>
 
 	);
