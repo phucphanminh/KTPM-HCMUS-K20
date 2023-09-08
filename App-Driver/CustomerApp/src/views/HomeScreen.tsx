@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, {useRef} from 'react';
 import {
   Text,
   View,
@@ -7,36 +7,41 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import { Google_Map_Api_Key } from '@env';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../routers/navigationParams';
-import { Images } from '../configs/images';
-import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import {  setLoading, showMessage } from './../redux/reducers';
-import { Button } from 'native-base';
-import { setOrigin } from './../redux/reducers';
-import { useSelector } from 'react-redux';
-import { selectorigin } from './../redux/reducers';
-import { LocationService } from '../services/location/LocationService';
-import { StatusColor } from '../components/Overlay/SlideMessage';
-import { SocketIOClient } from '../socket';
+import MapView, {Marker} from 'react-native-maps';
+import {Google_Map_Api_Key} from '@env';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../routers/navigationParams';
+import {Images} from '../configs/images';
+import {useState, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import {setLoading, showMessage} from './../redux/reducers';
+import {Button} from 'native-base';
+import {setOrigin} from './../redux/reducers';
+import {useSelector} from 'react-redux';
+import {selectorigin} from './../redux/reducers';
+import {LocationService} from '../services/location/LocationService';
+import {StatusColor} from '../components/Overlay/SlideMessage';
+import {SocketIOClient} from '../socket';
+import useCustomNavigation from '../hooks/useCustomNavigation';
+
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const dispatch = useDispatch();
+  const navigate = useCustomNavigation();
 
-  const socket=SocketIOClient.getInstance()
+  const socket = SocketIOClient.getInstance();
+
+  const [stateTurnOff, setStateTurnOff] = React.useState(false);
 
   useEffect(() => {
-    socket.connect()
-  },[])
+    socket.connect();
+  }, []);
 
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'ios') {
-        getLocation()
+        getLocation();
       } else {
         // For Android
         // Request location permission using PermissionsAndroid API
@@ -47,10 +52,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               title: 'Location Access Required',
               message: 'This App needs to Access your location',
               buttonPositive: 'OK',
-            }
+            },
           );
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            getLocation()
+            getLocation();
           } else {
             dispatch(showMessage(StatusColor.error, 'Permission Denied'));
           }
@@ -62,27 +67,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
     const getLocation = async () => {
       try {
-        dispatch(setLoading(true))
+        dispatch(setLoading(true));
         const position = await LocationService.getMyLocation();
         const currentLongitude = position.coords.longitude;
         const currentLatitude = position.coords.latitude;
-        console.log(currentLongitude,currentLatitude);
-        
+        console.log(currentLongitude, currentLatitude);
 
         dispatch(
           setOrigin({
-            location: { lat: currentLatitude, lng: currentLongitude },
-          })
+            location: {lat: currentLatitude, lng: currentLongitude},
+          }),
         );
-        dispatch(setLoading(false))
-
+        dispatch(setLoading(false));
       } catch (err) {
         dispatch(showMessage(StatusColor.error, err));
+      } finally {
+        dispatch(setLoading(false));
       }
-      finally {
-        dispatch(setLoading(false))
-      }
-    }
+    };
 
     requestLocationPermission();
   }, [dispatch]);
@@ -114,32 +116,22 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </MapView>
       )}
 
-
-      <View className=" bottom-0  absolute h-[20%]  w-full">
-        <View className="flex flex-col items-center justify-end h-full w-full ">
-          <View className="flex flex-col items-center justify-start bg-[#FFFBE7] border-2 border-[#F3BD06] rounded-[15px] h-[95%] w-[90%] mb-7 ">
-
-            <View className="relative  h-[30%] w-[95%] mt-2">
-              <TextInput
-                className="absolute pl-[15%]  bg-[#FFFBE7] border-2 border-[#F3BD06] rounded-[10px] h-full w-full "
-                editable
-                onPressIn={() => {
-                  navigation.navigate('Find');
-                }}
-                placeholder="Where are you go"
-              />
-              <View className=" absolute inset-y-0 left-0 flex items-start justify-center pl-3 pointer-events-none ">
-                <Image source={Images.iconfind}></Image>
-              </View>
-            </View>
-            <Button
-              className="my-2 rounded-[10px] px-5 h-[40px] w-[30%] "
-              onPress={() => {
-                console.log(Google_Map_Api_Key);
-              }}>
-              <Text className="text-white text-xs">Comfirm</Text>
-            </Button>
-          </View>
+      <View className=" top-4 absolute h-[10%] w-[100%] flex items-center mb-[20%] ">
+        <View className="w-[90%] flex flex-row items-center justify-end gap-2">
+          <Button
+            className={` bg-[#2ab54f]`}
+            onPress={() => {
+              navigate.navigate('Book');
+            }}>
+            <Text className="text-white text-xs">TurnOn</Text>
+          </Button>
+          <Button
+            className=" bg-red-500 "
+            onPress={() => {
+              console.log(Google_Map_Api_Key);
+            }}>
+            <Text className="text-white text-xs">TurnOff</Text>
+          </Button>
         </View>
       </View>
     </View>

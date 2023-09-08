@@ -6,25 +6,23 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../routers/navigationParams';
 import Map from '../component/Map';
 import ChoiceOrign from '../component/ChoiceOrign';
 import FlatListCar from '../component/FlatListCar';
 import {useSelector} from 'react-redux';
-import {
-  selectStep,
-  selectorigin,
-} from '../redux/reducers';
+import {selectStep, selectorigin} from '../redux/reducers';
 import {Images} from '../configs/images';
 import {useDispatch} from 'react-redux';
 import {setStep} from '../redux/reducers';
 import {Button} from 'native-base';
 import {Divider} from 'native-base';
 import {Google_Map_Api_Key} from '@env';
-import { SocketIOClient } from '../socket';
-
+import {SocketIOClient} from '../socket';
+import {setLocationCustomer} from '../redux/reducers';
+import useCustomNavigation from '../hooks/useCustomNavigation';
 
 const DATA: ItemData[] = [
   {
@@ -52,23 +50,44 @@ type ItemData = {
 
 type BookScreenProps = NativeStackScreenProps<RootStackParamList, 'Book'>;
 const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
-  const [selectedId, setSelectedId] = useState<string>();
+  const [selectedId, setSelectedId] = useState<any>();
   const Step = useSelector(selectStep);
   const origin = useSelector(selectorigin);
-  const socket=SocketIOClient.getInstance()
-  
-  // socket.emit('join_room', 'driver1');
-  socket.emitJoinRoom("driver1")
-  const AcceptBooking = () => {
-    // socket.emit('send_location_to_customer', origin);
-  };
+  const socket = SocketIOClient.getInstance();
+  const [ListCustomer, SetListCustomer] = useState<any[]>([]);
+  const navigate = useCustomNavigation();
 
-  // React.useEffect(() => {
-  //   // socket.on('send_location_to_driver', data => {
-  //   //   console.log(data);
-  //   // });
-  // }, [socket]);
+  // socket.emit('join_room', 'driver1');
+  React.useEffect(() => {
+    socket.emitJoinRoom('driver1');
+    socket.onListenCustomerLocation(data => {
+      SetListCustomer(prevListCustomer => [...prevListCustomer, data]);
+    });
+  }, []);
+
+  const AcceptBooking = () => {
+    const driveinformation = {
+      idcustomer: selectedId.data.Customer?.id,
+      driver: 'driver1',
+      name: 'Dai Andree',
+      identify: '77c1 1213213',
+      location: origin.location,
+    };
+    socket.emitSendAcceptBooking(driveinformation);
+    dispatch(setLocationCustomer(selectedId.data));
+    navigate.navigate('MapBook');
+  };
+  const getItemLayout = (_: any, index: number) => ({
+    length: 5, // Replace with the estimated height of your list items
+    offset: 5 * index,
+    index,
+  });
+
+  React.useEffect(() => {
+    console.log(ListCustomer[0]?.data?.Customer?.id);
+  }, [ListCustomer.length]);
   const dispatch = useDispatch();
+
   return (
     <View className="h-full w-full">
       <Map></Map>
@@ -84,32 +103,37 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
           }}
           className="flex flex-row w-[100%] h-[15%] ">
           <View className=" relative flex flex-row h-full w-full items-center justify-center mr-7 ">
-            <Text className="text-xl font-semibold">Select ride</Text>
+            <Text className="text-xl font-semibold">Select customer</Text>
             <Image className="absolute left-4" source={Images.angle} />
           </View>
         </TouchableOpacity>
         <FlatList
-          data={DATA}
-          keyExtractor={item => item.id}
+          data={ListCustomer}
+          keyExtractor={item => item?.data.Customer?.id}
           extraData={selectedId}
+          getItemLayout={getItemLayout}
           renderItem={({item}) => (
             <TouchableOpacity
-              className={`${item.id === selectedId ? 'bg-[#cea0a0]' : ''}`}
-              onPress={() => setSelectedId(item.id)}>
+              className={`${
+                item?.data.Customer?.id === selectedId?.data.Customer?.id
+                  ? 'bg-[#cea0a0]'
+                  : ''
+              }`}
+              onPress={() => setSelectedId(item)}>
               <FlatListCar
-                title={item.title}
-                destination={item.destination}
-                origin={item.origin}
-                price={item.price}
+                title={item?.data.Customer?.id}
+                destination={item?.data.destination?.description}
+                origin={item?.data.origin?.description}
+                price={item?.data.cardetails?.price}
               />
             </TouchableOpacity>
           )}
         />
-        <View className=" absolute bottom-0 flex flex-col items-center w-full h-[25%] justify-end bg-white ">
+        <View className=" absolute bottom-0 flex flex-col items-center w-full h-[20%] justify-end bg-white ">
           <Button
-            className=" mb-2 h-[50%] w-[60%] rounded-[20px]"
+            className="mb-2 h-[70%] w-[60%] rounded-[20px]"
             onPress={AcceptBooking}>
-            <Text className="text-xl font-semibold text-white">
+            <Text className="text-xl font-semibold text-white h-full">
               Book Ride now
             </Text>
           </Button>

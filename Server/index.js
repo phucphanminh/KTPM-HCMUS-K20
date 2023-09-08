@@ -1,5 +1,5 @@
 const express = require("express");
-const { SOCKET } = require('./socket/constants');
+const { SOCKET } = require("./socket/constants");
 const app = express();
 const http = require("http");
 const cors = require("cors");
@@ -10,7 +10,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*",  
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
@@ -34,21 +34,26 @@ io.on("connection", (socket) => {
     console.log(data);
     const messages = {
       data: data,
-      messages: "oke123",
+      messages: "Send to driver success",
     };
-    socket.emit(SOCKET.SEND_CUSTOMER_LOCATION, driverLocations);
-    socket.to("driver1").emit(SOCKET.SEND_DRIVERS_LOCATION, messages);
+    socket.emit(SOCKET.SEND_DRIVERS_LOCATION, driverLocations);
+    socket.to("driver1").emit(SOCKET.SEND_CUSTOMER_LOCATION, messages);
   });
 
   socket.on("send_location_to_customer", (data) => {
     console.log(data);
+  });
+  socket.on(SOCKET.SEND_ACCEPT_BOOKING, (data) => {
+    console.log(data.idcustomer);
+
+    socket.to(data.idcustomer).emit(SOCKET.SEND_ACCEPT_BOOKING_SUCCESS, data);
   });
 
   socket.on("disconnect", () => {
     console.log("User Disconnected", socket.id);
   });
 });
-const PORT=3001
+const PORT = 3001;
 server.listen(PORT, () => {
   console.log(`SERVER RUNNING on ${PORT}`);
 });

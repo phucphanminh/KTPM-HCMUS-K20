@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { StatusColor } from '../components/Overlay/SlideMessage';
+import {StatusColor} from '../components/Overlay/SlideMessage';
 
 const initialStatusState = {
   isLoading: false,
@@ -42,7 +42,7 @@ export const MessageReducer = (state = initialMessageState, action) => {
 const initialState = {
   origin: null,
   destination: null,
-  LocationDriver: null,
+  LocationCustomer: null,
   step: {name: 'init'},
   travelTimeinformations: null,
 };
@@ -63,8 +63,8 @@ export const navSlices = createSlice({
     setTravelTime: (state, action) => {
       state.travelTimeinformations = action.payload;
     },
-    setLocationDriver: (state, action) => {
-      state.LocationDriver = action.payload;
+    setLocationCustomer: (state, action) => {
+      state.LocationCustomer = action.payload;
     },
   },
 });
@@ -74,7 +74,7 @@ export const {
   setDestination,
   setTravelTime,
   setStep,
-  setLocationDriver,
+  setLocationCustomer,
 } = navSlices.actions;
 
 // selector
@@ -82,6 +82,6 @@ export const selectorigin = state => state.nav.origin;
 export const selectdestination = state => state.nav.destination;
 export const selecttravelTime = state => state.nav.travelTimeinformations;
 export const selectStep = state => state.nav.step;
-export const selectLocationDriver = state => state.nav.LocationDriver;
+export const selectLocationCustomer = state => state.nav.LocationCustomer;
 
 export default navSlices.reducer;
