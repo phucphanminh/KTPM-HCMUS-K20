@@ -26,6 +26,7 @@ import {Button} from 'native-base';
 import {Divider} from 'native-base';
 import {Google_Map_Api_Key} from '@env';
 import {SocketIOClient} from '../socket';
+import {User} from '../appData/user/User';
 
 // import * as io from 'socket.io-client';
 // import {SOCKET} from './../socket/constants';
@@ -80,10 +81,11 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   const destination = useSelector(selectdestination);
 
   const socket = SocketIOClient.getInstance();
+  const customerinfo = User.getInstance().information;
 
   const Booking = () => {
     const data = {
-      Customer: {id: '0001'},
+      Customer: {id: customerinfo.tel, name: customerinfo.name},
       origin,
       destination,
       cardetails: {
@@ -102,8 +104,8 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   //   });
   // }, [Step, socket]);
   const getItemLayout = (_: any, index: number) => ({
-    length: 5, // Replace with the estimated height of your list items
-    offset: 5 * index,
+    length: 3, // Replace with the estimated height of your list items
+    offset: 3 * index,
     index,
   });
 

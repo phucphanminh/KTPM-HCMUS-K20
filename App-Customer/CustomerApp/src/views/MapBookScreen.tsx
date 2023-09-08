@@ -28,6 +28,7 @@ import {Divider} from 'native-base';
 import {Google_Map_Api_Key} from '@env';
 import {SocketIOClient} from '../socket';
 import NotifyInformationDriver from '../component/NotifyInformationDriver';
+import {User} from '../appData/user/User';
 type MapBookScreenProps = NativeStackScreenProps<RootStackParamList, 'MapBook'>;
 const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
   const [selectedId, setSelectedId] = useState<string>();
@@ -42,10 +43,14 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
   });
 
   React.useEffect(() => {
-    socket.emitJoinRoom('0001');
+    socket.emitJoinRoom(User.getInstance().information.tel);
     socket.onListenDriversLocation(data => {
-      dispatch(setLocationDriver(data));
       console.log(data);
+      dispatch(setLocationDriver(data));
+    });
+    socket.onListenUpdateLocationDriver(data => {
+      console.log(data);
+      dispatch(setLocationDriver(data));
     });
     socket.onListenAcceptBookingSuccess(data => {
       console.log(data);
@@ -57,7 +62,7 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
       SetNotify(() => ({
         notify: true,
         name: locationDriver.name,
-        vehicleInfo: `${locationDriver.identify}--Honda--Accent`,
+        vehicleInfo: `${locationDriver.identify}-${locationDriver.brandName}`,
       }));
     }
   }, [locationDriver]);

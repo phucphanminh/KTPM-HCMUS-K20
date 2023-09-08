@@ -23,6 +23,7 @@ import {Google_Map_Api_Key} from '@env';
 import {SocketIOClient} from '../socket';
 import {setLocationCustomer} from '../redux/reducers';
 import useCustomNavigation from '../hooks/useCustomNavigation';
+import {User} from '../appData/user/User';
 
 const DATA: ItemData[] = [
   {
@@ -57,9 +58,9 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   const [ListCustomer, SetListCustomer] = useState<any[]>([]);
   const navigate = useCustomNavigation();
 
-  // socket.emit('join_room', 'driver1');
+  const driverinfo = User.getInstance().information;
+
   React.useEffect(() => {
-    socket.emitJoinRoom('driver1');
     socket.onListenCustomerLocation(data => {
       SetListCustomer(prevListCustomer => [...prevListCustomer, data]);
     });
@@ -68,17 +69,19 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   const AcceptBooking = () => {
     const driveinformation = {
       idcustomer: selectedId.data.Customer?.id,
-      driver: 'driver1',
-      name: 'Dai Andree',
-      identify: '77c1 1213213',
+      driver: driverinfo.tel,
+      name: driverinfo.name,
+      identify: driverinfo.vehicleid,
+      brandName: driverinfo.brandname,
       location: origin.location,
     };
     socket.emitSendAcceptBooking(driveinformation);
     dispatch(setLocationCustomer(selectedId.data));
+    console.log(selectedId);
     navigate.navigate('MapBook');
   };
   const getItemLayout = (_: any, index: number) => ({
-    length: 5, // Replace with the estimated height of your list items
+    length: 5,
     offset: 5 * index,
     index,
   });
@@ -121,7 +124,7 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
               }`}
               onPress={() => setSelectedId(item)}>
               <FlatListCar
-                title={item?.data.Customer?.id}
+                title={item?.data.Customer?.name}
                 destination={item?.data.destination?.description}
                 origin={item?.data.origin?.description}
                 price={item?.data.cardetails?.price}

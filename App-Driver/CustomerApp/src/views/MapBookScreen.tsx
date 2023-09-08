@@ -35,15 +35,15 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
   const [Notify, SetNotify] = useState({
     notify: false,
     name: '',
-    vehicleInfo: '',
+    telephonenumber: '',
   });
 
   React.useEffect(() => {
-    if (locationCustomer?.name) {
+    if (locationCustomer.Customer?.name) {
       SetNotify(() => ({
         notify: true,
-        name: locationCustomer.name,
-        vehicleInfo: `${locationCustomer.identify}--Honda--Accent`,
+        name: locationCustomer.Customer.name,
+        telephonenumber: locationCustomer.Customer.id,
       }));
     }
   }, [locationCustomer]);
@@ -70,7 +70,7 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
       <View className="absolute bottom-3 w-full h-[20%] items-center">
         <NotifyInformationCustomer
           customerName={Notify.name}
-          vehicleInfo={Notify.vehicleInfo}
+          telephonenumber={Notify.telephonenumber}
         />
       </View>
     </View>

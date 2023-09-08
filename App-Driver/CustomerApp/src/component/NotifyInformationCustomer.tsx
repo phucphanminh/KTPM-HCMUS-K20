@@ -5,14 +5,14 @@ import {Button} from 'native-base';
 
 interface NotifyInformationCustomerProps {
   customerName: string;
-  vehicleInfo: string;
+  telephonenumber: string;
 
   // Add any other props you need here
 }
 
 export default class NotifyInformationCustomer extends Component<NotifyInformationCustomerProps> {
   render() {
-    const {customerName, vehicleInfo} = this.props;
+    const {customerName, telephonenumber} = this.props;
     return (
       <View className="py-2 flex flex-col w-[90%] h-[90%] bg-white rounded-xl items-center">
         <View className=" w-[100%] h-[70%]   flex flex-row items-center">
@@ -22,7 +22,7 @@ export default class NotifyInformationCustomer extends Component<NotifyInformati
               {customerName}
             </Text>
             <Text className="font-semibold text-[#454242] text-md">
-              {vehicleInfo}
+              {telephonenumber}
             </Text>
           </View>
         </View>

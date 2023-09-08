@@ -53,6 +53,10 @@ export class SocketIOClient {
     this.socket.emit(SOCKET.SEND_ACCEPT_BOOKING, data);
   }
 
+  emitSendUpdateLocation(data: any) {
+    this.socket.emit(SOCKET.UPDATE_LOCATION_DRIVER, data);
+  }
+
   onListenCustomerLocation(callback: (data: any) => void) {
     this.socket.on(SOCKET.SEND_CUSTOMER_LOCATION, data => {
       callback(data);

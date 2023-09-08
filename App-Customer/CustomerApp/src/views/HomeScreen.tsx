@@ -37,8 +37,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
   useEffect(() => {
     // Check if the user is logged in using the LoginHandler
-    !loginHandler.handle() ? navigate.replace('Welcome') : socket.connect();
-  });
+    !loginHandler.handle() && navigate.replace('Welcome');
+  }, []);
 
   useEffect(() => {
     const requestLocationPermission = async () => {

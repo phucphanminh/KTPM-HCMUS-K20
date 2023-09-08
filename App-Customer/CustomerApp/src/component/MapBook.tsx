@@ -110,11 +110,11 @@ const MapBook = () => {
 
         {origin && locationDriver?.name && (
           <MapViewDirections
-            origin={{
+            destination={{
               latitude: origin.location.lat,
               longitude: origin.location.lng,
             }}
-            destination={{
+            origin={{
               latitude: locationDriver.location.lat,
               longitude: locationDriver.location.lng,
             }}

@@ -90,7 +90,7 @@ const MapBook = () => {
               latitude: locationCustomer.origin.location.lat,
               longitude: locationCustomer.origin.location.lng,
             }} // Set default latitude and longitude
-            title="location driver"
+            title="location customer"
             identifier="locationCustomer"
           />
         )}

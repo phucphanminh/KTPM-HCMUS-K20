@@ -24,6 +24,8 @@ import {SocketIOClient} from '../socket';
 import {StatusColor} from '../component/Overlay/SlideMessage';
 import {LoginHandler} from '../designPattern/chain';
 import useCustomNavigation from '../hooks/useCustomNavigation';
+import Geolocation from '@react-native-community/geolocation';
+import {User} from '../appData/user/User';
 
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -35,18 +37,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
   const loginHandler = new LoginHandler();
   const [stateTurnOff, setStateTurnOff] = React.useState(false);
+  const [locationStatus, setLocationStatus] = useState('');
+  const driverinfo = User.getInstance().information;
 
   useEffect(() => {
+    socket.emitJoinRoom(driverinfo.tel);
     // Check if the user is logged in using the LoginHandler
-    !loginHandler.handle() ? navigate.replace('Welcome') : socket.connect();
-  });
+    !loginHandler.handle() && navigate.replace('Welcome');
+  }, []);
+
+  let watchID: number | null = null;
+
   useEffect(() => {
     const requestLocationPermission = async () => {
+      console.log('request Location');
       if (Platform.OS === 'ios') {
-        getLocation();
+        getOneTimeLocation();
+        subscribeLocationLocation();
       } else {
-        // For Android
-        // Request location permission using PermissionsAndroid API
         try {
           const granted = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -57,9 +65,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
             },
           );
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            getLocation();
+            getOneTimeLocation();
+            subscribeLocationLocation();
           } else {
-            dispatch(showMessage(StatusColor.error, 'Permission Denied'));
+            setLocationStatus('Permission Denied');
           }
         } catch (err) {
           console.warn(err);
@@ -67,33 +76,90 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
       }
     };
 
-    const getLocation = async () => {
-      try {
-        dispatch(setLoading(true));
-        const position = await LocationService.getMyLocation();
+    requestLocationPermission();
+
+    return () => {
+      if (watchID !== null) {
+        Geolocation.clearWatch(watchID);
+      }
+    };
+  }, []);
+
+  const getOneTimeLocation = () => {
+    setLocationStatus('Getting Location ...');
+    Geolocation.getCurrentPosition(
+      //Will give you the current location
+      position => {
+        console.log('get position success');
+        setLocationStatus('You are Here');
         const currentLongitude = position.coords.longitude;
+        //getting the Longitude from the location json
         const currentLatitude = position.coords.latitude;
-        console.log(currentLongitude, currentLatitude);
+        //getting the Latitude from the location json
+        console.log(position);
+        const currentDescription = JSON.stringify(
+          position.coords.altitudeAccuracy,
+        );
 
         dispatch(
           setOrigin({
             location: {lat: currentLatitude, lng: currentLongitude},
           }),
         );
-        dispatch(setLoading(false));
-      } catch (err) {
-        dispatch(showMessage(StatusColor.error, err));
-      } finally {
-        dispatch(setLoading(false));
-      }
-    };
+        socket.emitSendUpdateLocation({
+          driverinfo: driverinfo.tel,
+          lat: currentLatitude,
+          lng: currentLongitude,
+        });
+      },
+      error => {
+        setLocationStatus(error.message);
+        console.log(error.message);
+      },
+      {enableHighAccuracy: false, timeout: 30000, maximumAge: 1000},
+    );
+  };
 
-    requestLocationPermission();
-  }, [dispatch]);
+  const subscribeLocationLocation = () => {
+    const watchID = Geolocation.watchPosition(
+      position => {
+        setLocationStatus('You are Here');
+        //Will give you the location on location change
+        console.log(position);
+        const currentLongitude = position.coords.longitude;
+
+        const currentLatitude = position.coords.latitude;
+
+        dispatch(
+          setOrigin({
+            location: {lat: currentLatitude, lng: currentLongitude},
+          }),
+        );
+        socket.emitSendUpdateLocation({
+          driverinfo: driverinfo.tel,
+          lat: currentLatitude,
+          lng: currentLongitude,
+        });
+      },
+      error => {
+        setLocationStatus(error.message);
+      },
+      {enableHighAccuracy: false, maximumAge: 1000},
+    );
+  };
 
   const mapRef = useRef(null);
   const origin = useSelector(selectorigin);
-
+  useEffect(() => {
+    if (!origin) {
+      return;
+    }
+    if (mapRef.current) {
+      (mapRef.current as any).fitToSuppliedMarkers(['origin'], {
+        edgePadding: {top: 50, right: 50, bottom: 50, left: 50},
+      });
+    }
+  }, [origin]);
   return (
     <View className="relative h-full w-full">
       {origin != null && (

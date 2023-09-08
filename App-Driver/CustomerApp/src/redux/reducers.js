@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {StatusColor} from '../components/Overlay/SlideMessage';
+import {StatusColor} from '../component/Overlay/SlideMessage';
 
 const initialStatusState = {
   isLoading: false,

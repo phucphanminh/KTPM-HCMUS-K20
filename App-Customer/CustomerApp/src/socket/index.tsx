@@ -65,4 +65,9 @@ export class SocketIOClient {
       callback(data);
     });
   }
+  onListenUpdateLocationDriver(callback: (data: any) => void) {
+    this.socket.on(SOCKET.UPDATE_LOCATION_DRIVER_TO_CUSTOMER, data => {
+      callback(data);
+    });
+  }
 }
