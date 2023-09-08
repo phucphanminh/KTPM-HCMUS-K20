@@ -33,7 +33,6 @@ const callGetDriver = async (driverID) => {
 };
 
 const callAddDriver = async (
-  driverID,
   driverTel,
   driverPass,
   driverName,
@@ -46,9 +45,8 @@ const callAddDriver = async (
 ) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'SELECT * FROM TAXI.AddDriver($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+      'SELECT * FROM TAXI.AddDriver($1, $2, $3, $4, $5, $6, $7, $8, $9)',
       [
-        driverID,
         driverTel,
         driverPass,
         driverName,
@@ -71,7 +69,6 @@ const callAddDriver = async (
 };
 
 const callUpdateDriver = async (
-  driverID, 
   driverTel, 
   driverPass, 
   driverName, 
@@ -85,9 +82,8 @@ const callUpdateDriver = async (
 ) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'SELECT * FROM TAXI.UpdateDriver($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
+      'SELECT * FROM TAXI.UpdateDriver($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
       [
-        driverID, 
         driverTel, 
         driverPass, 
         driverName, 

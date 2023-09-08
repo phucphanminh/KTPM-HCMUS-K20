@@ -34,7 +34,6 @@ const driverInfor = async (req, res) => {
 
 const driverAdd = async (req, res) => {
   const {
-    driverID,
     driverTel,
     driverPass,
     driverName,
@@ -48,7 +47,6 @@ const driverAdd = async (req, res) => {
 
   try {
     const result = await driverPromises.callAddDriver(
-      driverID,
       driverTel,
       driverPass,
       driverName,
@@ -69,7 +67,6 @@ const driverAdd = async (req, res) => {
 
 const driverInforUpdate = async (req, res) => {
   const { 
-    driverID, 
     driverTel, 
     driverPass, 
     driverName, 
@@ -84,7 +81,6 @@ const driverInforUpdate = async (req, res) => {
 
   try {
     const result = await driverPromises.callUpdateDriver(
-      driverID, 
       driverTel, 
       driverPass, 
       driverName, 
