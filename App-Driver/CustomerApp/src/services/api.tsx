@@ -1,8 +1,7 @@
 import axios from 'axios';
-const PORT=3000
 const api = axios.create({
-	baseURL: `http://192.168.2.13:${PORT}/api`,
-  });
-  
+	baseURL: `https://ktpm-k20-hcmus.onrender.com/api`,
+});
+
 
 export default api

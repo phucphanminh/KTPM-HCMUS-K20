@@ -5,7 +5,6 @@ import {
 	VStack,
 	Image,
 	theme,
-	useTheme,
 	Button,
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
@@ -18,7 +17,6 @@ import { Images } from '../configs/images';
 import { StyleSheet } from 'react-native';
 import { User } from '../appData/user/User';
 import { UserService } from '../services/user/UserService';
-import RideScreen, { driver } from './RideScreen';
 import CustomerProfile from '../component/Profile/Customer';
 import { StoreType } from '../redux';
 import { StatusColor } from '../component/Overlay/SlideMessage';
@@ -27,7 +25,7 @@ type WelcomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
 
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
 
-	const dispatch=useDispatch()
+	const dispatch = useDispatch()
 
 	const navigateSignIn = () => {
 		navigation.navigate("SignIn")
@@ -44,7 +42,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
 		dispatch(setLogin(User.isUserLogin()))
 	}
 	const handleEdit = () => {
-		dispatch(showMessage(StatusColor.info,"Not impliment yet"))
+		dispatch(showMessage(StatusColor.info, "Not impliment yet"))
 	}
 
 	return (
@@ -99,8 +97,8 @@ const styles = StyleSheet.create({
 		lineHeight: 24,
 		textAlign: 'center',
 	},
-	btn:{
-		marginTop:8,
+	btn: {
+		marginTop: 8,
 	}
 });
 
