@@ -55,6 +55,9 @@ router.put('/bookings/:booking_id/confirm', driverController.confirmBooking);
 router.put('/bookings/:booking_id/cancel', driverController.cancelBooking);
 
 // Route để hoàn thành cuốc đặt từ tài xế
-router.post('/bookings/complete', driverController.completeRide);  //
+router.post('/bookings/complete', driverController.completeRide);  
+
+// Route để cập nhật cuốc đặt từ tài xế
+router.post('/bookings/update', driverController.updateRide);  
 
 module.exports = router;
