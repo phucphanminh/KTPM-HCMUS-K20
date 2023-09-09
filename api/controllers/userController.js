@@ -12,7 +12,7 @@ const login = async(req, res) => {
     }
     try {
         const result = await userPromises.callAuthenticateUser(userTel, userPass);
-        return res.status(200).json({ result: result.result });
+        return res.status(200).json({ result: result.message });
     } catch (error) {
         return res.status(500).json({ error: 'Đã xảy ra lỗi khi xác thực người dùng.' });
     }
@@ -28,8 +28,8 @@ const userInfor = async(req, res) => {
       }
       return res.json(user);
     } catch (error) {
-        // console.error(error);
-        return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy thông tin người dùng.' });
+      // console.error(error);
+      return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy thông tin người dùng.' });
     }
 };
 

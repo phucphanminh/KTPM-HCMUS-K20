@@ -17,7 +17,7 @@ CREATE TABLE CUSTOMER
 (
    ID                   CHAR(20) NOT NULL,
    TEL                  CHAR(15) NOT NULL,
-   NAME                 VARCHAR(30),
+   NAME                 NCHAR(30)  NOT NULL,
    PRIMARY KEY (ID)
 );
 
