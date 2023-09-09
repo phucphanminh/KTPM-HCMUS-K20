@@ -36,7 +36,12 @@ const NotifyInformationCustomer = ({
         </View>
       </View>
       <View className=" mb-3 flex flex-row h-[40%] w-[90%] rounded-md justify-center gap-3">
-        <Button className="w-[30%] text-center  bg-red-500 h-[80%]">
+        <Button
+          className="w-[30%] text-center  bg-red-500 h-[80%]"
+          onPress={() => {
+            dispatch(selectStep({name: 'cancel trip'}));
+            socket.emitCancelTrip(telephonenumber);
+          }}>
           <Text className="text-white h-full text-xs">Cancel Trip</Text>
         </Button>
         {step.name === 'pick up' ? (

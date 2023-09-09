@@ -15,5 +15,6 @@ module.exports = {
     SEND_NOTIFY_PICK_UP_CUSTOMER: "send_notify_pick_up_customer",
 
     SEND_NOTIFY_TRIP_SUCCESS: "send_notify_trip_success",
+    SEND_NOTIFY_CANCEL_TRIP: "send_notify_cancel_trip",
   },
 };

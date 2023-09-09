@@ -79,4 +79,8 @@ export class SocketIOClient {
   emitSuccessTrip(data: any) {
     this.socket.emit(SOCKET.SEND_NOTIFY_TRIP_SUCCESS, data);
   }
+
+  emitCancelTrip(data: any) {
+    this.socket.emit(SOCKET.SEND_NOTIFY_CANCEL_TRIP, data);
+  }
 }
