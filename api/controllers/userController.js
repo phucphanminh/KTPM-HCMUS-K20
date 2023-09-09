@@ -69,19 +69,15 @@ const userRides = async(req, res) => {
     }
 };
 
-const createBooking = (req, res) => {
-    // Xử lý tạo cuốc xe từ App Khách Hàng
-    // ...
-};
+const cancelRide = async (req, res) => {
+  const rideID = req.params.ride_id;
 
-const getAvailableDrivers = (req, res) => {
-    // Xử lý lấy danh sách tài xế hiện có
-    // ...
-};
-
-const cancelBooking = (req, res) => {
-    // Xử lý hủy cuốc xe từ App Khách Hàng
-    // ...
+  try {
+    const result = await userPromises.callCancelRideByAppUser(rideID);
+    return res.json({ message: result.message });
+  } catch (error) {
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi hủy cuốc xe.' });
+  }
 };
 
 module.exports = {
@@ -90,7 +86,5 @@ module.exports = {
     userAdd,
     userInforUpdate,
     userRides,
-    createBooking,
-    getAvailableDrivers,
-    cancelBooking,
+    cancelRide,
 };

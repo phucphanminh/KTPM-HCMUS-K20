@@ -80,10 +80,27 @@ const callGetRidesByUserID = async (userID) => {
   });
 };
 
+const callCancelRideByAppUser = async (rideID) => {
+  return new Promise((resolve, reject) => {
+    db.query(
+      'SELECT * FROM TAXI.CancelRideByAppUser($1)',
+      [rideID],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.rows[0]);
+        }
+      }
+    );
+  });
+};
+
 module.exports = {
   callAuthenticateUser,
   callGetUser,
   callAddUser,
   callUpdateUser,
   callGetRidesByUserID,
+  callCancelRideByAppUser,
 };

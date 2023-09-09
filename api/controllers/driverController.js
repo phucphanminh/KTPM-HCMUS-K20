@@ -123,16 +123,13 @@ const confirmBooking = (req, res) => {
   // ...
 };
 
-const cancelBooking = (req, res) => {
-  // Xử lý hủy cuốc đặt từ tài xế
-  // ...
-};
 
-const completeRide = async (req, res) => {
+
+const processRide = async (req, res) => {
   const { rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime } = req.body;
 
   try {
-    const result = await driverPromises.callCompleteRide(rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime);
+    const result = await driverPromises.callProcessRide(rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime);
     return res.json({ message: result.message });
   } catch (error) {
     console.error(error);
@@ -140,14 +137,25 @@ const completeRide = async (req, res) => {
   }
 };
 
-const updateRide = async (req, res) => {
+const completeRide = async (req, res) => {
   const rideID = req.params.ride_id;
 
   try {
-    const result = await driverPromises.callUpdateRide(rideID);
+    const result = await driverPromises.callCompleteRide(rideID);
     return res.json({ message: result.message });
   } catch (error) {
-    return res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm cuốc xe.' });
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi hoàn thành cuốc xe.' });
+  }
+};
+
+const cancelRide = async (req, res) => {
+  const rideID = req.params.ride_id;
+
+  try {
+    const result = await driverPromises.callCancelRideByDriver(rideID);
+    return res.json({ message: result.message });
+  } catch (error) {
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi hủy cuốc xe.' });
   }
 };
 
@@ -159,7 +167,8 @@ module.exports = {
   driverRides,
   getNextBooking,
   confirmBooking,
-  cancelBooking,
+  processRide,
   completeRide,
-  updateRide,
+  cancelRide,
+
 };

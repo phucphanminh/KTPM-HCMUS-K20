@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION TAXI.AuthenticateUser(
       userTel CHAR(15),
       userPass TEXT
 )
-RETURNS TABLE (result TEXT) 
+RETURNS TABLE (message TEXT) 
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -110,9 +110,9 @@ RETURNS TABLE (
     USE_ID CHAR(20),
     CUS_ID CHAR(20),
     DRI_ID CHAR(20),
-    PICKUP CHAR(50),
-    DROPOFF CHAR(50),
-    STATUS BOOLEAN,
+    PICKUP TEXT,
+    DROPOFF TEXT,
+    STATUS INT,
     BOOKTIME TIMESTAMP,
     PRICE FLOAT,
     RESERVEDTIME TIMESTAMP
@@ -125,17 +125,34 @@ END;
 $$;
 
 -- Cancel Ride
-CREATE OR REPLACE FUNCTION TAXI.CancelRide(
+CREATE OR REPLACE FUNCTION TAXI.CancelRideByDriver(
     rideID char(20)
 )
-RETURNS VOID 
+RETURNS TABLE (message TEXT)  
 LANGUAGE plpgsql
 AS $$
 BEGIN
     UPDATE TAXI.RIDE
     SET
-        STATUS = FALSE
+        STATUS = 0
     WHERE ID = rideID;
+    RETURN QUERY SELECT 'driver: Hủy cuốc xe thành công';
+END;
+$$;
+
+-- Cancel Ride
+CREATE OR REPLACE FUNCTION TAXI.CancelRideByAppUser(
+    rideID char(20)
+)
+RETURNS TABLE (message TEXT)  
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE TAXI.RIDE
+    SET
+        STATUS = -1	
+    WHERE ID = rideID;
+    RETURN QUERY SELECT 'App User: Hủy cuốc xe thành công';
 END;
 $$;
 
@@ -144,7 +161,7 @@ CREATE OR REPLACE FUNCTION TAXI.AuthenticateDriver(
      driverTel CHAR(15),
      driverPass TEXT
 )
-RETURNS TABLE (result TEXT) 
+RETURNS TABLE (message TEXT) 
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -178,8 +195,8 @@ RETURNS TABLE (
     AVA CHAR(30),
     ACC CHAR(30),
     VEHICLEID CHAR(20),
-    VEHICLETYPE CHAR(50),
-    BRANDNAME CHAR(50),
+    VEHICLETYPE TEXT,
+    BRANDNAME TEXT,
     CMND CHAR(20),
     FREE BOOLEAN
 ) 
@@ -200,8 +217,8 @@ CREATE OR REPLACE FUNCTION TAXI.AddDriver(
     driverAva char(30),
     driverAcc char(30),
     driverVehicleID char(20),
-    driverVehicleType char(50),
-    driverBrandName char(50),
+    driverVehicleType TEXT,
+    driverBrandName TEXT,
     driverCMND char(20)
 )
 RETURNS TABLE (message TEXT) 
@@ -231,8 +248,8 @@ CREATE OR REPLACE FUNCTION TAXI.UpdateDriver(
     driverAva char(30),
     driverAcc char(30),
     driverVehicleID char(20),
-    driverVehicleType char(50),
-    driverBrandName char(50),
+    driverVehicleType TEXT,
+    driverBrandName TEXT,
     driverCMND char(20),
     driverFree BOOLEAN
 )
@@ -257,13 +274,13 @@ END;
 $$;
 
 -- Complete Ride
-CREATE OR REPLACE FUNCTION TAXI.CompleteRide(
+CREATE OR REPLACE FUNCTION TAXI.ProcessRide(
     rideID char(20),
     userID char(20),
     cusID char(20),
     driverID char(20),
-    pickupLocation char(50),
-    dropOffLocation char(50),
+    pickupLocation TEXT,
+    dropOffLocation TEXT,
     bookTime TIMESTAMP,
     price FLOAT,
     reservedTime TIMESTAMP
@@ -273,13 +290,13 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     INSERT INTO TAXI.RIDE (ID, USE_ID, CUS_ID, DRI_ID, PICKUP, DROPOFF, STATUS, BOOKTIME, PRICE, RESERVEDTIME)
-    VALUES (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, FALSE, bookTime, price, reservedTime);
-    RETURN QUERY SELECT 'Thêm cuốc xe thành công';
+    VALUES (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, 0, bookTime, price, reservedTime);
+    RETURN QUERY SELECT rideID::TEXT;
 END;
 $$;
 
 -- Update Ride Status
-CREATE OR REPLACE FUNCTION TAXI.Update_Ride_Status(
+CREATE OR REPLACE FUNCTION TAXI.CompleteRide(
 	ride_id CHAR(20)
 )
 RETURNS TABLE (message TEXT) 
@@ -287,9 +304,9 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
 	UPDATE TAXI.RIDE
-	SET STATUS = TRUE
+	SET STATUS = 1
 	WHERE ID = ride_id;
-	RETURN QUERY SELECT 'Cập nhật cuốc xe thành công';
+	RETURN QUERY SELECT 'Hoàn thành cuốc xe thành công';
 END;
 $$;
 
@@ -302,9 +319,9 @@ RETURNS TABLE (
     USE_ID CHAR(20),
     CUS_ID CHAR(20),
     DRI_ID CHAR(20),
-    PICKUP CHAR(50),
-    DROPOFF CHAR(50),
-    STATUS BOOLEAN,
+    PICKUP TEXT,
+    DROPOFF TEXT,
+    STATUS INT,
     BOOKTIME TIMESTAMP,
     PRICE FLOAT,
     RESERVEDTIME TIMESTAMP
