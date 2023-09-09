@@ -32,7 +32,24 @@ const saveGPS = async (ID,  phoneNumber, pickupAddress, latitude, longitude) => 
   });
 };
 
+const callAddCustomer = async (ID,  phoneNumber, name) => {
+  return new Promise((resolve, reject) => {
+    db.query(
+      'SELECT * FROM TAXI.AddCustomer($1, $2, $3)',
+      [ID,  phoneNumber, name],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.rows[0]);
+        }
+      }
+    );
+  });
+};
+
 module.exports = {
   gpsHistory,
   saveGPS,
+  callAddCustomer,
 };

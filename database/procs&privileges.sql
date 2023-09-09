@@ -154,7 +154,7 @@ BEGIN
      driverPass = digest(driverPass, 'sha256');
  
      -- Assign the value to the matchDriverId variable
-     SELECT ID INTO matchDriverId FROM TAXI.DRIVER WHERE TEL = driverTel AND PASS = driverPass;
+     SELECT TEL INTO matchDriverId FROM TAXI.DRIVER WHERE TEL = driverTel AND PASS = driverPass;
  
      IF matchDriverId IS NOT NULL THEN
          -- Successful match, return the driver's ID
@@ -169,10 +169,9 @@ $$;
 
 -- Get Driver Information
 CREATE OR REPLACE FUNCTION TAXI.GetDriver(
-    UID varchar(20)
+    driverTel CHAR(15)
 )
 RETURNS TABLE (
-    ID CHAR(20),
     TEL CHAR(15),
     PASS TEXT,
     NAME NCHAR(30),
@@ -187,7 +186,7 @@ RETURNS TABLE (
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    RETURN QUERY SELECT * FROM TAXI.DRIVER WHERE DRIVER.ID = UID;
+    RETURN QUERY SELECT * FROM TAXI.DRIVER WHERE DRIVER.TEL = driverTel;
 END;
 $$;
 
@@ -195,7 +194,6 @@ $$;
 
 -- Add Driver
 CREATE OR REPLACE FUNCTION TAXI.AddDriver(
-    driverID char(20),
     driverTel char(15),
     driverPass TEXT,
     driverName nchar(30),
@@ -218,8 +216,8 @@ BEGIN
         driverPass = digest(driverPass, 'sha256');
 
         -- Insert driver information into the DRIVER table
-        INSERT INTO TAXI.DRIVER (ID, TEL, PASS, NAME, AVA, ACC, VEHICLEID, VEHICLETYPE, BRANDNAME, CMND, FREE)
-        VALUES (driverID, driverTel, driverPass, driverName, driverAva, driverAcc, driverVehicleID, driverVehicleType, driverBrandName, driverCMND, TRUE);
+        INSERT INTO TAXI.DRIVER (TEL, PASS, NAME, AVA, ACC, VEHICLEID, VEHICLETYPE, BRANDNAME, CMND, FREE)
+        VALUES (driverTel, driverPass, driverName, driverAva, driverAcc, driverVehicleID, driverVehicleType, driverBrandName, driverCMND, TRUE);
         RETURN QUERY SELECT 'Tạo tài khoản thành công';
     END IF;
 END;
@@ -227,7 +225,6 @@ $$;
 
 -- Update Driver Information
 CREATE OR REPLACE FUNCTION TAXI.UpdateDriver(
-    driverID char(20),
     driverTel char(15),
     driverPass TEXT,
     driverName nchar(30),
@@ -245,7 +242,6 @@ AS $$
 BEGIN
     UPDATE TAXI.DRIVER
     SET
-        TEL = driverTel,
         PASS = digest(driverPass, 'sha256'),
         NAME = driverName,
         AVA = driverAva,
@@ -255,7 +251,7 @@ BEGIN
         BRANDNAME = driverBrandName,
         CMND = driverCMND,
         FREE = driverFree
-    WHERE ID = driverID;
+    WHERE TEL = driverTel;
     RETURN QUERY SELECT 'Cập nhật thông tin thành công';
 END;
 $$;
@@ -345,7 +341,21 @@ BEGIN
 END;
 $$;
 
-
+-- Add Customer
+CREATE OR REPLACE FUNCTION TAXI.AddCustomer(
+     ID CHAR(20),
+     phoneNumber CHAR(15),
+     name VARCHAR(30)
+)
+RETURNS TABLE (message TEXT)  
+LANGUAGE plpgsql
+AS $$
+BEGIN
+     -- Chèn dữ liệu mới vào bảng CUSTOMER
+     INSERT INTO TAXI.CUSTOMER(ID, TEL, NAME) VALUES (ID, phoneNumber, name);
+     RETURN QUERY SELECT 'Thêm customer thành công';
+END;
+$$;
 
 
 

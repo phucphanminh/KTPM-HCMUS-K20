@@ -8,6 +8,9 @@ router.post('/customer', callcenterController.gpsHistory);
 // Route để lưu lịch sử GPS từ CallCenter
 router.post('/save', callcenterController.saveGPS);
 
+// Route để thêm cusomer
+router.post('/add-customer', callcenterController.customerAdd); 
+
 // Route để tạo cuốc xe từ CallCenter
 router.post('/bookings', callcenterController.createBooking);
 
