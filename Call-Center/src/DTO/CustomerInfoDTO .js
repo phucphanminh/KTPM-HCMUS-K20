@@ -1,7 +1,7 @@
 const CryptoJS = require('crypto-js');
 
 class CustomerInfoDTO {
-    constructor(phoneNumber, name, pickupAddress, dropoffAddress, carType) {
+    constructor(phoneNumber, name, pickupAddress, dropoffAddress, carType, coordinateProviderType) {
         this.ID = this.generateId(phoneNumber, pickupAddress, dropoffAddress);
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -12,7 +12,7 @@ class CustomerInfoDTO {
         this.pickUpLng = 0; // Khởi tạo giá trị mặc định
         this.dropOffLat = 0; // Khởi tạo giá trị mặc định
         this.dropOffLng = 0; // Khởi tạo giá trị mặc định
-        this.coordinateProviderType = ''; // Khởi tạo giá trị mặc định
+        this.coordinateProviderType = coordinateProviderType;
     }
 
     generateId(phoneNumber, pickupAddress, dropoffAddress) {

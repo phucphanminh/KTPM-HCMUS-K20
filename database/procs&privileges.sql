@@ -273,8 +273,23 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     INSERT INTO TAXI.RIDE (ID, USE_ID, CUS_ID, DRI_ID, PICKUP, DROPOFF, STATUS, BOOKTIME, PRICE, RESERVEDTIME)
-    VALUES (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, TRUE, bookTime, price, reservedTime);
+    VALUES (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, FALSE, bookTime, price, reservedTime);
     RETURN QUERY SELECT 'Thêm cuốc xe thành công';
+END;
+$$;
+
+-- Update Ride Status
+CREATE OR REPLACE FUNCTION TAXI.Update_Ride_Status(
+	ride_id CHAR(20)
+)
+RETURNS TABLE (message TEXT) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+	UPDATE TAXI.RIDE
+	SET STATUS = TRUE
+	WHERE ID = ride_id;
+	RETURN QUERY SELECT 'Cập nhật cuốc xe thành công';
 END;
 $$;
 

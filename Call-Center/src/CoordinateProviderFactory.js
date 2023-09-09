@@ -2,7 +2,7 @@ import GeocodingService from './Plugin/GeocodingService';
 import GoongService from './Plugin/GoongService';
 
 // geocoding API
-const GEOCODING_API_KEY='AIzaSyAXEfI4Z_w6u3yP-ejaaIzU8b4s05nj43w';
+const GEOCODING_API_KEY='AIzaSyB2sQ1V0_MBc_QZAPvPlWHEN4FuRGGGXI0';
 
 // goong API
 const GOONG_API_KEY='tubIc8ZMj8csxNXRARKPmYaZSg9A6C5LMFHQoWiJ';

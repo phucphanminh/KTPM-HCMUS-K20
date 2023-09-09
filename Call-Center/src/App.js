@@ -1,102 +1,96 @@
 import { useState } from 'react';
 import './App.css';
 import handleRequest from './handleRequest';
-import FormInput from '../components/FormInput';
+import FormInput from './components/FormInput';
+import './components/formInput.css';
 
 const App = () => {
-  const [values, setValues] = useState({
-    username: 'huan bui',
-    phoneNumber: '0123456789',
-    pickupAddress: 'Landmark 81',
-    dropoffAddress: '227 Nguyễn Văn Cừ, Quận 5, TP.Hồ Chí Minh',
-    carType: 'Car 7 seats',
-    // name: "huan bui"
-    // phoneNumber: "0123456789",
-    // //pickupAddress: "Đại học Văn Lang",
-    // pickupAddress: "2 Nguyễn Văn Cừ, Quận 5, TP.Hồ Chí Minh",
-    // dropoffAddress: "Landmark 81",
-    // carType: "Car 7 seats",
-    // coordinateProviderType: "goongProvider"
+  const [formData, setFormData] = useState({
+    phoneNumber: '',
+    name: '',
+    pickupAddress: '',
+    dropoffAddress: '',
+    carType: 'Select Car Type', // Đặt giá trị mặc định ban đầu
+    // coordinateProviderType: '',
+    coordinateProviderType: 'goongProvider',
   });
 
-  const inputs = [
-    {
-      id: 1,
-      name: 'username',
-      type: 'text',
-      placeholder: 'Username',
-      errorMessage:
-        "Username should be 3-16 characters and shouldn't include any special character!",
-      label: 'Username',
-      pattern: '^[A-Za-z0-9]{3,16}$',
-      required: true,
-    },
-    {
-      id: 2,
-      name: 'phone',
-      type: 'phone',
-      placeholder: 'Phone Number',
-      errorMessage: 'It should be a valid phone number!',
-      label: 'Phone Number',
-      required: true,
-    },
-    {
-      id: 3,
-      name: 'pickup',
-      type: 'text',
-      placeholder: 'Pick Up Address',
-      label: 'Pick Up Address',
-    },
-    {
-      id: 4,
-      name: 'dropoff',
-      type: 'text',
-      placeholder: 'Drop Off Address',
-      label: 'Drop Off Address',
-    },
-    {
-      id: 5,
-      name: 'cartype',
-      type: 'text',
-      placeholder: 'Car Type ',
-      label: 'Car Type ',
-    },
-  ];
+  const carTypes = ['Car 7 seats', 'Car 4 seats'];
+  const toString = { 
+    'Car 7 seats': '7 SEATS CAR', 
+    'Car 4 seats': '4 SEATS CAR'
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  };
-
-  const onChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
+    console.log(formData);
+    handleRequest(formData);
   };
 
   return (
     <div className="app">
       <form onSubmit={handleSubmit}>
-        <h1>Register</h1>
-        {inputs.map((input) => (
-          <FormInput
-            key={input.id}
-            {...input}
-            value={values[input.name]}
-            onChange={onChange}
-          />
-        ))}
+        <h1>Order</h1>
+        <FormInput
+          name="phoneNumber"
+          type="text"
+          placeholder="Phone Number"
+          label="Phone Number"
+          value={formData.phoneNumber}
+          onChange={handleChange}
+        />
 
-        <button>Submit</button>
+        <FormInput
+          name="name"
+          type="text"
+          placeholder="Name"
+          label="Name"
+          value={formData.name}
+          onChange={handleChange}
+        />
+
+        <FormInput
+          name="pickupAddress"
+          type="text"
+          placeholder="Pick Up Address"
+          label="Pick Up Address"
+          value={formData.pickupAddress}
+          onChange={handleChange}
+        />
+
+        <FormInput
+          name="dropoffAddress"
+          type="text"
+          placeholder="Drop Off Address"
+          label="Drop Off Address"
+          value={formData.dropoffAddress}
+          onChange={handleChange}
+        />
+
+        <div className="formInput">
+          <label>Car Type</label>
+          <select
+            name="carType"
+            value={formData.carType}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Car Type</option> {/* Option mặc định */}
+            {carTypes.map((type) => (
+              <option key={toString[type]} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button style={{ width: '280px' }} type="submit">Submit</button>
       </form>
-      <div>
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.631711314178!2d106.67990747481815!3d10.762840859444594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f1c06f4e1dd%3A0x43900f1d4539a3d!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBLaG9hIGjhu41jIFThu7Egbmhpw6puIC0gxJDhuqFpIGjhu41jIFF14buRYyBnaWEgVFAuSENN!5e0!3m2!1svi!2s!4v1694231118235!5m2!1svi!2s"
-          width="500"
-          height="450"
-          style={{ border: '0' }}
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
-      </div>
     </div>
   );
 };

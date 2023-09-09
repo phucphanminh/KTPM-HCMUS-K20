@@ -4,11 +4,26 @@
   width: 280px;
 }
 
-input {
+input,
+select {
   padding: 15px;
   margin: 10px 0px;
   border-radius: 5px;
-  border: 1px solid gray;
+  border: 2px solid gray;
+  transition: border-color 0.3s ease;
+  /* Thêm hiệu ứng transition cho việc thay đổi border-color */
+}
+
+/* Hover cho input */
+input:hover {
+  border-color: #007bff;
+  /* Màu sắc hover tùy chọn */
+}
+
+/* Hover cho select */
+select:hover {
+  border-color: #007bff;
+  /* Màu sắc hover tùy chọn */
 }
 
 label {
@@ -27,6 +42,6 @@ input:invalid[focused='true'] {
   border: 1px solid red;
 }
 
-input:invalid[focused='true'] ~ span {
+input:invalid[focused='true']~span {
   display: block;
 }

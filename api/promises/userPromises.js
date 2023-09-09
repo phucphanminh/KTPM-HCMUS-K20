@@ -35,7 +35,7 @@ const callGetUser = async (userTel) => {
 const callAddUser = async (userTel, userPass, userName, userAva) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'SELECT * FROM TAXI.AddCustomer($1, $2, $3, $4)',
+      'SELECT * FROM TAXI.AddUser($1, $2, $3, $4)',
       [userTel, userPass, userName, userAva],
       (error, results) => {
         if (error) {
