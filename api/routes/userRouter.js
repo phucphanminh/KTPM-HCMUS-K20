@@ -39,7 +39,7 @@ router.get('/user-rides/:user_id', userController.userRides);       //
 //     "RESERVEDTIME": "2023-07-26T03:00:00.000Z"
 // }
 
-// Route để hủy cuốc đặt từ tài xế
+// Route để hủy cuốc đặt từ khách hàng
 router.post('/bookings/cancel/:ride_id', userController.cancelRide);  
 
 module.exports = router;
