@@ -10,12 +10,16 @@ const App = () => {
     name: '',
     pickupAddress: '',
     dropoffAddress: '',
-    carType: 'Car 4 seats',
-    coordinateProviderType: '',
-    // coordinateProviderType: 'goongProvider',
+    carType: 'Select Car Type', // Đặt giá trị mặc định ban đầu
+    // coordinateProviderType: '',
+    coordinateProviderType: 'goongProvider',
   });
 
   const carTypes = ['Car 7 seats', 'Car 4 seats'];
+  const toString = { 
+    'Car 7 seats': '7 SEATS CAR', 
+    'Car 4 seats': '4 SEATS CAR'
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,13 +28,14 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(formData);
     handleRequest(formData);
   };
 
   return (
     <div className="app">
       <form onSubmit={handleSubmit}>
-        <h1>Register</h1>
+        <h1>Order</h1>
         <FormInput
           name="phoneNumber"
           type="text"
@@ -71,12 +76,13 @@ const App = () => {
           <label>Car Type</label>
           <select
             name="carType"
-            placeholder="Car type"
             value={formData.carType}
             onChange={handleChange}
+            required
           >
+            <option value="">Select Car Type</option> {/* Option mặc định */}
             {carTypes.map((type) => (
-              <option key={type} value={type}>
+              <option key={toString[type]} value={type}>
                 {type}
               </option>
             ))}

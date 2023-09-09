@@ -3,16 +3,16 @@ import axios from 'axios';
 import GpsHistory from './DTO/GpsHistory';
 import CustomerInfoDTO from './DTO/CustomerInfoDTO .js';
 
-async function handleRequest() {
-  const requestData = {
-    phoneNumber: "0123456789",
-    name: "phuc phan",
-    // pickupAddress: "Đại học Văn Lang",
-    pickupAddress: "2 Nguyễn Văn Cừ, Quận 5, TP.Hồ Chí Minh",
-    dropoffAddress: "Landmark 81",
-    carType: "Car 7 seats",
-    coordinateProviderType: "goongProvider"
-  };
+async function handleRequest(requestData) {
+  // const requestData = {
+  //   phoneNumber: "0123456789",
+  //   name: "phuc phan",
+  //   // pickupAddress: "Đại học Văn Lang",
+  //   pickupAddress: "2 Nguyễn Văn Cừ, Quận 5, TP.Hồ Chí Minh",
+  //   dropoffAddress: "Landmark 81",
+  //   carType: "Car 7 seats",
+  //   coordinateProviderType: "goongProvider"
+  // };
 
   try {
     // Gửi yêu cầu POST đến máy chủ bằng Axios
@@ -26,7 +26,7 @@ async function handleRequest() {
     const coordinateProviderFactory = new CoordinateProviderFactory();
     const coordinateProviderType = requestData.coordinateProviderType;
     const coordinateProvider = coordinateProviderFactory.createProvider(coordinateProviderType);
-    const customerInfoDTO = new CustomerInfoDTO(requestData.phoneNumber, requestData.name, requestData.pickupAddress, requestData.dropoffAddress, requestData.coordinateProviderType);
+    const customerInfoDTO = new CustomerInfoDTO(requestData.phoneNumber, requestData.name, requestData.pickupAddress, requestData.dropoffAddress, requestData.carType, requestData.coordinateProviderType);
     // console.log(customerInfoDTO);
 
     // Lấy tọa độ điểm đến
