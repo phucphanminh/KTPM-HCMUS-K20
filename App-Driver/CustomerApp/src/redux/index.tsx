@@ -1,6 +1,5 @@
 import {createStore, combineReducers} from 'redux';
 import {AuthReducer, MessageReducer, StatusReducer} from './reducers';
-import {configureStore} from '@reduxjs/toolkit';
 import navReducer from './reducers';
 
 const rootReducers = combineReducers({
@@ -8,7 +7,6 @@ const rootReducers = combineReducers({
   nav: navReducer,
   slideMessage:MessageReducer,
   auth:AuthReducer,
-
 });
 export const store = createStore(rootReducers);
 

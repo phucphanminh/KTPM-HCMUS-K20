@@ -51,10 +51,13 @@ router.get('/next-booking', driverController.getNextBooking);
 // Route để xác nhận cuốc đặt từ tài xế
 router.put('/bookings/:booking_id/confirm', driverController.confirmBooking);
 
-// Route để hủy cuốc đặt từ tài xế
-router.put('/bookings/:booking_id/cancel', driverController.cancelBooking);
-
 // Route để hoàn thành cuốc đặt từ tài xế
-router.post('/bookings/complete', driverController.completeRide);  //
+router.post('/bookings/process', driverController.processRide);  
+
+// Route để hoàn tất cuốc đặt từ tài xế
+router.post('/bookings/complete/:ride_id', driverController.completeRide);  
+
+// Route để hủy cuốc đặt từ tài xế
+router.post('/bookings/cancel/:ride_id', driverController.cancelRide);  
 
 module.exports = router;

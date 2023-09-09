@@ -61,7 +61,7 @@ const initialState = {
   destination: null,
   LocationCustomer: null,
   step: {name: 'init'},
-
+  rideId:null,
   travelTimeinformations: null,
 };
 
@@ -84,6 +84,9 @@ export const navSlices = createSlice({
     setLocationCustomer: (state, action) => {
       state.LocationCustomer = action.payload;
     },
+    setRideId: (state, action) => {
+      state.rideId = action.payload;
+    },
   },
 });
 
@@ -93,6 +96,7 @@ export const {
   setTravelTime,
   setStep,
   setLocationCustomer,
+  setRideId
 } = navSlices.actions;
 
 // selector
@@ -101,5 +105,6 @@ export const selectdestination = state => state.nav.destination;
 export const selecttravelTime = state => state.nav.travelTimeinformations;
 export const selectStep = state => state.nav.step;
 export const selectLocationCustomer = state => state.nav.LocationCustomer;
+export const selectRideId = state => state.nav.rideId;
 
 export default navSlices.reducer;

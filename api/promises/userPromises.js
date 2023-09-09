@@ -35,7 +35,7 @@ const callGetUser = async (userTel) => {
 const callAddUser = async (userTel, userPass, userName, userAva) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'SELECT * FROM TAXI.AddCustomer($1, $2, $3, $4)',
+      'SELECT * FROM TAXI.AddUser($1, $2, $3, $4)',
       [userTel, userPass, userName, userAva],
       (error, results) => {
         if (error) {
@@ -80,10 +80,27 @@ const callGetRidesByUserID = async (userID) => {
   });
 };
 
+const callCancelRideByAppUser = async (rideID) => {
+  return new Promise((resolve, reject) => {
+    db.query(
+      'SELECT * FROM TAXI.CancelRideByAppUser($1)',
+      [rideID],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.rows[0]);
+        }
+      }
+    );
+  });
+};
+
 module.exports = {
   callAuthenticateUser,
   callGetUser,
   callAddUser,
   callUpdateUser,
   callGetRidesByUserID,
+  callCancelRideByAppUser,
 };

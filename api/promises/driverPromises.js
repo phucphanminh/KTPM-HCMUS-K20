@@ -122,11 +122,43 @@ const callGetRidesByDriverID = async (driverID) => {
   });
 };
 
-const callCompleteRide = async (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime) => {
+const callProcessRide = async (rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime) => {
   return new Promise((resolve, reject) => {
     db.query(
-      'SELECT * FROM TAXI.CompleteRide($1, $2, $3, $4, $5, $6, $7, $8, $9);',
+      'SELECT * FROM TAXI.ProcessRide($1, $2, $3, $4, $5, $6, $7, $8, $9);',
       [rideID, userID, cusID, driverID, pickupLocation, dropOffLocation, bookTime, price, reservedTime],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.rows[0]);
+        }
+      }
+    );
+  });
+};
+
+const callCompleteRide = async (rideID) => {
+  return new Promise((resolve, reject) => {
+    db.query(
+      'SELECT * FROM TAXI.CompleteRide($1)',
+      [rideID],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.rows[0]);
+        }
+      }
+    );
+  });
+};
+
+const callCancelRideByDriver = async (rideID) => {
+  return new Promise((resolve, reject) => {
+    db.query(
+      'SELECT * FROM TAXI.CancelRideByDriver($1)',
+      [rideID],
       (error, results) => {
         if (error) {
           reject(error);
@@ -144,5 +176,7 @@ module.exports = {
   callAddDriver,
   callUpdateDriver,
   callGetRidesByDriverID,
+  callProcessRide,
   callCompleteRide,
+  callCancelRideByDriver,
 };
