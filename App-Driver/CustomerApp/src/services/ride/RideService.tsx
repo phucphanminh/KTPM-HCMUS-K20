@@ -1,6 +1,6 @@
-import {API} from '../../constants/API';
-import {Adapter} from '../../designPattern/adapter/Adapter';
-import {CreateRideForm} from '../../views/BookScreen';
+import { API } from '../../constants/API';
+import { Adapter } from '../../designPattern/adapter/Adapter';
+import { CreateRideForm } from '../../views/BookScreen';
 import api from '../api';
 
 export type CreateRide = {
@@ -27,6 +27,19 @@ export class RideService {
       return Promise.resolve(responseData);
     } catch (error) {
       return Promise.reject('Error in when create Ride in server');
+    }
+  };
+  static getRide = async (rideId: string): Promise<CreateRide> => {
+
+    try {
+      const response = await api.get(
+        API.DRIVER.GET_RIDE + `/${rideId}`
+      );
+      const responseData = response?.data;
+
+      return Promise.resolve(responseData);
+    } catch (error) {
+      return Promise.reject('Error in when get Ride in server');
     }
   };
 }
