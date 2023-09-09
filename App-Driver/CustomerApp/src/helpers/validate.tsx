@@ -18,3 +18,15 @@ export const validate = {
     return value.trim() !== '';
   },
 };
+
+export function hash(input: string):string {
+  let hash = 0;
+  if (input.length === 0) return "asdfkla";
+
+  for (let i = 0; i < input.length; i++) {
+    const char = input.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+  }
+
+  return hash.toString(16); // Convert to hexadecimal representation
+}

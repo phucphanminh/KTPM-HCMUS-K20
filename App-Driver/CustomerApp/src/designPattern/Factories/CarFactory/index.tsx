@@ -5,7 +5,7 @@ import { UserInformation } from "../../../appData/user/User";
 import { ImageSourcePropType } from "react-native";
 
 interface ICar {
-    countPrice(distance: number): number;
+    countPrice(distance: number): string;
 }
 
 export type CarProps = {
@@ -13,20 +13,32 @@ export type CarProps = {
     vehicleid: string;
     vehicletype: CarType;
     brandname: string;
-    image?:any;
+    image?: any;
 };
 
-class Car implements ICar {
-    public data: CarProps ;
+export class Car implements ICar {
+    public data: CarProps;
 
     constructor(data: CarProps) {
         this.data = { ...data };
     }
 
-    public countPrice(distance: number): number {
-        return this.data.pricePerKm * distance;
+    public countPrice(distance: number): string {
+        // Ensure this.data.pricePerKm is of type number
+        const pricePerKm =
+            typeof this.data.pricePerKm === 'number' ? this.data.pricePerKm : 0;
+
+        // Calculate the price
+        const totalPrice = pricePerKm * distance;
+
+        // Format the price with commas for thousands separators and add the currency symbol "₫" (VND)
+        const formattedPrice = totalPrice.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'VND',
+        });
+
+        return formattedPrice;
     }
-    
 }
 
 class Seat4Car extends Car {
@@ -46,7 +58,7 @@ class Seat7Car extends Car {
 export class CarFactory {
     private static instance: CarFactory | null = null;
 
-    private constructor() {}
+    private constructor() { }
 
     public static getInstance(): CarFactory {
         if (CarFactory.instance === null) {

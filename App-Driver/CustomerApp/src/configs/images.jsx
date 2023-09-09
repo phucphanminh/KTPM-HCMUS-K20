@@ -16,8 +16,6 @@ import Gmail from '../../assets/icons/Gmail.png';
 import CallIcon from '../../assets/icons/Call.png';
 import CarMarker from '../../assets/images/carMarker.png';
 import Customer from '../../assets/images/Customer.png';
-import {Center, Icon} from 'native-base';
-import {G, Path} from 'react-native-svg';
 import Origin from '../../assets/images/origin.png';
 import Location from '../../assets/images/location.png';
 import Seat4Car from '../../assets/images/Seat4Car.png';
