@@ -24,7 +24,7 @@ export class RideService {
       );
       const responseData = response?.data;
 
-      return Promise.resolve(responseData.message);
+      return Promise.resolve(responseData);
     } catch (error) {
       return Promise.reject('Error in when create Ride in server');
     }
