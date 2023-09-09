@@ -28,8 +28,8 @@ const userInfor = async(req, res) => {
       }
       return res.json(user);
     } catch (error) {
-        // console.error(error);
-        return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy thông tin người dùng.' });
+      // console.error(error);
+      return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy thông tin người dùng.' });
     }
 };
 

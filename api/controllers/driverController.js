@@ -27,7 +27,7 @@ const driverInfor = async (req, res) => {
     }
     return res.json(driver);
   } catch (error) {
-    // console.error(error);
+    console.error(error);
     return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy thông tin tài xế.' });
   }
 };
