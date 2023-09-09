@@ -33,8 +33,10 @@ io.on("connection", (socket) => {
     socket.join(data);
     console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
+
   socket.on(SOCKET.UPDATE_LOCATION_DRIVER, (data) => {
     const temp = { lat: data.lat, lng: data.lng };
+    console.log(data);
     driverLocations[data.driverinfo] = temp;
 
     for (const driverid in listbooking) {
@@ -47,15 +49,41 @@ io.on("connection", (socket) => {
   });
 
   socket.on(SOCKET.BOOKING, (data) => {
-    console.log(data);
+    // customer book car after send location surroundings for customer
     const messages = {
       data: data,
       messages: "Send to driver success",
     };
     socket.emit(SOCKET.SEND_DRIVERS_LOCATION, driverLocations);
+    customerRequest[data.Customer?.id] = {
+      destination: data.destination,
+      origin: data.origin,
+      Customer: data.Customer,
+      cardetails: data.cardetails,
+    };
+    console.log(customerRequest);
     for (const driverName in driverLocations) {
       socket.to(driverName).emit(SOCKET.SEND_CUSTOMER_LOCATION, messages);
     }
+  });
+
+  socket.on(SOCKET.SEND_NOTIFY_PICK_UP, (data) => {
+    const messages = "pick up";
+    socket.to(data).emit(SOCKET.SEND_NOTIFY_PICK_UP_CUSTOMER, messages);
+  });
+
+  socket.on(SOCKET.SEND_NOTIFY_TRIP_SUCCESS, (data) => {
+    const messages = "drop off";
+    socket.to(data).emit(SOCKET.SEND_NOTIFY_PICK_UP_CUSTOMER, messages);
+  });
+
+  socket.on(SOCKET.GET_LOCATION_CUSTOMER, () => {
+    // send location customer request to driver when request
+    const data = [];
+    for (const customer in customerRequest) {
+      data.push({ data: { ...customerRequest[customer] } });
+    }
+    socket.emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, data);
   });
 
   socket.on(SOCKET.SEND_ACCEPT_BOOKING, (data) => {
@@ -65,6 +93,20 @@ io.on("connection", (socket) => {
       identify: data.identify,
       brandName: data.brandName,
     };
+    delete customerRequest[data.idcustomer];
+    for (const driver in driverLocations) {
+      if (Object.keys(customerRequest).length === 0) {
+        const data = { data: {} }; // You can send an empty object as data
+        socket.to(driver).emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, data);
+      } else {
+        const data = [];
+        for (const customer in customerRequest) {
+          data.push({ data: { ...customerRequest[customer] } });
+        }
+        socket.to(driver).emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, data);
+      }
+    }
+
     listbooking[data.driver] = temp;
 
     socket.to(data.idcustomer).emit(SOCKET.SEND_ACCEPT_BOOKING_SUCCESS, data);

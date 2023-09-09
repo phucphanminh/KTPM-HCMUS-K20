@@ -36,6 +36,9 @@ const MapBook = () => {
   const dispatch = useDispatch();
   const Step = useSelector(selectStep);
 
+  const step = useSelector(selectStep);
+  React.useEffect(() => {}, [step]);
+
   useEffect(() => {
     if (!origin && !destination) {
       return;
@@ -48,7 +51,7 @@ const MapBook = () => {
         },
       );
     }
-  }, [origin, destination, locationCustomer]);
+  }, [origin, destination, locationCustomer, step]);
   console.log(locationCustomer);
   return (
     <View className="relative">
@@ -61,53 +64,86 @@ const MapBook = () => {
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         }}>
-        {origin?.location && (
-          <Marker
-            coordinate={{
-              latitude: origin.location.lat,
-              longitude: origin.location.lng,
-            }}
-            title="your location"
-            description={origin.description}
-            identifier="origin"
-            image={Images.CarMarker}
-          />
-        )}
-        {/* {destination?.location && (
-        <Marker
-          coordinate={{
-            latitude: destination.location.lat,
-            longitude: destination.location.lng,
-          }}
-          title="your goal"
-          description={destination.description}
-          identifier="destination"
-        />
-      )} */}
-        {locationCustomer && (
-          <Marker
-            coordinate={{
-              latitude: locationCustomer.origin.location.lat,
-              longitude: locationCustomer.origin.location.lng,
-            }} // Set default latitude and longitude
-            title="location customer"
-            identifier="locationCustomer"
-          />
-        )}
-        {origin && locationCustomer && (
-          <MapViewDirections
-            origin={{
-              latitude: origin.location.lat,
-              longitude: origin.location.lng,
-            }}
-            destination={{
-              latitude: locationCustomer.origin.location.lat,
-              longitude: locationCustomer.origin.location.lng,
-            }}
-            apikey="AIzaSyA3I9U2vrkhKwLoziKmNEXbzUcXdXOw630"
-            strokeWidth={3}
-            strokeColor={myTheme.colors.blue[500]}
-          />
+        {step.name == 'pick up' ? (
+          <>
+            {origin?.location && (
+              <Marker
+                coordinate={{
+                  latitude: origin.location.lat,
+                  longitude: origin.location.lng,
+                }}
+                title="your location"
+                description={origin.description}
+                identifier="origin"
+                image={Images.CarMarker}
+              />
+            )}
+            {locationCustomer && (
+              <Marker
+                coordinate={{
+                  latitude: locationCustomer.destination.location.lat,
+                  longitude: locationCustomer.destination.location.lng,
+                }} // Set default latitude and longitude
+                title="destination"
+                identifier="destination"
+              />
+            )}
+            {origin && locationCustomer && (
+              <MapViewDirections
+                origin={{
+                  latitude: origin.location.lat,
+                  longitude: origin.location.lng,
+                }}
+                destination={{
+                  latitude: locationCustomer.destination.location.lat,
+                  longitude: locationCustomer.destination.location.lng,
+                }}
+                apikey="AIzaSyA3I9U2vrkhKwLoziKmNEXbzUcXdXOw630"
+                strokeWidth={3}
+                strokeColor={myTheme.colors.blue[500]}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            {origin?.location && (
+              <Marker
+                coordinate={{
+                  latitude: origin.location.lat,
+                  longitude: origin.location.lng,
+                }}
+                title="your location"
+                description={origin.description}
+                identifier="origin"
+                image={Images.CarMarker}
+              />
+            )}
+            {locationCustomer && (
+              <Marker
+                coordinate={{
+                  latitude: locationCustomer.origin.location.lat,
+                  longitude: locationCustomer.origin.location.lng,
+                }} // Set default latitude and longitude
+                title="location customer"
+                identifier="locationCustomer"
+              />
+            )}
+            {origin && locationCustomer && (
+              <MapViewDirections
+                origin={{
+                  latitude: origin.location.lat,
+                  longitude: origin.location.lng,
+                }}
+                destination={{
+                  latitude: locationCustomer.origin.location.lat,
+                  longitude: locationCustomer.origin.location.lng,
+                }}
+                apikey="AIzaSyA3I9U2vrkhKwLoziKmNEXbzUcXdXOw630"
+                strokeWidth={3}
+                strokeColor={myTheme.colors.blue[500]}
+              />
+            )}
+          </>
         )}
       </MapView>
     </View>
