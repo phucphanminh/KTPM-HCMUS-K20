@@ -58,6 +58,7 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
     });
   }, []);
   React.useEffect(() => {
+    console.log(locationDriver);
     if (locationDriver?.name) {
       SetNotify(() => ({
         notify: true,

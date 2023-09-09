@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
       Customer: data.Customer,
       cardetails: data.cardetails,
     };
-    console.log(customerRequest[data.Customer?.id]);
+    console.log(customerRequest);
     for (const driverName in driverLocations) {
       socket.to(driverName).emit(SOCKET.SEND_CUSTOMER_LOCATION, messages);
     }
@@ -69,12 +69,11 @@ io.on("connection", (socket) => {
 
   socket.on(SOCKET.GET_LOCATION_CUSTOMER, () => {
     // send location customer request to driver when request
-
+    const data = [];
     for (const customer in customerRequest) {
-      console.log(customerRequest[customer]);
-      const data = { data: { ...customerRequest[customer] } };
-      socket.emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, data);
+      data.push({ data: { ...customerRequest[customer] } });
     }
+    socket.emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, data);
   });
 
   socket.on(SOCKET.SEND_ACCEPT_BOOKING, (data) => {
@@ -85,7 +84,19 @@ io.on("connection", (socket) => {
       brandName: data.brandName,
     };
     delete customerRequest[data.idcustomer];
-    console.log(customerRequest);
+    for (const driver in driverLocations) {
+      if (Object.keys(customerRequest).length === 0) {
+        const data = { data: {} }; // You can send an empty object as data
+        socket.to(driver).emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, data);
+      } else {
+        const data = [];
+        for (const customer in customerRequest) {
+          data.push({ data: { ...customerRequest[customer] } });
+        }
+        socket.to(driver).emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, data);
+      }
+    }
+
     listbooking[data.driver] = temp;
 
     socket.to(data.idcustomer).emit(SOCKET.SEND_ACCEPT_BOOKING_SUCCESS, data);

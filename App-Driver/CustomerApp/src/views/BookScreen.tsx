@@ -67,7 +67,7 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
       SetListCustomer(prevListCustomer => [...prevListCustomer, data]);
     });
     socket.onListenCustomerLocationRequest(data => {
-      SetListCustomer(prevListCustomer => [...prevListCustomer, data]);
+      SetListCustomer(data);
     });
   }, []);
 
