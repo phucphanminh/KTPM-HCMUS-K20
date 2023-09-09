@@ -8,5 +8,6 @@ export const API = {
         REGISTER: "/driver/add-driver",
         GET_INFO:"/driver/driver-info",
         CREATE_RIDE:"/driver/bookings/complete",
+        GET_RIDE:"/driver/driver-rides",
     }
 }
