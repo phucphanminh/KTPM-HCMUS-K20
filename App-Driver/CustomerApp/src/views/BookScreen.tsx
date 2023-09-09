@@ -75,8 +75,25 @@ const BookScreen: React.FC<BookScreenProps> = ({ navigation }) => {
   const driverinfo = User.getInstance().information;
 
   React.useEffect(() => {
+    socket.emitJoinRoom(driverinfo.tel);
+    socket.emitGetCustomerLocation();
     socket.onListenCustomerLocation(data => {
-      SetListCustomer(prevListCustomer => [...prevListCustomer, data]);
+      SetListCustomer(prevListCustomer => {
+        // Check if the data already exists in the array
+        const exists = prevListCustomer.some(item => item.id === data.id);
+
+        // If it doesn't exist, add it to the array
+        if (!exists) {
+          return [...prevListCustomer, data];
+        }
+
+        // If it exists, return the original array without modifications
+        return prevListCustomer;
+      });
+    });
+
+    socket.onListenCustomerLocationRequest(data => {
+      SetListCustomer(data);
     });
   }, []);
 
@@ -91,6 +108,7 @@ const BookScreen: React.FC<BookScreenProps> = ({ navigation }) => {
     };
     socket.emitSendAcceptBooking(driveinformation);
     dispatch(setLocationCustomer(selectedId.data));
+
     console.log(selectedId);
 
     try {
@@ -127,7 +145,7 @@ const BookScreen: React.FC<BookScreenProps> = ({ navigation }) => {
   });
 
   React.useEffect(() => {
-    console.log(ListCustomer[0]?.data?.Customer?.id);
+    console.log('vcl');
   }, [ListCustomer.length]);
   const dispatch = useDispatch();
 

@@ -27,50 +27,16 @@ import {Divider} from 'native-base';
 import {Google_Map_Api_Key} from '@env';
 import {SocketIOClient} from '../socket';
 import {User} from '../appData/user/User';
+import {CarFactory} from '../designPattern/Factories/CarFactory';
+import {CarType} from '../models/Car/CarType';
 
 // import * as io from 'socket.io-client';
 // import {SOCKET} from './../socket/constants';
 
 // const socket = io.connect('http://192.168.2.29:3001');
 
-const DATA: ItemData[] = [
-  {
-    id: '1',
-    title: 'AndreCar',
-    detail: 'Muximum 4 passengers',
-    price: '120.000',
-  },
-  {
-    id: '2',
-    title: 'AndreCar',
-    detail: 'Muximum 4 passengers',
-    price: '120.000',
-  },
-  {
-    id: '3',
-    title: 'AndreCar',
-    detail: 'Muximum 4 passengers',
-    price: '120.000',
-  },
-  {
-    id: '4',
-    title: 'AndreCar',
-    detail: 'Muximum 4 passengers',
-    price: '120.000',
-  },
-  {
-    id: '5',
-    title: 'AndreCar',
-    detail: 'Muximum 4 passengers',
-    price: '120.000',
-  },
-];
-type ItemData = {
-  id: string;
-  title: string;
-  detail: string;
-  price: string;
-};
+const seat4car = CarFactory.getInstance().factoryMethod(CarType.SEAT_4);
+const seat7car = CarFactory.getInstance().factoryMethod(CarType.SEAT_7);
 
 type BookScreenProps = NativeStackScreenProps<RootStackParamList, 'Book'>;
 const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
@@ -79,6 +45,17 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   const Step = useSelector(selectStep);
   const origin = useSelector(selectorigin);
   const destination = useSelector(selectdestination);
+
+  const data = [
+    {
+      id: seat4car.data.type,
+      car: seat4car,
+    },
+    {
+      id: seat7car.data.type,
+      car: seat7car,
+    },
+  ];
 
   const socket = SocketIOClient.getInstance();
   const customerinfo = User.getInstance().information;
@@ -130,19 +107,15 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
             </View>
           </TouchableOpacity>
           <FlatList
-            data={DATA}
-            keyExtractor={item => item.id}
+            data={data}
+            keyExtractor={item => item.id as string}
             extraData={selectedId}
             getItemLayout={getItemLayout}
             renderItem={({item}) => (
               <TouchableOpacity
                 className={`${item.id === selectedId ? 'bg-[#cea0a0]' : ''}`}
                 onPress={() => setSelectedId(item.id)}>
-                <FlatListCar
-                  title={item.title}
-                  detail={item.detail}
-                  price={item.price}
-                />
+                <FlatListCar car={item.car} />
               </TouchableOpacity>
             )}
           />

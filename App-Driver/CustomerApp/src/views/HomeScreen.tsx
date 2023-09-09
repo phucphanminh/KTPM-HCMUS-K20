@@ -42,6 +42,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
   useEffect(() => {
     socket.emitJoinRoom(driverinfo.tel);
+  }, []);
+
+  useEffect(() => {
     // Check if the user is logged in using the LoginHandler
     !loginHandler.handle() && navigate.replace('Welcome');
   }, []);
@@ -106,17 +109,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
             location: {lat: currentLatitude, lng: currentLongitude},
           }),
         );
-        socket.emitSendUpdateLocation({
-          driverinfo: driverinfo.tel,
-          lat: currentLatitude,
-          lng: currentLongitude,
-        });
       },
       error => {
         setLocationStatus(error.message);
         console.log(error.message);
       },
-      {enableHighAccuracy: false, timeout: 30000, maximumAge: 1000},
+      {enableHighAccuracy: false, timeout: 60000, maximumAge: 1000},
     );
   };
 
@@ -135,6 +133,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
             location: {lat: currentLatitude, lng: currentLongitude},
           }),
         );
+
         socket.emitSendUpdateLocation({
           driverinfo: driverinfo.tel,
           lat: currentLatitude,
@@ -154,6 +153,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
     if (!origin) {
       return;
     }
+    socket.emitSendUpdateLocation({
+      driverinfo: driverinfo.tel,
+      lat: origin?.location.lat,
+      lng: origin?.location.lng,
+    });
     if (mapRef.current) {
       (mapRef.current as any).fitToSuppliedMarkers(['origin'], {
         edgePadding: {top: 50, right: 50, bottom: 50, left: 50},
@@ -168,7 +172,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
           className=" absolute w-full h-full"
           initialRegion={{
             latitude: origin.location.lat,
-            longitude: origin.location.lng,
+            longitude: origin.location.lat,
             latitudeDelta: 0.05,
             longitudeDelta: 0.05,
           }}>

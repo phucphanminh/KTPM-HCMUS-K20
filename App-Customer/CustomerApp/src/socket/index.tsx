@@ -70,4 +70,10 @@ export class SocketIOClient {
       callback(data);
     });
   }
+
+  onListenPickup(callback: (data: any) => void) {
+    this.socket.on(SOCKET.SEND_NOTIFY_PICK_UP_CUSTOMER, data => {
+      callback(data);
+    });
+  }
 }

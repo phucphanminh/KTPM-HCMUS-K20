@@ -61,6 +61,7 @@ const initialState = {
   destination: null,
   LocationCustomer: null,
   step: {name: 'init'},
+
   travelTimeinformations: null,
 };
 

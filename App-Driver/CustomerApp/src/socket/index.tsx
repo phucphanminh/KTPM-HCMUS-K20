@@ -62,4 +62,21 @@ export class SocketIOClient {
       callback(data);
     });
   }
+
+  emitGetCustomerLocation() {
+    this.socket.emit(SOCKET.GET_LOCATION_CUSTOMER);
+  }
+  onListenCustomerLocationRequest(callback: (data: any) => void) {
+    this.socket.on(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, data => {
+      callback(data);
+    });
+  }
+
+  emitPickCustomer(data: any) {
+    this.socket.emit(SOCKET.SEND_NOTIFY_PICK_UP, data);
+  }
+
+  emitSuccessTrip(data: any) {
+    this.socket.emit(SOCKET.SEND_NOTIFY_TRIP_SUCCESS, data);
+  }
 }

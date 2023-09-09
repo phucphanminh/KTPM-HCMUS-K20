@@ -34,7 +34,7 @@ const MapBook = () => {
   const mapRef = useRef(null);
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const Step = useSelector(selectStep);
+  const step = useSelector(selectStep);
 
   useEffect(() => {
     if (!origin && !destination) {
@@ -48,7 +48,8 @@ const MapBook = () => {
         },
       );
     }
-  }, [origin, destination, locationDriver]);
+  }, [origin, destination, locationDriver, step]);
+
   return (
     <View className="relative">
       <MapView
@@ -60,18 +61,60 @@ const MapBook = () => {
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         }}>
-        {origin?.location && (
-          <Marker
-            coordinate={{
-              latitude: origin.location.lat,
-              longitude: origin.location.lng,
-            }}
-            title="your location"
-            description={origin.description}
-            identifier="origin"
-          />
-        )}
-        {/* {destination?.location && (
+        {step.name == 'pick up' ? (
+          <>
+            {destination?.location && (
+              <Marker
+                coordinate={{
+                  latitude: destination.location.lat,
+                  longitude: destination.location.lng,
+                }}
+                title="your goal"
+                description={destination.description}
+                identifier="destination"
+              />
+            )}
+            {locationDriver && (
+              <Marker
+                coordinate={{
+                  latitude: locationDriver.location.lat,
+                  longitude: locationDriver.location.lng,
+                }} // Set default latitude and longitude
+                title="location driver"
+                identifier="locationDriver"
+                image={Images.CarMarker}
+              />
+            )}
+            {destination && locationDriver?.name && (
+              <MapViewDirections
+                destination={{
+                  latitude: destination.location.lat,
+                  longitude: destination.location.lng,
+                }}
+                origin={{
+                  latitude: locationDriver.location.lat,
+                  longitude: locationDriver.location.lng,
+                }}
+                apikey="AIzaSyA3I9U2vrkhKwLoziKmNEXbzUcXdXOw630"
+                strokeWidth={3}
+                strokeColor={myTheme.colors.blue[500]}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            {origin?.location && (
+              <Marker
+                coordinate={{
+                  latitude: origin.location.lat,
+                  longitude: origin.location.lng,
+                }}
+                title="your location"
+                description={origin.description}
+                identifier="origin"
+              />
+            )}
+            {/* {destination?.location && (
         <Marker
           coordinate={{
             latitude: destination.location.lat,
@@ -82,46 +125,50 @@ const MapBook = () => {
           identifier="destination"
         />
       )} */}
-        {locationDriver &&
-          (locationDriver?.name ? (
-            <Marker
-              coordinate={{
-                latitude: locationDriver.location.lat,
-                longitude: locationDriver.location.lng,
-              }} // Set default latitude and longitude
-              title="location driver"
-              identifier="locationDriver"
-              image={Images.CarMarker}
-            />
-          ) : (
-            Object.values(locationDriver).map((value: any, index: number) => (
-              <Marker
-                key={`driver-${index}`}
-                coordinate={{
-                  latitude: value.lat,
-                  longitude: value.lng,
-                }}
-                title="location driver"
-                identifier="locationDriver"
-                image={Images.CarMarker}
-              />
-            ))
-          ))}
+            {locationDriver &&
+              (locationDriver?.name ? (
+                <Marker
+                  coordinate={{
+                    latitude: locationDriver.location.lat,
+                    longitude: locationDriver.location.lng,
+                  }} // Set default latitude and longitude
+                  title="location driver"
+                  identifier="locationDriver"
+                  image={Images.CarMarker}
+                />
+              ) : (
+                Object.values(locationDriver).map(
+                  (value: any, index: number) => (
+                    <Marker
+                      key={`driver-${index}`}
+                      coordinate={{
+                        latitude: value.lat,
+                        longitude: value.lng,
+                      }}
+                      title="location driver"
+                      identifier="locationDriver"
+                      image={Images.CarMarker}
+                    />
+                  ),
+                )
+              ))}
 
-        {origin && locationDriver?.name && (
-          <MapViewDirections
-            destination={{
-              latitude: origin.location.lat,
-              longitude: origin.location.lng,
-            }}
-            origin={{
-              latitude: locationDriver.location.lat,
-              longitude: locationDriver.location.lng,
-            }}
-            apikey="AIzaSyA3I9U2vrkhKwLoziKmNEXbzUcXdXOw630"
-            strokeWidth={3}
-            strokeColor={myTheme.colors.blue[500]}
-          />
+            {origin && locationDriver?.name && (
+              <MapViewDirections
+                destination={{
+                  latitude: origin.location.lat,
+                  longitude: origin.location.lng,
+                }}
+                origin={{
+                  latitude: locationDriver.location.lat,
+                  longitude: locationDriver.location.lng,
+                }}
+                apikey="AIzaSyA3I9U2vrkhKwLoziKmNEXbzUcXdXOw630"
+                strokeWidth={3}
+                strokeColor={myTheme.colors.blue[500]}
+              />
+            )}
+          </>
         )}
       </MapView>
       {!locationDriver?.name && (
