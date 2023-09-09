@@ -1,4 +1,4 @@
-import { Flex, Text, Heading, VStack, Input, HStack, CheckCircleIcon, Button, theme, FormControl, Image, Box, Modal, Alert } from 'native-base';
+import { Flex, Text, Heading, VStack, Input, HStack, CheckCircleIcon, Button, theme, FormControl, Image, Box, Modal, Alert, Select, CheckIcon } from 'native-base';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -10,6 +10,7 @@ import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { validate } from './../helpers/validate';
 import { FormFieldSignUp, UserService } from './../services/user/UserService';
 import Divider from '../component/Divider';
+import { CarType } from '../models/Car/CarType';
 
 type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 
@@ -21,7 +22,7 @@ const initialFormData: FormFieldSignUp = {
 	driverBrandName: '',
 	driverCMND: '',
 	driverVehicleID: '',
-	driverVehicleType: '',
+	driverVehicleType: CarType.SEAT_4,
 };
 
 const ErrorMessage: FormFieldSignUp = {
@@ -32,7 +33,7 @@ const ErrorMessage: FormFieldSignUp = {
 	driverBrandName: '',
 	driverCMND: '',
 	driverVehicleID: '',
-	driverVehicleType: '',
+	driverVehicleType: CarType.SEAT_4,
 };
 
 
@@ -46,6 +47,7 @@ const SignUp: React.FC<SignUpScreenProps> = ({ navigation }) => {
 
 	const [message, setMessage] = React.useState("")
 	const [isSuccess, setIsSuccess] = React.useState(true)
+	const [vehicleType,setVehicleType]=React.useState(CarType.SEAT_4)
 
 	const dispatch = useDispatch()
 
@@ -66,11 +68,13 @@ const SignUp: React.FC<SignUpScreenProps> = ({ navigation }) => {
 	const handleSubmit = async () => {
 		const isValidated = validateForm();
 
+		const submitData={...data,driverVehicleType:vehicleType}
+		
 		if (isValidated) {
 			dispatch(setLoading(true));
 			try {
 				// Call API or perform further actions
-				const responseData = await UserService.signUp(data);
+				const responseData = await UserService.signUp(submitData);
 				setIsSuccess(true);
 				setMessage(responseData);
 			} catch (error) {
@@ -111,7 +115,15 @@ const SignUp: React.FC<SignUpScreenProps> = ({ navigation }) => {
 
 				<HStack w={"100%"} space={2}>
 					<Input onChange={updateField('driverVehicleID')} type='text' placeholder='VehicleNumber' width={"50%"} />
-					<Input onChange={updateField('driverVehicleType')} type='text' placeholder='VehicleModel' width={"50%"} />
+
+					<Select selectedValue={vehicleType} minWidth="200" accessibilityLabel="Choose Model" placeholder="Choose Model" _selectedItem={{
+						bg: "teal.600",
+						endIcon: <CheckIcon size="5" />
+					}} mt={1} onValueChange={itemValue => setVehicleType(itemValue as CarType)}>
+						<Select.Item label={CarType.SEAT_4} value={CarType.SEAT_4} />
+						<Select.Item label={CarType.SEAT_7} value={CarType.SEAT_7} />
+					</Select>
+					
 				</HStack>
 
 				<HStack alignItems={"center"} space={2} >

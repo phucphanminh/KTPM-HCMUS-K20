@@ -1,6 +1,7 @@
 import { User } from '../../appData/user/User';
 import { API } from '../../constants/API';
 import { Adapter } from '../../designPattern/adapter/Adapter';
+import { CarType } from '../../models/Car/CarType';
 import api from './../api';
 
 
@@ -14,7 +15,7 @@ export type FormFieldSignUp = {
 	driverName: string,
 	driverAcc: string,
 	driverVehicleID: string,
-	driverVehicleType: string,
+	driverVehicleType: CarType,
 	driverBrandName: string,
 	driverCMND: string,
 }

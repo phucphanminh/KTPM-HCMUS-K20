@@ -6,6 +6,7 @@ import myTheme from './../../configs/Theme';
 import Divider from '../Divider';
 import { useDispatch } from 'react-redux';
 import { UserInformation } from '../../appData/user/User';
+import { CarFactory } from '../../designPattern/Factories/CarFactory';
 
 interface DriverProps {
 	data: UserInformation
@@ -15,7 +16,8 @@ const DriverProfile: React.FC<DriverProps> = ({ data }) => {
 	
 	const [isFree, setIsFree] = useState(data.free)
 	const dispatch = useDispatch()
-
+	const driverCar= CarFactory.getInstance().factoryMethod(data)
+	
 	return (
 		<>
 			<VStack width={"100%"} alignItems={"center"} space={3}>
@@ -50,10 +52,10 @@ const DriverProfile: React.FC<DriverProps> = ({ data }) => {
 				</HStack>
 
 				<VStack alignItems={"center"} space={2}>
-					<Image style={styles.image} source={Images.carType} alt='car_type' />
-					<Text fontSize={24} fontWeight={600} color={"secondary.600"}>{data.brandname} - {data.vehicletype}</Text>
+					<Image style={styles.image} source={driverCar.data.image} alt='car_type' />
+					<Text fontSize={24} fontWeight={600} color={"secondary.600"}>{driverCar.data.brandname} - {driverCar.data.vehicletype}</Text>
 					<Divider width={"75%"} />
-					<Text fontSize={20} color={"gray.700"}>{data.vehicleid}</Text>
+					<Text fontSize={20} color={"gray.700"}>{driverCar.data.vehicleid}</Text>
 				</VStack>
 			</VStack>
 		</>

@@ -1,0 +1,6 @@
+export enum DriverState {
+	FREE = "FREE",
+	OFF = "OFFLINE",
+	ON_THE_WAY = "ON THE WAY",
+	PICKING_CUSTOMER = "PICKING CUSTOMER",
+}
