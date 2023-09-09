@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 class GoongService {
     constructor(apiKey) {
@@ -7,12 +7,12 @@ class GoongService {
 
     async getCoordinateResponse(address) {
         console.log("Định vị bằng GoongService:");
-        console.log(`${this.apiKey}`);
+        // console.log(`${this.apiKey}`);
         const apiUrl = `https://rsapi.goong.io/geocode?address=${address}&api_key=${this.apiKey}`;
-        console.log(apiUrl);
+        // console.log(apiUrl);
         const response = await axios.get(apiUrl);
         return response.data;
     }
 }
 
-module.exports = GoongService;
+export default GoongService;
