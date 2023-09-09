@@ -147,7 +147,7 @@ const callUpdateRide = async (rideID) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results.rows);
+          resolve(results.rows[0]);
         }
       }
     );
