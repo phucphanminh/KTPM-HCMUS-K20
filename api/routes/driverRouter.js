@@ -58,6 +58,6 @@ router.put('/bookings/:booking_id/cancel', driverController.cancelBooking);
 router.post('/bookings/complete', driverController.completeRide);  
 
 // Route để cập nhật cuốc đặt từ tài xế
-router.post('/bookings/update', driverController.updateRide);  
+router.post('/bookings/update/:ride_id', driverController.updateRide);  
 
 module.exports = router;
