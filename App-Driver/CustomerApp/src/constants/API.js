@@ -6,6 +6,7 @@ export const API = {
     DRIVER: {
         LOGIN: "/driver/login",
         REGISTER: "/driver/add-driver",
-        GET_INFO:"/driver/driver-info"
+        GET_INFO:"/driver/driver-info",
+        CREATE_RIDE:"/driver/bookings/complete",
     }
 }
