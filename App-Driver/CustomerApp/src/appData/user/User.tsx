@@ -1,4 +1,5 @@
 import {Adapter} from '../../designPattern/adapter/Adapter';
+import { CarType } from '../../models/Car/CarType';
 import {UserService} from '../../services/user/UserService';
 
 export type UserInformation = {
@@ -7,7 +8,7 @@ export type UserInformation = {
   ava: string;
   acc: string;
   vehicleid: string;
-  vehicletype: string;
+  vehicletype: CarType;
   brandname: string;
   cmnd: string;
   free: boolean;
@@ -21,7 +22,7 @@ export class User {
     ava: '',
     acc: '',
     vehicleid: '',
-    vehicletype: '',
+    vehicletype: CarType.SEAT_4,
     brandname: '',
     cmnd: '',
     free: false,
@@ -68,7 +69,7 @@ export class User {
       ava: '',
       acc: '',
       vehicleid: '',
-      vehicletype: '',
+      vehicletype: CarType.SEAT_4,
       brandname: '',
       cmnd: '',
       free: false,
