@@ -18,6 +18,8 @@ import HomeIcon from '../../assets/icons/homeIcon.png';
 import Momo from '../../assets/images/Momo.png';
 import Cash from '../../assets/images/cash.png';
 import CarMarker from '../../assets/images/carMarker.png';
+import Seat4Car from '../../assets/images/Seat4Car.png';
+import Seat7Car from '../../assets/images/Seat7Car.png';
 
 export const Images = {
   logo,
@@ -34,6 +36,8 @@ export const Images = {
   CarMarker,
   Momo,
   Cash,
+  Seat4Car,
+  Seat7Car
 };
 export const Icons = {
   Apple,Facebook,Gmail,CallIcon,HomeIcon
