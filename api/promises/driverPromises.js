@@ -138,6 +138,22 @@ const callCompleteRide = async (rideID, userID, cusID, driverID, pickupLocation,
   });
 };
 
+const callUpdateRide = async (rideID) => {
+  return new Promise((resolve, reject) => {
+    db.query(
+      'SELECT * FROM TAXI.Update_Ride_Status($1)',
+      [rideID],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.rows);
+        }
+      }
+    );
+  });
+};
+
 module.exports = {
   callAuthenticateDriver,
   callGetDriver,
@@ -145,4 +161,5 @@ module.exports = {
   callUpdateDriver,
   callGetRidesByDriverID,
   callCompleteRide,
+  callUpdateRide,
 };

@@ -139,6 +139,17 @@ const completeRide = async (req, res) => {
   }
 };
 
+const updateRide = async (req, res) => {
+  const rideID = req.params.ride_id;
+
+  try {
+    const result = await driverPromises.callUpdateRide(rideID);
+    return res.json({ message: result.message });
+  } catch (error) {
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm cuốc xe.' });
+  }
+};
+
 module.exports = {
   login,
   driverInfor,
@@ -149,4 +160,5 @@ module.exports = {
   confirmBooking,
   cancelBooking,
   completeRide,
+  updateRide,
 };
