@@ -39,13 +39,7 @@ router.get('/user-rides/:user_id', userController.userRides);       //
 //     "RESERVEDTIME": "2023-07-26T03:00:00.000Z"
 // }
 
-// Route để tạo cuốc xe từ App Khách Hàng
-router.post('/bookings', userController.createBooking);
-
-// Route để lấy danh sách tài xế hiện có
-router.get('/available-drivers', userController.getAvailableDrivers);
-
-// Route để hủy cuốc xe từ App Khách Hàng
-router.post('/bookings/:booking_id/cancel', userController.cancelBooking);
+// Route để hủy cuốc đặt từ tài xế
+router.post('/bookings/cancel/:ride_id', userController.cancelRide);  
 
 module.exports = router;
