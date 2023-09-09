@@ -6,24 +6,30 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../routers/navigationParams';
+import React, { useState, useEffect } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../routers/navigationParams';
 import Map from '../component/Map';
 import ChoiceOrign from '../component/ChoiceOrign';
 import FlatListCar from '../component/FlatListCar';
-import {useSelector} from 'react-redux';
-import {selectStep, selectorigin} from '../redux/reducers';
-import {Images} from '../configs/images';
-import {useDispatch} from 'react-redux';
-import {setStep} from '../redux/reducers';
-import {Button} from 'native-base';
-import {Divider} from 'native-base';
-import {Google_Map_Api_Key} from '@env';
-import {SocketIOClient} from '../socket';
-import {setLocationCustomer} from '../redux/reducers';
+import { useSelector } from 'react-redux';
+import { selectStep, selectorigin, showMessage } from '../redux/reducers';
+import { Images } from '../configs/images';
+import { useDispatch } from 'react-redux';
+import { setStep } from '../redux/reducers';
+import { Button } from 'native-base';
+import { Divider } from 'native-base';
+import { Google_Map_Api_Key } from '@env';
+import { SocketIOClient } from '../socket';
+import { setLocationCustomer } from '../redux/reducers';
 import useCustomNavigation from '../hooks/useCustomNavigation';
-import {User} from '../appData/user/User';
+import { User } from '../appData/user/User';
+import { CarType } from '../models/Car/CarType';
+import { RideService } from '../services/ride/RideService';
+import { setLoading } from './../redux/reducers';
+import { StatusColor } from '../component/Overlay/SlideMessage';
+import { CarFactory } from '../designPattern/Factories/CarFactory';
+import { LocationService } from '../services/location/LocationService';
 
 const DATA: ItemData[] = [
   {
@@ -49,8 +55,16 @@ type ItemData = {
   price: string;
 };
 
+export type CreateRideForm = {
+  userTel: string,
+  driverTel: string,
+  pickupLocation: string,
+  dropOffLocation: string,
+  price: string,
+}
+
 type BookScreenProps = NativeStackScreenProps<RootStackParamList, 'Book'>;
-const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
+const BookScreen: React.FC<BookScreenProps> = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState<any>();
   const Step = useSelector(selectStep);
   const origin = useSelector(selectorigin);
@@ -66,7 +80,7 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
     });
   }, []);
 
-  const AcceptBooking = () => {
+  const AcceptBooking = async () => {
     const driveinformation = {
       idcustomer: selectedId.data.Customer?.id,
       driver: driverinfo.tel,
@@ -78,6 +92,32 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
     socket.emitSendAcceptBooking(driveinformation);
     dispatch(setLocationCustomer(selectedId.data));
     console.log(selectedId);
+
+    try {
+      dispatch(setLoading(true))
+
+      const origin = selectedId.data.origin
+      const destination = selectedId.data.destination
+
+      const dataSubmit: CreateRideForm = {
+        driverTel: driverinfo.tel,
+        userTel: selectedId?.data.Customer?.id,
+        pickupLocation: origin.description,
+        dropOffLocation: destination.description,
+        price: CarFactory.getInstance().factoryMethod(driverinfo).countPrice(LocationService.calculateDistance(origin.location, destination.location))
+      }
+
+      await RideService.createRide(dataSubmit)
+
+      dispatch(setLoading(false))
+      dispatch(showMessage(StatusColor.success, "Create a new Ride Success"))
+    } catch (error) {
+      dispatch(showMessage(StatusColor.error, error))
+    }
+    finally {
+      dispatch(setLoading(false))
+    }
+
     navigate.navigate('MapBook');
   };
   const getItemLayout = (_: any, index: number) => ({
@@ -115,13 +155,12 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
           keyExtractor={item => item?.data.Customer?.id}
           extraData={selectedId}
           getItemLayout={getItemLayout}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <TouchableOpacity
-              className={`${
-                item?.data.Customer?.id === selectedId?.data.Customer?.id
-                  ? 'bg-[#cea0a0]'
-                  : ''
-              }`}
+              className={`${item?.data.Customer?.id === selectedId?.data.Customer?.id
+                ? 'bg-[#cea0a0]'
+                : ''
+                }`}
               onPress={() => setSelectedId(item)}>
               <FlatListCar
                 title={item?.data.Customer?.name}
