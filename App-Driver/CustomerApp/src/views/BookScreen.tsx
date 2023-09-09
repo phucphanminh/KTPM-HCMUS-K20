@@ -61,7 +61,12 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   const driverinfo = User.getInstance().information;
 
   React.useEffect(() => {
+    socket.emitJoinRoom(driverinfo.tel);
+    socket.emitGetCustomerLocation();
     socket.onListenCustomerLocation(data => {
+      SetListCustomer(prevListCustomer => [...prevListCustomer, data]);
+    });
+    socket.onListenCustomerLocationRequest(data => {
       SetListCustomer(prevListCustomer => [...prevListCustomer, data]);
     });
   }, []);
@@ -77,7 +82,6 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
     };
     socket.emitSendAcceptBooking(driveinformation);
     dispatch(setLocationCustomer(selectedId.data));
-    console.log(selectedId);
     navigate.navigate('MapBook');
   };
   const getItemLayout = (_: any, index: number) => ({
@@ -87,7 +91,7 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   });
 
   React.useEffect(() => {
-    console.log(ListCustomer[0]?.data?.Customer?.id);
+    console.log('vcl');
   }, [ListCustomer.length]);
   const dispatch = useDispatch();
 

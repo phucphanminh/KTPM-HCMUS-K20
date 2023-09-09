@@ -8,5 +8,7 @@ module.exports = {
     SEND_ACCEPT_BOOKING_SUCCESS: "send_accept_booking_success",
     UPDATE_LOCATION_DRIVER: "update_location_driver",
     UPDATE_LOCATION_DRIVER_TO_CUSTOMER: "update_location_driver_to_customer",
+    GET_LOCATION_CUSTOMER: "get_location_customer",
+    GET_LOCATION_CUSTOMER_ARRAY: "get_location_customer_array",
   },
 };

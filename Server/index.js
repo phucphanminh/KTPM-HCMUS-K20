@@ -33,8 +33,10 @@ io.on("connection", (socket) => {
     socket.join(data);
     console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
+
   socket.on(SOCKET.UPDATE_LOCATION_DRIVER, (data) => {
     const temp = { lat: data.lat, lng: data.lng };
+    console.log(data);
     driverLocations[data.driverinfo] = temp;
 
     for (const driverid in listbooking) {
@@ -47,14 +49,31 @@ io.on("connection", (socket) => {
   });
 
   socket.on(SOCKET.BOOKING, (data) => {
-    console.log(data);
+    // customer book car after send location surroundings for customer
     const messages = {
       data: data,
       messages: "Send to driver success",
     };
     socket.emit(SOCKET.SEND_DRIVERS_LOCATION, driverLocations);
+    customerRequest[data.Customer?.id] = {
+      destination: data.destination,
+      origin: data.origin,
+      Customer: data.Customer,
+      cardetails: data.cardetails,
+    };
+    console.log(customerRequest[data.Customer?.id]);
     for (const driverName in driverLocations) {
       socket.to(driverName).emit(SOCKET.SEND_CUSTOMER_LOCATION, messages);
+    }
+  });
+
+  socket.on(SOCKET.GET_LOCATION_CUSTOMER, () => {
+    // send location customer request to driver when request
+
+    for (const customer in customerRequest) {
+      console.log(customerRequest[customer]);
+      const data = { data: { ...customerRequest[customer] } };
+      socket.emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, data);
     }
   });
 
@@ -65,6 +84,8 @@ io.on("connection", (socket) => {
       identify: data.identify,
       brandName: data.brandName,
     };
+    delete customerRequest[data.idcustomer];
+    console.log(customerRequest);
     listbooking[data.driver] = temp;
 
     socket.to(data.idcustomer).emit(SOCKET.SEND_ACCEPT_BOOKING_SUCCESS, data);
