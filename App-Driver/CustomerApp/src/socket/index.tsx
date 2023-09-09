@@ -71,4 +71,12 @@ export class SocketIOClient {
       callback(data);
     });
   }
+
+  emitPickCustomer(data: any) {
+    this.socket.emit(SOCKET.SEND_NOTIFY_PICK_UP, data);
+  }
+
+  emitSuccessTrip(data: any) {
+    this.socket.emit(SOCKET.SEND_NOTIFY_TRIP_SUCCESS, data);
+  }
 }

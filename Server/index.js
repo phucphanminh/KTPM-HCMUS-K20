@@ -67,6 +67,16 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on(SOCKET.SEND_NOTIFY_PICK_UP, (data) => {
+    const messages = "pick up";
+    socket.to(data).emit(SOCKET.SEND_NOTIFY_PICK_UP_CUSTOMER, messages);
+  });
+
+  socket.on(SOCKET.SEND_NOTIFY_TRIP_SUCCESS, (data) => {
+    const messages = "drop off";
+    socket.to(data).emit(SOCKET.SEND_NOTIFY_PICK_UP_CUSTOMER, messages);
+  });
+
   socket.on(SOCKET.GET_LOCATION_CUSTOMER, () => {
     // send location customer request to driver when request
     const data = [];

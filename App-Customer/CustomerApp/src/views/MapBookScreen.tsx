@@ -56,6 +56,12 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
       console.log(data);
       dispatch(setLocationDriver(data));
     });
+
+    socket.onListenPickup(data => {
+      dispatch(setStep({name: data}));
+      console.log('\n');
+      console.log(data);
+    });
   }, []);
   React.useEffect(() => {
     console.log(locationDriver);
