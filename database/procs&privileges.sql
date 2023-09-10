@@ -161,7 +161,7 @@ AS $$
 BEGIN
     UPDATE TAXI.RIDE
     SET
-        STATUS = 0
+        STATUS = -1
     WHERE ID = rideID;
     RETURN QUERY SELECT 'driver: Hủy cuốc xe thành công';
 END;

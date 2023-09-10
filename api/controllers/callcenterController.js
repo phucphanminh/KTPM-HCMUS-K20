@@ -1,10 +1,10 @@
 const callcenterPromises = require('../promises/callcenterPromises');
 
 const gpsHistory = async (req, res) => {
-  const { phoneNumber, pickupAddress } = req.body;
+  const { tel, originDescription } = req.body;
   // console.log(req.body);
   try {
-    const result = await callcenterPromises.gpsHistory(phoneNumber, pickupAddress);
+    const result = await callcenterPromises.gpsHistory(tel, originDescription);
       return res.json(result);
     } catch (error) {
     // console.error(error);
@@ -13,10 +13,10 @@ const gpsHistory = async (req, res) => {
 };
 
 const saveGPS = async (req, res) => {
-  const { ID,  phoneNumber, pickupAddress, latitude, longitude } = req.body;
+  const { ID,  tel, originDescription, latitude, longitude } = req.body;
   // console.log(req.body);
   try {
-    const result = await callcenterPromises.saveGPS(ID,  phoneNumber, pickupAddress, latitude, longitude);
+    const result = await callcenterPromises.saveGPS(ID, tel, originDescription, latitude, longitude);
     return res.json(result);
   } catch (error) {
     console.error(error);
@@ -25,10 +25,10 @@ const saveGPS = async (req, res) => {
 };
 
 const customerAdd = async (req, res) => {
-  const { ID,  phoneNumber, name } = req.body;
+  const { ID,  tel, name } = req.body;
   // console.log(req.body);
   try {
-    const result = await callcenterPromises.callAddCustomer(ID,  phoneNumber, name);
+    const result = await callcenterPromises.callAddCustomer(ID, tel, name);
     return res.json(result);
   } catch (error) {
     console.error(error);

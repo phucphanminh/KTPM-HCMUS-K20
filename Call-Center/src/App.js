@@ -6,20 +6,17 @@ import './components/formInput.css';
 
 const App = () => {
   const [formData, setFormData] = useState({
-    phoneNumber: '',
+    tel: '',
     name: '',
-    pickupAddress: '',
-    dropoffAddress: '',
-    carType: 'Select Car Type', // Đặt giá trị mặc định ban đầu
+    originDescription: '',
+    destinationDescription: '',
+    genre: 'Select Car Type', // Đặt giá trị mặc định ban đầu
     // coordinateProviderType: '',
-    coordinateProviderType: 'goongProvider',
+    coordinateProviderType: 'Select Coordinate Provider',
   });
 
-  const carTypes = ['Car 7 seats', 'Car 4 seats'];
-  const toString = { 
-    'Car 7 seats': '7 SEATS CAR', 
-    'Car 4 seats': '4 SEATS CAR'
-  };
+  const genres = ['4 seats', '7 seats'];
+  const services = ['Goole Maps', 'Goong Maps'];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,11 +34,11 @@ const App = () => {
       <form onSubmit={handleSubmit}>
         <h1>Order</h1>
         <FormInput
-          name="phoneNumber"
+          name="tel"
           type="text"
           placeholder="Phone Number"
           label="Phone Number"
-          value={formData.phoneNumber}
+          value={formData.tel}
           onChange={handleChange}
         />
 
@@ -55,34 +52,51 @@ const App = () => {
         />
 
         <FormInput
-          name="pickupAddress"
+          name="originDescription"
           type="text"
           placeholder="Pick Up Address"
           label="Pick Up Address"
-          value={formData.pickupAddress}
+          value={formData.originDescription}
           onChange={handleChange}
         />
 
         <FormInput
-          name="dropoffAddress"
+          name="destinationDescription"
           type="text"
           placeholder="Drop Off Address"
           label="Drop Off Address"
-          value={formData.dropoffAddress}
+          value={formData.destinationDescription}
           onChange={handleChange}
         />
 
         <div className="formInput">
           <label>Car Type</label>
           <select
-            name="carType"
-            value={formData.carType}
+            name="genre"
+            value={formData.genre}
             onChange={handleChange}
             required
           >
             <option value="">Select Car Type</option> {/* Option mặc định */}
-            {carTypes.map((type) => (
-              <option key={toString[type]} value={type}>
+            {genres.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="formInput">
+          <label>Coordinate Provider</label>
+          <select
+            name="coordinateProviderType"
+            value={formData.coordinateProviderType}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Coordinate Provider</option> {/* Option mặc định */}
+            {services.map((type) => (
+              <option key={type} value={toString[type]}>
                 {type}
               </option>
             ))}
