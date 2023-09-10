@@ -105,48 +105,48 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   }, []);
 
   const AcceptBooking = async () => {
-    const driveinformation = {
-      idcustomer: selectedId.data.Customer?.id,
-      driver: driverinfo.tel,
-      name: driverinfo.name,
-      identify: driverinfo.vehicleid,
-      brandName: driverinfo.brandname,
-      location: origin.location,
-    };
-    socket.emitSendAcceptBooking(driveinformation);
-    dispatch(setLocationCustomer(selectedId.data));
-
-    console.log(selectedId);
-
     try {
       dispatch(setLoading(true));
 
-      const origin = selectedId.data.origin;
-      const destination = selectedId.data.destination;
+      const originCustomer = selectedId.data.origin;
+      const destinationCustomer = selectedId.data.destination;
 
       const dataSubmit: CreateRideForm = {
         driverTel: driverinfo.tel,
         userTel: selectedId?.data.Customer?.id,
-        pickupLocation: origin.description,
-        dropOffLocation: destination.description,
+        pickupLocation: originCustomer.description,
+        dropOffLocation: destinationCustomer.description,
         price: CarFactory.getInstance()
           .factoryMethod(driverinfo)
           .countPrice(
             LocationService.calculateDistance(
-              origin.location,
-              destination.location,
+              originCustomer.location,
+              destinationCustomer.location,
             ),
           ),
       };
 
       const {message} = await RideService.createRide(dataSubmit);
+
       dispatch(showMessage(StatusColor.success, message));
       dispatch(setRideId(message));
+      const driveinformation = {
+        idcustomer: selectedId.data.Customer?.id,
+        driver: driverinfo.tel,
+        name: driverinfo.name,
+        identify: driverinfo.vehicleid,
+        brandName: driverinfo.brandname,
+        location: origin.location,
+        rideId: message,
+      };
+      socket.emitSendAcceptBooking(driveinformation);
     } catch (error) {
       dispatch(showMessage(StatusColor.error, error));
     } finally {
       dispatch(setLoading(false));
     }
+
+    dispatch(setLocationCustomer(selectedId.data));
     dispatch(setStep({name: 'bending'}));
     navigate.navigate('MapBook');
   };

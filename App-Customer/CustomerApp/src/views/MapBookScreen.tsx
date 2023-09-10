@@ -9,7 +9,7 @@ import {
 import React, {useState} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../routers/navigationParams';
-import {selectRideId, showMessage} from '../redux/reducers';
+import {selectRideId, setRideId, showMessage} from '../redux/reducers';
 import {StatusColor} from '../component/Overlay/SlideMessage';
 
 import MapBook from '../component/MapBook';
@@ -31,7 +31,7 @@ import {Google_Map_Api_Key} from '@env';
 import {SocketIOClient} from '../socket';
 import NotifyInformationDriver from '../component/NotifyInformationDriver';
 import {User} from '../appData/user/User';
-import { RideService } from '../services/ride/RideService';
+import {RideService} from '../services/ride/RideService';
 type MapBookScreenProps = NativeStackScreenProps<RootStackParamList, 'MapBook'>;
 const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
   const [selectedId, setSelectedId] = useState<string>();
@@ -57,6 +57,7 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
     });
     socket.onListenAcceptBookingSuccess(data => {
       dispatch(setLocationDriver(data));
+      dispatch(setRideId(data.rideId));
     });
 
     socket.onListenPickup(data => {
@@ -115,6 +116,8 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
           } catch (e) {
             dispatch(showMessage(StatusColor.error, e));
           }
+          dispatch(setLocationDriver(null));
+          dispatch(setRideId(null));
 
           navigation.navigate('Home');
         }}>
