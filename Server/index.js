@@ -16,11 +16,11 @@ const io = new Server(server, {
 });
 
 const driverLocations = {
-  // driver1: { lat: 10.7769, lng: 106.7009 }, // District 1
-  // driver2: { lat: 10.7654, lng: 106.6973 }, // District 3
-  // driver3: { lat: 10.7916, lng: 106.7078 }, // District 4
-  // driver4: { lat: 10.8491, lng: 106.6297 }, // Binh Thanh District
-  // driver5: { lat: 10.7601, lng: 106.6636 }, // Phu Nhuan District
+  driver1: { lat: 10.7769, lng: 106.7009 }, // District 1
+  driver2: { lat: 10.7654, lng: 106.6973 }, // District 3
+  driver3: { lat: 10.7916, lng: 106.7078 }, // District 4
+  driver4: { lat: 10.8491, lng: 106.6297 }, // Binh Thanh District
+  driver5: { lat: 10.7601, lng: 106.6636 }, // Phu Nhuan District
 };
 
 const customerRequest = {};
@@ -83,9 +83,18 @@ io.on("connection", (socket) => {
       .to(data.customerId)
       .emit(SOCKET.SEND_NOTIFY_PICK_UP_CUSTOMER, messages);
     customerRequest[data.customerId] =
-      listbooking[data.driverId].customerRequest;
+      listbooking[data.driverId]?.customerRequest;
     delete listbooking[data.driverId];
-    socket.emit(SOCKET.SEND_DRIVERS_LOCATION, driverLocations);
+    socket
+      .to(data.customerId)
+      .emit(SOCKET.SEND_DRIVERS_LOCATION, driverLocations);
+    const datatemp = [];
+    for (const customer in customerRequest) {
+      datatemp.push({ data: { ...customerRequest[customer] } });
+    }
+    for (const driverName in driverLocations) {
+      socket.to(driverName).emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, datatemp);
+    }
   });
 
   socket.on(SOCKET.GET_LOCATION_CUSTOMER, () => {
@@ -123,6 +132,35 @@ io.on("connection", (socket) => {
     listbooking[data.driver] = temp;
 
     socket.to(data.idcustomer).emit(SOCKET.SEND_ACCEPT_BOOKING_SUCCESS, data);
+  });
+
+  socket.on(SOCKET.SEND_NOTIFY_CANCEL_TRIP_FROM_CUSTOMER, (data) => {
+    if (data.driverId) {
+      delete listbooking[data.driverId];
+      socket
+        .to(data.driverId)
+        .emit(SOCKET.SEND_NOTIFY_CANCEL_TRIP_TO_DRIVER, "cancel trip");
+      const datatemp = [];
+      for (const customer in customerRequest) {
+        datatemp.push({ data: { ...customerRequest[customer] } });
+      }
+      for (const driverName in driverLocations) {
+        socket
+          .to(driverName)
+          .emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, datatemp);
+      }
+    } else {
+      delete customerRequest[data.customerId];
+      const datatemp = [];
+      for (const customer in customerRequest) {
+        datatemp.push({ data: { ...customerRequest[customer] } });
+      }
+      for (const driverName in driverLocations) {
+        socket
+          .to(driverName)
+          .emit(SOCKET.GET_LOCATION_CUSTOMER_ARRAY, datatemp);
+      }
+    }
   });
 
   socket.on("disconnect", () => {

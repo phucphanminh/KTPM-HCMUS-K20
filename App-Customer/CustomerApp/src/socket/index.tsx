@@ -76,4 +76,8 @@ export class SocketIOClient {
       callback(data);
     });
   }
+
+  emitSendCancelTrip(data: any) {
+    this.socket.emit(SOCKET.SEND_NOTIFY_CANCEL_TRIP_FROM_CUSTOMER, data);
+  }
 }

@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {Images} from '../configs/images';
 import {Button} from 'native-base';
 import {useDispatch} from 'react-redux';
-import {setStep} from '../redux/reducers';
+import {setLocationCustomer, setStep} from '../redux/reducers';
 import {selectStep} from '../redux/reducers';
 import {useSelector} from 'react-redux';
 import {SocketIOClient} from '../socket';
@@ -49,6 +49,7 @@ const NotifyInformationCustomer = ({
               driverId: user.tel,
             });
             navigate.navigate('Home');
+            dispatch(setLocationCustomer(null));
           }}>
           <Text className="text-white h-full text-xs">Cancel Trip</Text>
         </Button>

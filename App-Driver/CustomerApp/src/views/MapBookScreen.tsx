@@ -28,7 +28,7 @@ import NotifyInformationCustomer from '../component/NotifyInformationCustomer';
 type MapBookScreenProps = NativeStackScreenProps<RootStackParamList, 'MapBook'>;
 const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
   const [selectedId, setSelectedId] = useState<string>();
-  const Step = useSelector(selectStep);
+  const step = useSelector(selectStep);
   const origin = useSelector(selectorigin);
   const socket = SocketIOClient.getInstance();
   const locationCustomer = useSelector(selectLocationCustomer);
@@ -47,6 +47,14 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
       }));
     }
   }, [locationCustomer]);
+
+  React.useEffect(() => {
+    socket.onListenCancelFromCustomer(data => {
+      console.log(data);
+      dispatch(setStep({name: data}));
+      navigation.navigate('Book');
+    });
+  }, []);
 
   const dispatch = useDispatch();
   return (

@@ -7,4 +7,7 @@ export const SOCKET = {
   UPDATE_LOCATION_DRIVER_TO_CUSTOMER: 'update_location_driver_to_customer',
 
   SEND_NOTIFY_PICK_UP_CUSTOMER: 'send_notify_pick_up_customer',
+
+  SEND_NOTIFY_CANCEL_TRIP_FROM_CUSTOMER:
+    'send_notify_cancel_trip_from_customer',
 };

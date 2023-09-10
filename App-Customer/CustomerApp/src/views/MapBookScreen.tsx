@@ -40,6 +40,7 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
     notify: false,
     name: '',
     vehicleInfo: '',
+    driverId: '',
   });
 
   React.useEffect(() => {
@@ -65,9 +66,14 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
         notify: true,
         name: locationDriver.name,
         vehicleInfo: `${locationDriver.identify}-${locationDriver.brandName}`,
+        driverId: locationDriver.driver,
       }));
     }
   }, [locationDriver]);
+
+  React.useEffect(() => {
+    SetNotify({...Notify, notify: false});
+  }, [step]);
 
   const dispatch = useDispatch();
 
@@ -89,6 +95,18 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
           <Text className="text-bold">Back</Text>
         </View>
       </TouchableOpacity> */}
+      <Button
+        className=" absolute top-2 right-3 w-[20%] text-center  bg-red-500 h-[5%] rounded-md"
+        onPress={() => {
+          dispatch(setStep({name: 'customer cancel trip'}));
+          socket.emitSendCancelTrip({
+            customerId: User.getInstance().information.tel,
+            driverId: locationDriver.driver,
+          });
+          navigation.navigate('Home');
+        }}>
+        <Text className="text-white h-full text-xs">Cancel Trip</Text>
+      </Button>
       {Notify.notify && (
         <View className="absolute bottom-3 w-full h-[10%] items-center">
           <NotifyInformationDriver
