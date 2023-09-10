@@ -1,13 +1,10 @@
 import React from 'react';
 import {ListRenderItemInfo, SafeAreaView, StyleSheet} from 'react-native';
-import {View} from 'react-native';
 import {Ride} from '../designPattern/adapter/Adapter';
 import {Flex, HStack, Image, Text, theme, VStack} from 'native-base';
-import Images from '../configs/images';
+import {Images} from '../configs/images';
 import {truncateString} from './../helpers/validate';
 import {RideState} from './../models/Ride/State';
-import {User} from '../appData/user/User';
-import {CarFactory} from '../designPattern/Factories/CarFactory';
 
 interface RideItemProps {
   data: ListRenderItemInfo<Ride>; // Define the correct type for the 'data' prop
@@ -16,15 +13,13 @@ interface RideItemProps {
 const RideItem: React.FC<RideItemProps> = ({data}) => {
   // Extract relevant information from the 'data' prop
   const {item: ride} = data;
-  const driverinfo = User.getInstance().information;
-  const car = CarFactory.getInstance().factoryMethod(driverinfo);
 
   return (
     <Flex style={styles.item}>
       <HStack alignItems={'center'} space={2}>
         <Image
           style={styles.image}
-          source={car.data.image}
+          source={Images.Seat4Car}
           size={'md'}
           alt="img"
         />

@@ -16,5 +16,10 @@ module.exports = {
 
     SEND_NOTIFY_TRIP_SUCCESS: "send_notify_trip_success",
     SEND_NOTIFY_CANCEL_TRIP: "send_notify_cancel_trip",
+
+    SEND_NOTIFY_CANCEL_TRIP_FROM_CUSTOMER:
+      "send_notify_cancel_trip_from_customer",
+
+    SEND_NOTIFY_CANCEL_TRIP_TO_DRIVER: "send_notify_cancel_trip_to_driver",
   },
 };

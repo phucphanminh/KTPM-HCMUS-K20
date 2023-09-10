@@ -90,7 +90,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   }, []);
 
   React.useEffect(() => {
-    if (step.name == 'pick up' || step.name == 'drop off') {
+    if (step.name == 'pick up') {
       navigation.navigate('MapBook');
     }
   }, [step]);

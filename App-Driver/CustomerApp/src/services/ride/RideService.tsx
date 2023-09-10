@@ -1,6 +1,6 @@
-import { API } from '../../constants/API';
-import { Adapter } from '../../designPattern/adapter/Adapter';
-import { CreateRideForm } from '../../views/BookScreen';
+import {API} from '../../constants/API';
+import {Adapter} from '../../designPattern/adapter/Adapter';
+import {CreateRideForm} from '../../views/BookScreen';
 import api from '../api';
 
 export type CreateRide = {
@@ -42,7 +42,7 @@ export class RideService {
   };
   static cancelRide = async (rideId: string): Promise<any> => {
     try {
-      const response = await api.get(API.DRIVER.CANCEL_RIDE + `/${rideId}`);
+      const response = await api.post(API.DRIVER.CANCEL_RIDE + `/${rideId}`);
       const responseData = response?.data;
 
       return Promise.resolve(responseData);
@@ -52,7 +52,7 @@ export class RideService {
   };
   static completeRide = async (rideId: string): Promise<any> => {
     try {
-      const response = await api.get(API.DRIVER.CANCEL_RIDE + `/${rideId}`);
+      const response = await api.post(API.DRIVER.COMPLETE_RIDE + `/${rideId}`);
       const responseData = response?.data;
 
       return Promise.resolve(responseData);

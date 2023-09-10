@@ -9,6 +9,8 @@ import {
 import React, {useState} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../routers/navigationParams';
+import {selectRideId, showMessage} from '../redux/reducers';
+import {StatusColor} from '../component/Overlay/SlideMessage';
 
 import MapBook from '../component/MapBook';
 import ChoiceOrign from '../component/ChoiceOrign';
@@ -29,17 +31,20 @@ import {Google_Map_Api_Key} from '@env';
 import {SocketIOClient} from '../socket';
 import NotifyInformationDriver from '../component/NotifyInformationDriver';
 import {User} from '../appData/user/User';
+import { RideService } from '../services/ride/RideService';
 type MapBookScreenProps = NativeStackScreenProps<RootStackParamList, 'MapBook'>;
 const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
   const [selectedId, setSelectedId] = useState<string>();
   const step = useSelector(selectStep);
   const origin = useSelector(selectorigin);
+  const rideId = useSelector(selectRideId);
   const socket = SocketIOClient.getInstance();
   const locationDriver = useSelector(selectLocationDriver);
   const [Notify, SetNotify] = useState({
     notify: false,
     name: '',
     vehicleInfo: '',
+    driverId: '',
   });
 
   React.useEffect(() => {
@@ -65,9 +70,14 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
         notify: true,
         name: locationDriver.name,
         vehicleInfo: `${locationDriver.identify}-${locationDriver.brandName}`,
+        driverId: locationDriver.driver,
       }));
     }
   }, [locationDriver]);
+
+  React.useEffect(() => {
+    SetNotify({...Notify, notify: false});
+  }, [step]);
 
   const dispatch = useDispatch();
 
@@ -89,6 +99,27 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
           <Text className="text-bold">Back</Text>
         </View>
       </TouchableOpacity> */}
+      <Button
+        className=" absolute top-2 right-3 w-[20%] text-center  bg-red-500 h-[5%] rounded-md"
+        onPress={async () => {
+          dispatch(setStep({name: 'customer cancel trip'}));
+          socket.emitSendCancelTrip({
+            customerId: User.getInstance().information.tel,
+            driverId: locationDriver.driver,
+          });
+
+          try {
+            const {message} = await RideService.cancelRide(rideId);
+
+            dispatch(showMessage(StatusColor.success, message));
+          } catch (e) {
+            dispatch(showMessage(StatusColor.error, e));
+          }
+
+          navigation.navigate('Home');
+        }}>
+        <Text className="text-white h-full text-xs">Cancel Trip</Text>
+      </Button>
       {Notify.notify && (
         <View className="absolute bottom-3 w-full h-[10%] items-center">
           <NotifyInformationDriver
