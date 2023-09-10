@@ -54,6 +54,7 @@ io.on("connection", (socket) => {
       data: data,
       messages: "Send to driver success",
     };
+    console.log(data);
     socket.emit(SOCKET.SEND_DRIVERS_LOCATION, driverLocations);
     customerRequest[data.Customer?.id] = {
       destination: data.destination,
