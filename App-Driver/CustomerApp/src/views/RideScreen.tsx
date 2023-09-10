@@ -26,7 +26,7 @@ const RideScreen: React.FC<RideScreenProps> = ({}) => {
       try {
         dispatch(setLoading(true));
         const responseData = await RideService.getRide(driverInfo.tel);
-        setData(responseData);
+        setData(responseData.reverse());
         dispatch(showMessage(StatusColor.success, 'Get Rides success'));
       } catch (error) {
         dispatch(showMessage(StatusColor.error, error));
