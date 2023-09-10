@@ -6,30 +6,36 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../routers/navigationParams';
+import React, {useState, useEffect} from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../routers/navigationParams';
 import Map from '../component/Map';
 import ChoiceOrign from '../component/ChoiceOrign';
 import FlatListCar from '../component/FlatListCar';
-import { useSelector } from 'react-redux';
-import { selectStep, selectorigin, setRideId, showMessage } from '../redux/reducers';
-import { Images } from '../configs/images';
-import { useDispatch } from 'react-redux';
-import { setStep } from '../redux/reducers';
-import { Button } from 'native-base';
-import { Divider } from 'native-base';
-import { Google_Map_Api_Key } from '@env';
-import { SocketIOClient } from '../socket';
-import { setLocationCustomer } from '../redux/reducers';
+import {useSelector} from 'react-redux';
+import {
+  selectStep,
+  selectorigin,
+  selectRideId,
+  setRideId,
+  showMessage,
+} from '../redux/reducers';
+import {Images} from '../configs/images';
+import {useDispatch} from 'react-redux';
+import {setStep} from '../redux/reducers';
+import {Button} from 'native-base';
+import {Divider} from 'native-base';
+import {Google_Map_Api_Key} from '@env';
+import {SocketIOClient} from '../socket';
+import {setLocationCustomer} from '../redux/reducers';
 import useCustomNavigation from '../hooks/useCustomNavigation';
-import { User } from '../appData/user/User';
-import { CarType } from '../models/Car/CarType';
-import { RideService } from '../services/ride/RideService';
-import { setLoading } from './../redux/reducers';
-import { StatusColor } from '../component/Overlay/SlideMessage';
-import { CarFactory } from '../designPattern/Factories/CarFactory';
-import { LocationService } from '../services/location/LocationService';
+import {User} from '../appData/user/User';
+import {CarType} from '../models/Car/CarType';
+import {RideService} from '../services/ride/RideService';
+import {setLoading} from './../redux/reducers';
+import {StatusColor} from '../component/Overlay/SlideMessage';
+import {CarFactory} from '../designPattern/Factories/CarFactory';
+import {LocationService} from '../services/location/LocationService';
 
 const DATA: ItemData[] = [
   {
@@ -64,11 +70,12 @@ export type CreateRideForm = {
 };
 
 type BookScreenProps = NativeStackScreenProps<RootStackParamList, 'Book'>;
-const BookScreen: React.FC<BookScreenProps> = ({ navigation }) => {
+const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
   const [selectedId, setSelectedId] = useState<any>();
   const Step = useSelector(selectStep);
   const origin = useSelector(selectorigin);
   const socket = SocketIOClient.getInstance();
+  const rideId = useSelector(selectRideId);
   const [ListCustomer, SetListCustomer] = useState<any[]>([]);
   const navigate = useCustomNavigation();
 
@@ -132,17 +139,19 @@ const BookScreen: React.FC<BookScreenProps> = ({ navigation }) => {
           ),
       };
 
-      const { message } = await RideService.createRide(dataSubmit);
+      const {message} = await RideService.createRide(dataSubmit);
 
       dispatch(showMessage(StatusColor.success, message));
       dispatch(setRideId(message));
 
+      const temp = await RideService.getRide(driverinfo.tel);
+      console.log('line 148', temp);
     } catch (error) {
       dispatch(showMessage(StatusColor.error, error));
     } finally {
       dispatch(setLoading(false));
     }
-
+    dispatch(setStep({name: 'bending'}));
     navigate.navigate('MapBook');
   };
   const getItemLayout = (_: any, index: number) => ({
@@ -151,7 +160,7 @@ const BookScreen: React.FC<BookScreenProps> = ({ navigation }) => {
     index,
   });
 
-  React.useEffect(() => { }, [ListCustomer.length]);
+  React.useEffect(() => {}, [ListCustomer.length]);
   const dispatch = useDispatch();
 
   return (
@@ -178,12 +187,13 @@ const BookScreen: React.FC<BookScreenProps> = ({ navigation }) => {
           keyExtractor={item => item?.data.Customer?.id}
           extraData={selectedId}
           getItemLayout={getItemLayout}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <TouchableOpacity
-              className={`${item?.data.Customer?.id === selectedId?.data.Customer?.id
-                ? 'bg-[#cea0a0]'
-                : ''
-                }`}
+              className={`${
+                item?.data.Customer?.id === selectedId?.data.Customer?.id
+                  ? 'bg-[#cea0a0]'
+                  : ''
+              }`}
               onPress={() => setSelectedId(item)}>
               <FlatListCar
                 title={item?.data.Customer?.name}
@@ -199,7 +209,7 @@ const BookScreen: React.FC<BookScreenProps> = ({ navigation }) => {
             className="mb-2 h-[70%] w-[60%] rounded-[20px]"
             onPress={AcceptBooking}>
             <Text className="text-xl font-semibold text-white h-full">
-              Book Ride now
+              Receive guests
             </Text>
           </Button>
         </View>

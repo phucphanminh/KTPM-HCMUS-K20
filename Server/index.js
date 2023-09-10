@@ -77,6 +77,17 @@ io.on("connection", (socket) => {
     socket.to(data).emit(SOCKET.SEND_NOTIFY_PICK_UP_CUSTOMER, messages);
   });
 
+  socket.on(SOCKET.SEND_NOTIFY_CANCEL_TRIP, (data) => {
+    const messages = "cancel trip";
+    socket
+      .to(data.customerId)
+      .emit(SOCKET.SEND_NOTIFY_PICK_UP_CUSTOMER, messages);
+    customerRequest[data.customerId] =
+      listbooking[data.driverId].customerRequest;
+    delete listbooking[data.driverId];
+    socket.emit(SOCKET.SEND_DRIVERS_LOCATION, driverLocations);
+  });
+
   socket.on(SOCKET.GET_LOCATION_CUSTOMER, () => {
     // send location customer request to driver when request
     const data = [];
@@ -92,7 +103,9 @@ io.on("connection", (socket) => {
       name: data.name,
       identify: data.identify,
       brandName: data.brandName,
+      customerRequest: { ...customerRequest[data.idcustomer] },
     };
+
     delete customerRequest[data.idcustomer];
     for (const driver in driverLocations) {
       if (Object.keys(customerRequest).length === 0) {
