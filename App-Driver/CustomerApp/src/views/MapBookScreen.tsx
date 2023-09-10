@@ -52,7 +52,7 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
   return (
     <View className="relative h-full w-full">
       <MapBook />
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           dispatch(
             setStep({
@@ -66,7 +66,7 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
           <Image source={Images.angle}></Image>
           <Text className="text-bold">Back</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <View className="absolute bottom-3 w-full h-[20%] items-center">
         <NotifyInformationCustomer
           customerName={Notify.name}

@@ -8,6 +8,8 @@ import {selectStep} from '../redux/reducers';
 import {useSelector} from 'react-redux';
 import {SocketIOClient} from '../socket';
 import {SOCKET} from '../socket/constants';
+import useCustomNavigation from '../hooks/useCustomNavigation';
+import {User} from '../appData/user/User';
 
 type ItemProps = {
   customerName: string;
@@ -20,7 +22,9 @@ const NotifyInformationCustomer = ({
 }: ItemProps) => {
   const socket = SocketIOClient.getInstance();
   const dispatch = useDispatch();
+  const user = User.getInstance().information;
   const step = useSelector(selectStep);
+  const navigate = useCustomNavigation();
   React.useEffect(() => {}, [step]);
   return (
     <View className="py-2 flex flex-col w-[90%] h-[90%] bg-white rounded-xl items-center">
@@ -39,21 +43,27 @@ const NotifyInformationCustomer = ({
         <Button
           className="w-[30%] text-center  bg-red-500 h-[80%]"
           onPress={() => {
-            dispatch(selectStep({name: 'cancel trip'}));
-            socket.emitCancelTrip(telephonenumber);
+            dispatch(setStep({name: 'cancel trip'}));
+            socket.emitCancelTrip({
+              customerId: telephonenumber,
+              driverId: user.tel,
+            });
+            navigate.navigate('Home');
           }}>
           <Text className="text-white h-full text-xs">Cancel Trip</Text>
         </Button>
-        {step.name === 'pick up' ? (
+        {step?.name === 'pick up' && (
           <Button
             className="w-[30%] text-center  bg-green-500 h-[80%]"
             onPress={() => {
               dispatch(setStep({name: 'drop off'}));
               socket.emitSuccessTrip(telephonenumber);
+              navigate.navigate('Home');
             }}>
             <Text className="text-white h-full text-xs">drop off</Text>
           </Button>
-        ) : (
+        )}
+        {step?.name === 'bending' && (
           <Button
             className="w-[30%] text-center  bg-green-500 h-[80%]"
             onPress={() => {

@@ -16,6 +16,7 @@ import {
   selectorigin,
   selectStep,
   selectLocationDriver,
+  setLocationDriver,
 } from '../redux/reducers';
 import MapViewDirections from 'react-native-maps-directions';
 import {Google_Map_Api_Key} from '@env';
@@ -26,6 +27,7 @@ import {setStep} from '../redux/reducers';
 
 import {Images} from '../configs/images';
 import myTheme from './../configs/Theme';
+import {SocketIOClient} from '../socket';
 
 const MapBook = () => {
   const origin = useSelector(selectorigin);
@@ -35,6 +37,7 @@ const MapBook = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const step = useSelector(selectStep);
+  const socket = SocketIOClient.getInstance();
 
   useEffect(() => {
     if (!origin && !destination) {
@@ -50,6 +53,13 @@ const MapBook = () => {
     }
   }, [origin, destination, locationDriver, step]);
 
+  React.useEffect(() => {
+    if (step.name == 'cancel trip') {
+      socket.onListenDriversLocation(data => {
+        dispatch(setLocationDriver(data));
+      });
+    }
+  }, [step]);
   return (
     <View className="relative">
       <MapView

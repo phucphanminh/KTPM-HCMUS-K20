@@ -26,13 +26,14 @@ import {LoginHandler} from '../designPattern/chain';
 import useCustomNavigation from '../hooks/useCustomNavigation';
 import Geolocation from '@react-native-community/geolocation';
 import {User} from '../appData/user/User';
+import {selectStep} from './../redux/reducers';
 
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const dispatch = useDispatch();
   const navigate = useCustomNavigation();
-
+  const step = useSelector(selectStep);
   const socket = SocketIOClient.getInstance();
 
   const loginHandler = new LoginHandler();
@@ -87,6 +88,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
       }
     };
   }, []);
+
+  React.useEffect(() => {
+    if (step.name == 'pick up' || step.name == 'drop off') {
+      navigation.navigate('MapBook');
+    }
+  }, [step]);
 
   const getOneTimeLocation = () => {
     setLocationStatus('Getting Location ...');

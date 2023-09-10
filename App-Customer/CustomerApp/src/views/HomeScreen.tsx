@@ -17,7 +17,7 @@ import {useDispatch} from 'react-redux';
 import {setLoading, showMessage} from './../redux/reducers';
 import {Button} from 'native-base';
 import {setOrigin} from './../redux/reducers';
-import {useSelector} from 'react-redux';
+
 import {selectorigin} from './../redux/reducers';
 import {LocationService} from '../services/location/LocationService';
 import {StatusColor} from '../component/Overlay/SlideMessage';
@@ -25,12 +25,14 @@ import {SocketIOClient} from '../socket';
 import {User} from '../appData/user/User';
 import {LoginHandler} from '../designPattern/chain';
 import useCustomNavigation from '../hooks/useCustomNavigation';
+import {useSelector} from 'react-redux';
+import {selectStep} from './../redux/reducers';
 
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const dispatch = useDispatch();
-
+  const step = useSelector(selectStep);
   const socket = SocketIOClient.getInstance();
   const navigate = useCustomNavigation();
   const loginHandler = new LoginHandler();
@@ -92,6 +94,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
   const mapRef = useRef(null);
   const origin = useSelector(selectorigin);
+
+  React.useEffect(() => {
+    if (step.name == 'pick up') {
+      navigation.navigate('MapBook');
+    }
+    if (step.name == 'cancel trip') {
+      navigation.navigate('MapBook');
+    }
+  }, [step]);
 
   return (
     <View className="relative h-full w-full">

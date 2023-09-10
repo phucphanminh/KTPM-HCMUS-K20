@@ -32,7 +32,7 @@ import {User} from '../appData/user/User';
 type MapBookScreenProps = NativeStackScreenProps<RootStackParamList, 'MapBook'>;
 const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
   const [selectedId, setSelectedId] = useState<string>();
-  const Step = useSelector(selectStep);
+  const step = useSelector(selectStep);
   const origin = useSelector(selectorigin);
   const socket = SocketIOClient.getInstance();
   const locationDriver = useSelector(selectLocationDriver);
@@ -45,22 +45,17 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
   React.useEffect(() => {
     socket.emitJoinRoom(User.getInstance().information.tel);
     socket.onListenDriversLocation(data => {
-      console.log(data);
       dispatch(setLocationDriver(data));
     });
     socket.onListenUpdateLocationDriver(data => {
-      console.log(data);
       dispatch(setLocationDriver(data));
     });
     socket.onListenAcceptBookingSuccess(data => {
-      console.log(data);
       dispatch(setLocationDriver(data));
     });
 
     socket.onListenPickup(data => {
       dispatch(setStep({name: data}));
-      console.log('\n');
-      console.log(data);
     });
   }, []);
   React.useEffect(() => {
@@ -75,10 +70,11 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
   }, [locationDriver]);
 
   const dispatch = useDispatch();
+
   return (
     <View className="relative h-full w-full">
       <MapBook />
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           dispatch(
             setStep({
@@ -92,7 +88,7 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
           <Image source={Images.angle}></Image>
           <Text className="text-bold">Back</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       {Notify.notify && (
         <View className="absolute bottom-3 w-full h-[10%] items-center">
           <NotifyInformationDriver
