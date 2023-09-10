@@ -1,5 +1,5 @@
-export enum RideState {
-	IN_PROGRESS = 0,
-	COMPLETED = 1,
-	UNCOMPLETED = -1,
-}
+export const RideState: { [key: number]: string } = {
+	"0": "In Progress",
+	"1": "Completed",
+	"-1": "Uncompleted",
+  };

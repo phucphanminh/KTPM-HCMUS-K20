@@ -1,6 +1,6 @@
-import {API} from '../../constants/API';
-import {Adapter} from '../../designPattern/adapter/Adapter';
-import {CreateRideForm} from '../../views/BookScreen';
+import { API } from '../../constants/API';
+import { Adapter } from '../../designPattern/adapter/Adapter';
+import { CreateRideForm } from '../../views/BookScreen';
 import api from '../api';
 
 export type CreateRide = {
@@ -30,14 +30,34 @@ export class RideService {
       return Promise.reject('Error in when create Ride in server');
     }
   };
-  static getRide = async (rideId: string): Promise<CreateRide> => {
+  static getRide = async (id: string): Promise<any> => {
     try {
-      const response = await api.get(API.DRIVER.GET_RIDE + `/${rideId}`);
+      const response = await api.get(API.DRIVER.GET_RIDE + `/${id}`);
       const responseData = response?.data;
 
       return Promise.resolve(responseData);
     } catch (error) {
       return Promise.reject('Error in when get Ride in server');
+    }
+  };
+  static cancelRide = async (rideId: string): Promise<any> => {
+    try {
+      const response = await api.get(API.DRIVER.CANCEL_RIDE + `/${rideId}`);
+      const responseData = response?.data;
+
+      return Promise.resolve(responseData);
+    } catch (error) {
+      return Promise.reject('Error in when cancel Ride in server');
+    }
+  };
+  static completeRide = async (rideId: string): Promise<any> => {
+    try {
+      const response = await api.get(API.DRIVER.CANCEL_RIDE + `/${rideId}`);
+      const responseData = response?.data;
+
+      return Promise.resolve(responseData);
+    } catch (error) {
+      return Promise.reject('Error in when complete Ride in server');
     }
   };
 }
