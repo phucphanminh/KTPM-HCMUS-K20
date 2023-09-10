@@ -148,6 +148,9 @@ BEGIN
         TAXI.APPUSER ON RIDE.USE_ID = APPUSER.TEL
     WHERE 
    		RIDE.USE_ID = userID;
+--   	ORDER BY 
+--        RIDE.BOOKTIME DESC;	
+   	
 END;
 $$;
 
@@ -384,6 +387,8 @@ BEGIN
         TAXI.APPUSER ON RIDE.USE_ID = APPUSER.TEL
     WHERE 
         RIDE.DRI_ID = driverID;
+--    ORDER BY 
+--        RIDE.BOOKTIME DESC;
 END;
 $$;
 

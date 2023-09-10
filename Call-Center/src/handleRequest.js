@@ -28,7 +28,7 @@ async function handleRequest(requestData) {
 
   try {
     // Gửi yêu cầu POST đến máy chủ bằng Axios
-    const response = await axios.post('http://localhost:4500/api/callcenter/customer', requestData, {
+    const response = await axios.post('https://ktpm-k20-hcmus.onrender.com/api/callcenter/customer', requestData, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -82,7 +82,7 @@ async function handleRequest(requestData) {
       const gpsHistory = new GpsHistory(requestData.tel, requestData.originDescription, extractedPickUpCoordinates[0].lat, extractedPickUpCoordinates[0].lng);
       console.log('GPS History: ', gpsHistory);
       
-      const result = await axios.post('http://localhost:4500/api/callcenter/save', gpsHistory, {
+      const result = await axios.post('https://ktpm-k20-hcmus.onrender.com/api/callcenter/save', gpsHistory, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -105,7 +105,7 @@ async function handleRequest(requestData) {
       "name": customerInfoDTO.Customer.name
     };
     console.log(newCustomer);
-    const result = await axios.post('http://localhost:4500/api/callcenter/add-customer', newCustomer, {
+    const result = await axios.post('https://ktpm-k20-hcmus.onrender.com/api/callcenter/add-customer', newCustomer, {
       headers: {
         'Content-Type': 'application/json',
       },
