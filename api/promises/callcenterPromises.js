@@ -1,10 +1,10 @@
 const db = require('../config.js');
 
-const gpsHistory = async (phoneNumber, pickupAddress) => {
+const gpsHistory = async (tel, originDescription) => {
   return new Promise((resolve, reject) => {
     db.query(
       'SELECT * FROM TAXI.Find_GPS_History($1, $2)',
-      [phoneNumber, pickupAddress],
+      [tel, originDescription],
       (error, results) => {
         if (error) {
           reject(error);
@@ -16,11 +16,11 @@ const gpsHistory = async (phoneNumber, pickupAddress) => {
   });
 };
 
-const saveGPS = async (ID,  phoneNumber, pickupAddress, latitude, longitude) => {
+const saveGPS = async (ID, tel, originDescription, latitude, longitude) => {
   return new Promise((resolve, reject) => {
     db.query(
       'SELECT * FROM TAXI.Save_GPS_History($1, $2, $3, $4, $5)',
-      [ID,  phoneNumber, pickupAddress, latitude, longitude],
+      [ID, tel, originDescription, latitude, longitude],
       (error, results) => {
         if (error) {
           reject(error);
@@ -32,11 +32,11 @@ const saveGPS = async (ID,  phoneNumber, pickupAddress, latitude, longitude) => 
   });
 };
 
-const callAddCustomer = async (ID,  phoneNumber, name) => {
+const callAddCustomer = async (ID,  tel, name) => {
   return new Promise((resolve, reject) => {
     db.query(
       'SELECT * FROM TAXI.AddCustomer($1, $2, $3)',
-      [ID,  phoneNumber, name],
+      [ID, tel, name],
       (error, results) => {
         if (error) {
           reject(error);

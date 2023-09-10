@@ -1,32 +1,61 @@
 const CryptoJS = require('crypto-js');
 
 class CustomerInfoDTO {
-    constructor(phoneNumber, name, pickupAddress, dropoffAddress, carType, coordinateProviderType) {
-        this.ID = this.generateId(phoneNumber, pickupAddress, dropoffAddress);
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.pickupAddress = pickupAddress;
-        this.dropoffAddress = dropoffAddress;
-        this.carType = carType;
-        this.pickUpLat = 0; // Khởi tạo giá trị mặc định
-        this.pickUpLng = 0; // Khởi tạo giá trị mặc định
-        this.dropOffLat = 0; // Khởi tạo giá trị mặc định
-        this.dropOffLng = 0; // Khởi tạo giá trị mặc định
-        this.coordinateProviderType = coordinateProviderType;
-    }
+  constructor(customer, origin, destination, cardetails, coordinateProviderType) {
+    this.ID = this.generateId(customer, origin, destination);
+    this.Customer = customer;
+    this.origin = origin;
+    this.destination = destination;
+    this.cardetails = cardetails;
+    this.coordinateProviderType = coordinateProviderType;
+  }
 
-    generateId(phoneNumber, pickupAddress, dropoffAddress) {
+  generateId(customer, origin, destination) {
     const currentTime = new Date().toISOString();
-    const combinedString = phoneNumber + pickupAddress + dropoffAddress + currentTime;
+    const combinedString = customer.tel + origin.description + destination.description + currentTime;
 
     try {
-        const hash = CryptoJS.SHA256(combinedString);
-        const hashBytes = hash.toString(CryptoJS.enc.Hex);
-        return hashBytes.substring(0, 15); // Lấy 15 ký tự đầu
+      const hash = CryptoJS.SHA256(combinedString);
+      const hashBytes = hash.toString(CryptoJS.enc.Hex);
+      return hashBytes.substring(0, 15); // Lấy 15 ký tự đầu
     } catch (error) {
-        throw new Error("SHA-256 algorithm not found");
+      throw new Error("SHA-256 algorithm not found");
     }
-    }
+  }
 }
 
-module.exports = CustomerInfoDTO;
+class Customer {
+  constructor(tel, name) {
+    this.tel = tel;
+    this.name = name;
+  }
+}
+
+class Position {
+  constructor(description, lat, lng) {
+    this.description = description;
+    this.location = new Location(lat, lng);
+  }
+}
+
+class Location {
+  constructor(lat, lng) {
+    this.lat = lat;
+    this.lng = lng;
+  }
+}
+
+class CarDetails {
+  constructor(price, genre) {
+    this.price = price;
+    this.genre = genre;
+  }
+}
+
+module.exports = {
+  CustomerInfoDTO,
+  Customer,
+  Position,
+  Location,
+  CarDetails,
+};

@@ -138,7 +138,7 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
       };
 
       const {message} = await RideService.createRide(dataSubmit);
-
+      console.log('143', message);
       dispatch(showMessage(StatusColor.success, message));
       dispatch(setRideId(message));
     } catch (error) {
