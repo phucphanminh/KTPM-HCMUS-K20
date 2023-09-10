@@ -30,3 +30,25 @@ export function hash(input: string):string {
 
   return hash.toString(16); // Convert to hexadecimal representation
 }
+export function truncateString(input: string, maxLength: number): string {
+  if (input.length <= maxLength) {
+    return input; // Return the original string if it's already within or equal to the maxLength
+  } else {
+    return input.substring(0, maxLength) + '...'; // Truncate and add '...' at the end
+  }
+}
+export function formatDatabaseTimestamp(timestamp: string): string {
+  const date = new Date(timestamp);
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short',
+  };
+
+  return date.toLocaleString('en-US', options);
+}
