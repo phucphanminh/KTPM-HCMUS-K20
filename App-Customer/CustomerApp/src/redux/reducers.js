@@ -62,6 +62,8 @@ const initialState = {
   LocationDriver: null,
   step: {name: 'init'},
   travelTimeinformations: null,
+  rideId:null,
+
 };
 
 export const navSlices = createSlice({
@@ -83,6 +85,9 @@ export const navSlices = createSlice({
     setLocationDriver: (state, action) => {
       state.LocationDriver = action.payload;
     },
+    setRideId: (state, action) => {
+      state.rideId = action.payload;
+    },
   },
 });
 
@@ -92,6 +97,7 @@ export const {
   setTravelTime,
   setStep,
   setLocationDriver,
+  setRideId
 } = navSlices.actions;
 
 // selector
@@ -100,5 +106,6 @@ export const selectdestination = state => state.nav.destination;
 export const selecttravelTime = state => state.nav.travelTimeinformations;
 export const selectStep = state => state.nav.step;
 export const selectLocationDriver = state => state.nav.LocationDriver;
+export const selectRideId = state => state.nav.rideId;
 
 export default navSlices.reducer;
