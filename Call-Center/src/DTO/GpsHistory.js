@@ -1,17 +1,17 @@
 const CryptoJS = require('crypto-js');
 
 class GpsHistory {
-    constructor(phoneNumber, pickupAddress, latitude, longitude) {
-        this.ID = this.generateId(phoneNumber, pickupAddress);
-        this.phoneNumber = phoneNumber;
-        this.pickupAddress = pickupAddress;
+    constructor(tel, originDescription, latitude, longitude) {
+        this.ID = this.generateId(tel, originDescription);
+        this.tel = tel;
+        this.originDescription = originDescription;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    generateId(phoneNumber, pickupAddress) {
+    generateId(tel, originDescription) {
         const currentTime = new Date().toISOString();
-        const combinedString = phoneNumber + pickupAddress + currentTime;
+        const combinedString = tel + originDescription + currentTime;
 
         try {
             const hash = CryptoJS.SHA256(combinedString);
@@ -23,7 +23,7 @@ class GpsHistory {
     }
 
     toString() {
-        return `GpsHistory{id='${this.ID}', phoneNumber='${this.phoneNumber}', pickupAddress='${this.pickupAddress}', latitude=${this.latitude}, longitude=${this.longitude}}`;
+        return `GpsHistory{id='${this.ID}', tel='${this.tel}', originDescription='${this.originDescription}', latitude=${this.latitude}, longitude=${this.longitude}}`;
     }
 }
 
