@@ -9,6 +9,8 @@ import {
 import React, {useState} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../routers/navigationParams';
+import {showMessage} from '../redux/reducers';
+import {StatusColor} from '../component/Overlay/SlideMessage';
 
 import MapBook from '../component/MapBook';
 import ChoiceOrign from '../component/ChoiceOrign';
@@ -103,6 +105,7 @@ const MapBookScreen: React.FC<MapBookScreenProps> = ({navigation}) => {
             customerId: User.getInstance().information.tel,
             driverId: locationDriver.driver,
           });
+          dispatch(showMessage(StatusColor.success, 'Cancel trip success '));
           navigation.navigate('Home');
         }}>
         <Text className="text-white h-full text-xs">Cancel Trip</Text>

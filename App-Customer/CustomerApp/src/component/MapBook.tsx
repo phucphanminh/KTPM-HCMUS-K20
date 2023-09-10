@@ -23,11 +23,13 @@ import {Google_Map_Api_Key} from '@env';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from 'native-base';
 import {useDispatch} from 'react-redux';
+import {showMessage} from '../redux/reducers';
 import {setStep} from '../redux/reducers';
 import useCustomNavigation from '../hooks/useCustomNavigation';
 
 import {Images} from '../configs/images';
 import myTheme from './../configs/Theme';
+import {StatusColor} from './Overlay/SlideMessage';
 import {SocketIOClient} from '../socket';
 
 const MapBook = () => {
@@ -57,12 +59,14 @@ const MapBook = () => {
   React.useEffect(() => {
     console.log(step.name);
     if (step.name == 'cancel trip') {
+      dispatch(showMessage(StatusColor.info, 'Trip cancelled'));
       socket.onListenDriversLocation(data => {
         dispatch(setLocationDriver(data));
       });
     }
     if (step.name == 'drop off') {
       navigation.navigate('Home');
+      dispatch(showMessage(StatusColor.success, 'Trip success'));
       dispatch(setLocationDriver(null));
     }
   }, [step]);

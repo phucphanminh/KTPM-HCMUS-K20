@@ -9,7 +9,7 @@ export const API = {
     GET_INFO: '/driver/driver-info',
     CREATE_RIDE: '/driver/bookings/process',
     GET_RIDE: '/driver/driver-rides',
-    CANCEL_RIDE: '/driver/driver-rides/cancel',
-    COMPLETE_RIDE: '/driver/driver-rides/complete',
+    CANCEL_RIDE: '/driver/bookings/cancel',
+    COMPLETE_RIDE: '/driver/bookings/complete',
   },
 };
