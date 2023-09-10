@@ -83,4 +83,10 @@ export class SocketIOClient {
   emitCancelTrip(data: any) {
     this.socket.emit(SOCKET.SEND_NOTIFY_CANCEL_TRIP, data);
   }
+
+  onListenCancelFromCustomer(callback: (data: any) => void) {
+    this.socket.on(SOCKET.SEND_NOTIFY_CANCEL_TRIP_TO_DRIVER, data => {
+      callback(data);
+    });
+  }
 }
