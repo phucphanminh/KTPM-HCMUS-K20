@@ -51,7 +51,7 @@ const NotifyInformationCustomer = ({
               customerId: telephonenumber,
               driverId: user.tel,
             });
-            console.log(rideId);
+
             try {
               const {message} = await RideService.cancelRide(rideId);
 

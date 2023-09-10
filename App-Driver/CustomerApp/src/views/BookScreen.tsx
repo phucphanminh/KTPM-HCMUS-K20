@@ -116,8 +116,6 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
     socket.emitSendAcceptBooking(driveinformation);
     dispatch(setLocationCustomer(selectedId.data));
 
-    console.log(selectedId);
-
     try {
       dispatch(setLoading(true));
 
@@ -140,7 +138,7 @@ const BookScreen: React.FC<BookScreenProps> = ({navigation}) => {
       };
 
       const {message} = await RideService.createRide(dataSubmit);
-      console.log('143', message);
+
       dispatch(showMessage(StatusColor.success, message));
       dispatch(setRideId(message));
     } catch (error) {

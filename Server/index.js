@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
 
   socket.on(SOCKET.UPDATE_LOCATION_DRIVER, (data) => {
     const temp = { lat: data.lat, lng: data.lng };
-    console.log(data);
+
     driverLocations[data.driverinfo] = temp;
 
     for (const driverid in listbooking) {
@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
       Customer: data.Customer,
       cardetails: data.cardetails,
     };
-    console.log(customerRequest);
+
     for (const driverName in driverLocations) {
       socket.to(driverName).emit(SOCKET.SEND_CUSTOMER_LOCATION, messages);
     }

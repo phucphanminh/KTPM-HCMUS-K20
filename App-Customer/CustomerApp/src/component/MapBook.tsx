@@ -57,7 +57,6 @@ const MapBook = () => {
   }, [origin, destination, locationDriver, step]);
 
   React.useEffect(() => {
-    console.log(step.name);
     if (step.name == 'cancel trip') {
       dispatch(showMessage(StatusColor.info, 'Trip cancelled'));
       socket.onListenDriversLocation(data => {
