@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import './App.css';
-import handleRequest from './handleRequest';
-import FormInput from './components/FormInput';
-import './components/formInput.css';
+import { useState } from "react";
+import "./App.css";
+import handleRequest from "./handleRequest";
+import FormInput from "./components/FormInput";
+import "./components/formInput.css";
 
 const App = () => {
   const [formData, setFormData] = useState({
-    tel: '',
-    name: '',
-    originDescription: '',
-    destinationDescription: '',
-    genre: 'Select Car Type', // Đặt giá trị mặc định ban đầu
+    tel: "",
+    name: "",
+    originDescription: "",
+    destinationDescription: "",
+    genre: "Select Car Type", // Đặt giá trị mặc định ban đầu
     // coordinateProviderType: '',
-    coordinateProviderType: 'Select Coordinate Provider',
+    coordinateProviderType: "Select Coordinate Provider",
   });
 
-  const genres = ['4 seats', '7 seats'];
-  const services = ['Goole Maps', 'Goong Maps'];
+  const genres = ["4 seats", "7 seats"];
+  const services = ["Goole Maps", "Goong Maps"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,6 +26,7 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+
     handleRequest(formData);
   };
 
@@ -94,7 +95,8 @@ const App = () => {
             onChange={handleChange}
             required
           >
-            <option value="">Select Coordinate Provider</option> {/* Option mặc định */}
+            <option value="">Select Coordinate Provider</option>{" "}
+            {/* Option mặc định */}
             {services.map((type) => (
               <option key={type} value={toString[type]}>
                 {type}
@@ -103,7 +105,9 @@ const App = () => {
           </select>
         </div>
 
-        <button style={{ width: '280px' }} type="submit">Submit</button>
+        <button style={{ width: "280px" }} type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );

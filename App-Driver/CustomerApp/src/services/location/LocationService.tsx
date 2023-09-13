@@ -12,7 +12,7 @@ function deg2rad(deg: number): number {
 }
 export class LocationService {
   static getMyLocation = (): Promise<GeolocationResponse> => {
-    const config = { enableHighAccuracy: true, timeout: 30000, maximumAge: 1000 };
+    const config = {enableHighAccuracy: true, timeout: 30000, maximumAge: 1000};
     return new Promise((resolve, reject) => {
       Geolocation.getCurrentPosition(
         position => {
@@ -33,9 +33,9 @@ export class LocationService {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(deg2rad(origin1.lat)) *
-      Math.cos(deg2rad(origin2.lat)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+        Math.cos(deg2rad(origin2.lat)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c; // Distance in kilometers
