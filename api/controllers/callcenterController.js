@@ -26,13 +26,13 @@ const saveGPS = async (req, res) => {
 
 const customerAdd = async (req, res) => {
   const { ID,  tel, name } = req.body;
-  // console.log(req.body);
+  console.log(req.body);
   try {
     const result = await callcenterPromises.callAddCustomer(ID, tel, name);
     return res.json(result);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Đã xảy ra lỗi khi lưu lịch sử GPS.' });
+    return res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm customer.' });
   }
 };
 
